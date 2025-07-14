@@ -1,0 +1,28 @@
+{
+  "name": "municipalidad-pisco/sistema-helpdesk",
+  "description": "Sistema HelpDesk - Municipalidad Provincial de Pisco",
+  "type": "project",
+  "license": "MIT",
+  "autoload": {
+    "psr-4": {
+      "MunicipalidadPisco\\SistemaHelpdesk\\": "backend/clases/"
+    }
+  },
+  "authors": [
+    {
+      "name": "Johan",
+      "email": "jofelipad@gmail.com"
+    },
+    {
+      "name": "Fernando",
+      "email": "fernando@email.com"
+    }
+  ],
+  "require": {
+    "php": ">=7.4"
+  },
+  "require-dev": {},
+  "config": {
+    "optimize-autoloader": true
+  }
+}

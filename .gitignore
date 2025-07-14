@@ -1,0 +1,33 @@
+# Archivos de configuración sensible
+.env
+
+# Librerías de Composer (se regeneran automáticamente)
+/vendor/
+
+# Archivos subidos por usuarios
+/subidas/
+
+# Reportes generados
+/reportes/*.pdf
+
+# Logs y archivos temporales
+*.log
+*.tmp
+/temp/
+
+# Archivos del sistema
+.DS_Store
+Thumbs.db
+
+# Archivos de IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Archivos de respaldo
+*.bak
+*.backup
+
+# Cache
+/cache/
