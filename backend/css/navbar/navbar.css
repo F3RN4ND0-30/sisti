@@ -55,9 +55,12 @@
     max-width: 70px;
 }
 
+/* Sidebar collapsed - ocultar elementos */
 #sidebar.active .sidebar-header span,
 #sidebar.active ul li a span,
-#sidebar.active .subtitle {
+#sidebar.active .subtitle,
+#sidebar.active .nav-section,
+#sidebar.active .section-title {
     display: none;
 }
 
@@ -92,10 +95,6 @@
 }
 
 #sidebar.active ul ul {
-    display: none;
-}
-
-#sidebar.active .nav-section {
     display: none;
 }
 
@@ -143,8 +142,9 @@
 
 /* Separadores de sección */
 .nav-section {
-    margin: 20px 0 10px 0;
-    padding: 0 20px;
+    margin: 20px 0 10px 0 !important;
+    padding: 0 20px !important;
+    list-style: none !important;
 }
 
 .section-title {
@@ -155,6 +155,12 @@
     font-weight: 600;
     display: block;
     margin-bottom: 8px;
+    padding: 5px 0;
+}
+
+/* Ajuste para el primer elemento después de sección */
+.nav-section+li {
+    margin-top: 5px;
 }
 
 #sidebar ul li {

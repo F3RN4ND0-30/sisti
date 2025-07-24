@@ -60,7 +60,7 @@ if (!isset($_SESSION['hd_activo']) || $_SESSION['hd_activo'] !== true) {
             <div class="col-lg-3 col-md-6">
                 <div class="stat-card red">
                     <i class="material-icons" style="font-size: 40px; color: #e74c3c;">warning</i>
-                    <div class="stat-number">9</div>
+                    <div class="stat-number">0</div>
                     <h5>Incidentes Pendientes</h5>
                     <p class="text-muted">Requieren atención</p>
                 </div>
@@ -69,7 +69,7 @@ if (!isset($_SESSION['hd_activo']) || $_SESSION['hd_activo'] !== true) {
             <div class="col-lg-3 col-md-6">
                 <div class="stat-card orange">
                     <i class="material-icons" style="font-size: 40px; color: #f39c12;">settings</i>
-                    <div class="stat-number">2</div>
+                    <div class="stat-number">0</div>
                     <h5>Incidentes en Proceso</h5>
                     <p class="text-muted">Siendo atendidos</p>
                 </div>
@@ -78,7 +78,7 @@ if (!isset($_SESSION['hd_activo']) || $_SESSION['hd_activo'] !== true) {
             <div class="col-lg-3 col-md-6">
                 <div class="stat-card green">
                     <i class="material-icons" style="font-size: 40px; color: #27ae60;">check_circle</i>
-                    <div class="stat-number">4</div>
+                    <div class="stat-number">0</div>
                     <h5>Incidentes Resueltos</h5>
                     <p class="text-muted">Completados exitosamente</p>
                 </div>
