@@ -50,7 +50,7 @@
                     Registrar Incidencia
                 </a>
 
-                <a href="seguimiento.php" class="action-btn btn-outline-action">
+                <a href="frontend/tickets/seguimiento-ticket.php" class="action-btn btn-outline-action">
                     <i class="material-icons">search</i>
                     Consultar Ticket
                 </a>
