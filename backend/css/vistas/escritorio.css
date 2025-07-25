@@ -329,6 +329,63 @@ body {
     margin-bottom: 0 !important;
 }
 
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: 'Inter', sans-serif;
+    margin-top: 20px;
+}
+
+.table thead {
+    background-color: #2563eb;
+    color: white;
+}
+
+.table th,
+.table td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.table tr:hover {
+    background-color: #f1f5f9;
+}
+
+.estado-tag {
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: bold;
+    display: inline-block;
+    text-align: center;
+}
+
+.estado-pendiente {
+    background-color: #ffe8e8;
+    color: #e74c3c;
+    border: 1px solid #e74c3c;
+}
+
+.estado-proceso {
+    background-color: #fff3cd;
+    color: #f39c12;
+    border: 1px solid #f39c12;
+}
+
+.estado-resuelto {
+    background-color: #e8f5e9;
+    color: #27ae60;
+    border: 1px solid #27ae60;
+}
+
+.table thead th {
+    background-color: #2563eb;
+    color: white;
+    text-align: center;
+}
+
+
 /* Animations */
 @keyframes fadeInDown {
     from {
