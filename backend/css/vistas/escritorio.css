@@ -329,6 +329,7 @@ body {
     margin-bottom: 0 !important;
 }
 
+<<<<<<< HEAD
 .table {
     width: 100%;
     border-collapse: collapse;
@@ -386,6 +387,8 @@ body {
 }
 
 
+=======
+>>>>>>> origin/main
 /* Animations */
 @keyframes fadeInDown {
     from {

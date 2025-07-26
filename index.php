@@ -45,12 +45,12 @@
 
             <!-- Botones de Acción -->
             <div class="action-section">
-                <a href="frontend/tickets/registro-ticket.php" class="action-btn btn-primary-action">
+                <a href="registro-ticket.php" class="action-btn btn-primary-action">
                     <i class="material-icons">add_circle</i>
                     Registrar Incidencia
                 </a>
 
-                <a href="frontend/tickets/seguimiento-ticket.php" class="action-btn btn-outline-action">
+                <a href="seguimiento.php" class="action-btn btn-outline-action">
                     <i class="material-icons">search</i>
                     Consultar Ticket
                 </a>
