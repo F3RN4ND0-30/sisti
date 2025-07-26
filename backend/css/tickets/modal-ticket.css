@@ -1,0 +1,31 @@
+.modal {
+    position: fixed;
+    z-index: 9999;
+    /* aseguramos que esté sobre todo */
+    left: 0;
+    top: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.4);
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    /* Para evitar scroll cuando el modal esté activo */
+    overflow: hidden;
+}
+
+.modal-contenido {
+    background-color: #fff;
+    padding: 25px 30px;
+    border-radius: 10px;
+    max-width: 400px;
+    width: 90%;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    position: relative;
+
+    /* Para evitar que el contenido se extienda o desborde */
+    box-sizing: border-box;
+}

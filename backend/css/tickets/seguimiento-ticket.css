@@ -1,0 +1,374 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/icon?family=Material+Icons');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html,
+body {
+    height: 100%;
+    font-family: 'Inter', sans-serif;
+    background: #f3f4f6;
+    overflow: hidden;
+}
+
+body {
+    /* Background animado estilo gradient */
+    background: linear-gradient(135deg, #2563eb, #1d4ed8);
+    position: relative;
+}
+
+body::before {
+    content: '';
+    position: fixed;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="0.5"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>') repeat;
+    animation: float 20s ease-in-out infinite;
+    z-index: 0;
+    pointer-events: none;
+    opacity: 0.3;
+}
+
+@keyframes float {
+
+    0%,
+    100% {
+        transform: translateY(0) rotate(0);
+    }
+
+    50% {
+        transform: translateY(-20px) rotate(180deg);
+    }
+}
+
+/* Contenedor general centrado */
+.seguimiento-container {
+    max-width: 900px;
+    margin: 60px auto;
+    background: #fff;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    padding: 40px;
+    position: relative;
+    z-index: 1;
+    animation: fadeIn 0.8s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(40px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* TITULO CENTRAL */
+.seguimiento-container h2 {
+    font-size: 32px;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 30px;
+    background: linear-gradient(135deg, #2563eb, #1d4ed8);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* FORMULARIO */
+form {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    margin-bottom: 40px;
+}
+
+form input[type="text"] {
+    padding: 14px 20px;
+    border: 2px solid #e5e7eb;
+    border-radius: 12px;
+    font-size: 16px;
+    flex: 1;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    font-family: 'Inter', sans-serif;
+    outline: none;
+}
+
+form input[type="text"]:focus {
+    border-color: #2563eb;
+    box-shadow: 0 0 10px rgba(37, 99, 235, 0.3);
+    background-color: #fff;
+}
+
+form button {
+    background: linear-gradient(135deg, #2563eb, #1d4ed8);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    padding: 14px 32px;
+    font-weight: 700;
+    font-size: 16px;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+    box-shadow: 0 5px 15px rgba(37, 99, 235, 0.4);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+form button:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 30px rgba(37, 99, 235, 0.6);
+}
+
+form button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.25), transparent);
+    transition: left 0.5s;
+}
+
+form button:hover::before {
+    left: 100%;
+}
+
+/* CABECERA DEL TICKET */
+.ticket-header {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.ticket-header p {
+    font-size: 16px;
+    color: #374151;
+    margin: 8px 0;
+}
+
+.ticket-header strong {
+    color: #2563eb;
+}
+
+/* DATOS DEL TICKET */
+.ticket-info {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
+    margin-bottom: 40px;
+}
+
+.ticket-info div {
+    background: #f9fafb;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    padding: 15px 20px;
+}
+
+.ticket-info label {
+    font-size: 12px;
+    color: #6b7280;
+    display: block;
+    margin-bottom: 4px;
+}
+
+.ticket-info span {
+    font-weight: 600;
+    color: #1f2937;
+    font-size: 15px;
+}
+
+/* BARRA DE ESTADO */
+.estado-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+    margin-top: 40px;
+    padding: 0 20px;
+}
+
+.estado-container::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 40px;
+    right: 40px;
+    height: 4px;
+    background-color: #e5e7eb;
+    z-index: 0;
+    transform: translateY(-50%);
+}
+
+.estado-paso {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    width: 33.33%;
+}
+
+.estado-paso .circle {
+    height: 40px;
+    width: 40px;
+    border-radius: 50%;
+    background-color: #e5e7eb;
+    margin: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+    font-weight: 600;
+    font-size: 16px;
+    transition: background-color 0.3s ease-in-out;
+}
+
+.estado-paso.completo .circle {
+    background-color: #22c55e;
+    /* verde */
+}
+
+.estado-paso .label {
+    margin-top: 10px;
+    font-size: 14px;
+    color: #374151;
+}
+
+/* MENSAJE NO ENCONTRADO */
+.no-found {
+    color: #ef4444;
+    font-weight: 600;
+    text-align: center;
+    margin-top: 40px;
+}
+
+#btnRegresar {
+    background: #2563eb;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    padding: 8px 20px;
+    font-weight: 700;
+    font-size: 14px;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+    box-shadow: 0 5px 15px rgba(37, 99, 235, 0.4);
+    transition: all 0.3s ease;
+}
+
+#btnRegresar:hover {
+    background: #1d4ed8;
+    box-shadow: 0 10px 30px rgba(37, 99, 235, 0.6);
+}
+
+@media (max-width: 768px) {
+    .seguimiento-container {
+        margin: 15px;
+        padding: 20px 15px;
+        max-width: 100%;
+    }
+
+    form {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    form input[type="text"],
+    form button {
+        width: 100%;
+        font-size: 14px;
+        padding: 12px 15px;
+    }
+
+    .ticket-info {
+        grid-template-columns: 1fr;
+    }
+
+    /* Reduce un poco el tamaño de texto */
+    .seguimiento-container h2 {
+        font-size: 24px;
+    }
+
+    .ticket-info div {
+        padding: 12px 15px;
+    }
+
+    .ticket-info label {
+        font-size: 11px;
+    }
+
+    .ticket-info span {
+        font-size: 14px;
+    }
+
+    /* Botón regresar: alineado a la derecha sin float, con flexbox */
+    #btnRegresar {
+        padding: 8px 16px;
+        font-size: 13px;
+        display: inline-block;
+        margin-left: auto;
+        /* para que se vaya a la derecha */
+        cursor: pointer;
+    }
+
+    /* Contenedor para botón con flex */
+    .boton-regresar-container {
+        display: flex;
+        justify-content: flex-end;
+        margin-top: 20px;
+    }
+
+    /* Adaptar barra estado a vertical para móviles */
+    .estado-container {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 0 10px;
+        margin-top: 30px;
+        position: relative;
+    }
+
+    .estado-container::before {
+        content: '';
+        position: absolute;
+        top: 40px;
+        left: 20px;
+        width: 4px;
+        height: calc(100% - 80px);
+        background-color: #e5e7eb;
+        z-index: 0;
+        transform: none;
+    }
+
+    .estado-paso {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        margin-bottom: 25px;
+        text-align: left;
+        position: relative;
+        z-index: 1;
+    }
+
+    .estado-paso .circle {
+        margin: 0;
+        flex-shrink: 0;
+        height: 35px;
+        width: 35px;
+        font-size: 14px;
+    }
+
+    .estado-paso .label {
+        font-size: 14px;
+        color: #374151;
+    }
+}

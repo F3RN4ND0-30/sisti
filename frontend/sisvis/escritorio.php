@@ -7,6 +7,29 @@ if (!isset($_SESSION['hd_activo']) || $_SESSION['hd_activo'] !== true) {
     exit();
 }
 ?>
+<?php
+require_once '../../backend/bd/conexion.php';
+
+// Total incidentes HOY
+$stmtHoy = $conexion->prepare("SELECT COUNT(*) AS total FROM tb_incidentes WHERE CAST(fecha_creacion AS DATE) = CAST(GETDATE() AS DATE)");
+$stmtHoy->execute();
+$totalHoy = $stmtHoy->fetch(PDO::FETCH_ASSOC)['total'] ?? 0;
+
+// Incidentes pendientes (estado = 1)
+$stmtPend = $conexion->prepare("SELECT COUNT(*) AS total FROM tb_incidentes WHERE Id_Estados_Incidente = 1");
+$stmtPend->execute();
+$pendientes = $stmtPend->fetch(PDO::FETCH_ASSOC)['total'] ?? 0;
+
+// Incidentes en proceso (estado = 2)
+$stmtProc = $conexion->prepare("SELECT COUNT(*) AS total FROM tb_incidentes WHERE Id_Estados_Incidente = 2");
+$stmtProc->execute();
+$proceso = $stmtProc->fetch(PDO::FETCH_ASSOC)['total'] ?? 0;
+
+// Incidentes resueltos (estado = 3)
+$stmtRes = $conexion->prepare("SELECT COUNT(*) AS total FROM tb_incidentes WHERE Id_Estados_Incidente = 3");
+$stmtRes->execute();
+$resueltos = $stmtRes->fetch(PDO::FETCH_ASSOC)['total'] ?? 0;
+?>
 <!doctype html>
 <html lang="es">
 
@@ -21,6 +44,14 @@ if (!isset($_SESSION['hd_activo']) || $_SESSION['hd_activo'] !== true) {
 
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="icon" type="image/png" href="../../backend/img/logoPisco.png" />
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- DataTables -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
 </head>
 
 <body>
@@ -51,7 +82,7 @@ if (!isset($_SESSION['hd_activo']) || $_SESSION['hd_activo'] !== true) {
             <div class="col-lg-3 col-md-6">
                 <div class="stat-card blue">
                     <i class="material-icons" style="font-size: 40px; color: #3498db;">today</i>
-                    <div class="stat-number">0</div>
+                    <div class="stat-number"><?php echo $totalHoy; ?></div>
                     <h5>Total Incidentes Hoy</h5>
                     <p class="text-muted">Tickets registrados hoy</p>
                 </div>
@@ -60,7 +91,7 @@ if (!isset($_SESSION['hd_activo']) || $_SESSION['hd_activo'] !== true) {
             <div class="col-lg-3 col-md-6">
                 <div class="stat-card red">
                     <i class="material-icons" style="font-size: 40px; color: #e74c3c;">warning</i>
-                    <div class="stat-number">0</div>
+                    <div class="stat-number"><?php echo $pendientes; ?></div>
                     <h5>Incidentes Pendientes</h5>
                     <p class="text-muted">Requieren atención</p>
                 </div>
@@ -69,7 +100,7 @@ if (!isset($_SESSION['hd_activo']) || $_SESSION['hd_activo'] !== true) {
             <div class="col-lg-3 col-md-6">
                 <div class="stat-card orange">
                     <i class="material-icons" style="font-size: 40px; color: #f39c12;">settings</i>
-                    <div class="stat-number">0</div>
+                    <div class="stat-number"><?php echo $proceso; ?></div>
                     <h5>Incidentes en Proceso</h5>
                     <p class="text-muted">Siendo atendidos</p>
                 </div>
@@ -78,7 +109,7 @@ if (!isset($_SESSION['hd_activo']) || $_SESSION['hd_activo'] !== true) {
             <div class="col-lg-3 col-md-6">
                 <div class="stat-card green">
                     <i class="material-icons" style="font-size: 40px; color: #27ae60;">check_circle</i>
-                    <div class="stat-number">0</div>
+                    <div class="stat-number"><?php echo $resueltos; ?></div>
                     <h5>Incidentes Resueltos</h5>
                     <p class="text-muted">Completados exitosamente</p>
                 </div>
@@ -96,43 +127,20 @@ if (!isset($_SESSION['hd_activo']) || $_SESSION['hd_activo'] !== true) {
         </div>
 
         <!-- Módulos del Sistema -->
-        <div class="module-grid">
-            <div class="module-card tickets" onclick="alert('Módulo en desarrollo')">
-                <div class="module-icon">
-                    <i class="material-icons">confirmation_number</i>
-                </div>
-                <h5>Gestión de Tickets</h5>
-                <p>Crear, administrar y dar seguimiento a los tickets de soporte e incidencias reportadas.</p>
-            </div>
-
-            <div class="module-card reports" onclick="alert('Módulo en desarrollo')">
-                <div class="module-icon">
-                    <i class="material-icons">assessment</i>
-                </div>
-                <h5>Reportes y Estadísticas</h5>
-                <p>Generar reportes detallados y visualizar estadísticas de atención y resolución.</p>
-            </div>
-
-            <?php if ($_SESSION['hd_rol'] === 'administrador'): ?>
-                <div class="module-card users" onclick="alert('Módulo en desarrollo')">
-                    <div class="module-icon">
-                        <i class="material-icons">people</i>
-                    </div>
-                    <h5>Gestión de Usuarios</h5>
-                    <p>Administrar técnicos, roles y permisos del sistema de soporte.</p>
-                </div>
-            <?php endif; ?>
-
-            <div class="module-card config" onclick="alert('Módulo en desarrollo')">
-                <div class="module-icon">
-                    <i class="material-icons">settings</i>
-                </div>
-                <h5>Configuración</h5>
-                <p>Personalizar perfil, preferencias y configuraciones del sistema.</p>
-            </div>
-        </div>
+        <?php include '../../backend/php/desk/tabla_incidentes.php'; ?>
 
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            $('.table').DataTable({
+                language: {
+                    url: '//cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json'
+                },
+                responsive: true
+            });
+        });
+    </script>
 
 </body>
 
