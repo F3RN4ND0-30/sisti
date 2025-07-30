@@ -3,8 +3,8 @@ header('Content-Type: application/json');
 
 // Configuración del servicio
 $numruc = '20148421103';
-$numdniusu = '71131433'; // DNI del funcionario autorizado
-$password = '71131433'; // Clave de acceso real o token proporcionado por la entidad
+$numdniusu = '71864348'; // DNI del funcionario autorizado
+$password = '71864348'; // Clave de acceso real o token proporcionado por la entidad
 $maxIntentos = 5;
 $intentos = 0;
 

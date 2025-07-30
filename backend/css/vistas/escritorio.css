@@ -329,7 +329,6 @@ body {
     margin-bottom: 0 !important;
 }
 
-<<<<<<< HEAD
 .table {
     width: 100%;
     border-collapse: collapse;
@@ -386,9 +385,46 @@ body {
     text-align: center;
 }
 
+/* Selector de Estado Editable */
+.estado-select {
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: bold;
+    border: 2px solid transparent;
+    outline: none;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
 
-=======
->>>>>>> origin/main
+/* Colores según estado */
+.estado-select.pendiente {
+    background-color: #ffe8e8;
+    color: #e74c3c;
+    border-color: #e74c3c;
+}
+
+.estado-select.proceso {
+    background-color: #fff3cd;
+    color: #f39c12;
+    border-color: #f39c12;
+}
+
+.estado-select.resuelto {
+    background-color: #e8f5e9;
+    color: #27ae60;
+    border-color: #27ae60;
+}
+
+.estado-select:hover {
+    filter: brightness(0.95);
+}
+
+.estado-select.changed {
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+}
+
+
 /* Animations */
 @keyframes fadeInDown {
     from {

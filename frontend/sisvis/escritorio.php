@@ -7,29 +7,7 @@ if (!isset($_SESSION['hd_activo']) || $_SESSION['hd_activo'] !== true) {
     exit();
 }
 ?>
-<?php
-require_once '../../backend/bd/conexion.php';
 
-// Total incidentes HOY
-$stmtHoy = $conexion->prepare("SELECT COUNT(*) AS total FROM tb_incidentes WHERE CAST(fecha_creacion AS DATE) = CAST(GETDATE() AS DATE)");
-$stmtHoy->execute();
-$totalHoy = $stmtHoy->fetch(PDO::FETCH_ASSOC)['total'] ?? 0;
-
-// Incidentes pendientes (estado = 1)
-$stmtPend = $conexion->prepare("SELECT COUNT(*) AS total FROM tb_incidentes WHERE Id_Estados_Incidente = 1");
-$stmtPend->execute();
-$pendientes = $stmtPend->fetch(PDO::FETCH_ASSOC)['total'] ?? 0;
-
-// Incidentes en proceso (estado = 2)
-$stmtProc = $conexion->prepare("SELECT COUNT(*) AS total FROM tb_incidentes WHERE Id_Estados_Incidente = 2");
-$stmtProc->execute();
-$proceso = $stmtProc->fetch(PDO::FETCH_ASSOC)['total'] ?? 0;
-
-// Incidentes resueltos (estado = 3)
-$stmtRes = $conexion->prepare("SELECT COUNT(*) AS total FROM tb_incidentes WHERE Id_Estados_Incidente = 3");
-$stmtRes->execute();
-$resueltos = $stmtRes->fetch(PDO::FETCH_ASSOC)['total'] ?? 0;
-?>
 <!doctype html>
 <html lang="es">
 
@@ -52,6 +30,8 @@ $resueltos = $stmtRes->fetch(PDO::FETCH_ASSOC)['total'] ?? 0;
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+
+    <script src="../../backend/js/desk/actualizarEstado.js" defer></script>
 </head>
 
 <body>
@@ -77,12 +57,22 @@ $resueltos = $stmtRes->fetch(PDO::FETCH_ASSOC)['total'] ?? 0;
             </div>
         </div>
 
+        <!-- Información del Sistema -->
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="activity-card">
+                    <h4><i class="material-icons">support_agent</i> Sistema de HelpDesk</h4>
+                    <p>El Sistema de HelpDesk de la Municipalidad Provincial de Pisco permite la gestión integral de incidencias y soporte técnico para optimizar la atención ciudadana y mejorar los servicios municipales. Proporciona herramientas para el registro, seguimiento y resolución de tickets de soporte de manera eficiente y organizada.</p>
+                </div>
+            </div>
+        </div>
+
         <!-- Estadísticas -->
         <div class="row">
             <div class="col-lg-3 col-md-6">
                 <div class="stat-card blue">
                     <i class="material-icons" style="font-size: 40px; color: #3498db;">today</i>
-                    <div class="stat-number"><?php echo $totalHoy; ?></div>
+                    <div class="stat-number" id="total-hoy">0</div>
                     <h5>Total Incidentes Hoy</h5>
                     <p class="text-muted">Tickets registrados hoy</p>
                 </div>
@@ -91,7 +81,7 @@ $resueltos = $stmtRes->fetch(PDO::FETCH_ASSOC)['total'] ?? 0;
             <div class="col-lg-3 col-md-6">
                 <div class="stat-card red">
                     <i class="material-icons" style="font-size: 40px; color: #e74c3c;">warning</i>
-                    <div class="stat-number"><?php echo $pendientes; ?></div>
+                    <div class="stat-number" id="pendientes">0</div>
                     <h5>Incidentes Pendientes</h5>
                     <p class="text-muted">Requieren atención</p>
                 </div>
@@ -100,7 +90,7 @@ $resueltos = $stmtRes->fetch(PDO::FETCH_ASSOC)['total'] ?? 0;
             <div class="col-lg-3 col-md-6">
                 <div class="stat-card orange">
                     <i class="material-icons" style="font-size: 40px; color: #f39c12;">settings</i>
-                    <div class="stat-number"><?php echo $proceso; ?></div>
+                    <div class="stat-number" id="proceso">0</div>
                     <h5>Incidentes en Proceso</h5>
                     <p class="text-muted">Siendo atendidos</p>
                 </div>
@@ -109,19 +99,9 @@ $resueltos = $stmtRes->fetch(PDO::FETCH_ASSOC)['total'] ?? 0;
             <div class="col-lg-3 col-md-6">
                 <div class="stat-card green">
                     <i class="material-icons" style="font-size: 40px; color: #27ae60;">check_circle</i>
-                    <div class="stat-number"><?php echo $resueltos; ?></div>
+                    <div class="stat-number" id="resueltos">0</div>
                     <h5>Incidentes Resueltos</h5>
                     <p class="text-muted">Completados exitosamente</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- Información del Sistema -->
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="activity-card">
-                    <h4><i class="material-icons">support_agent</i> Sistema de HelpDesk</h4>
-                    <p>El Sistema de HelpDesk de la Municipalidad Provincial de Pisco permite la gestión integral de incidencias y soporte técnico para optimizar la atención ciudadana y mejorar los servicios municipales. Proporciona herramientas para el registro, seguimiento y resolución de tickets de soporte de manera eficiente y organizada.</p>
                 </div>
             </div>
         </div>

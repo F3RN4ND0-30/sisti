@@ -41,24 +41,19 @@ try {
             </thead>
             <tbody>
                 <?php foreach ($incidentes as $row): ?>
+                    <?php $estado = strtolower(trim($row['Estado'])); ?>
                     <tr>
                         <td><?= $row['Id_Incidentes'] ?></td>
                         <td><?= $row['Ticket'] ?></td>
                         <td><?= $row['Area'] ?></td>
                         <td><?= $row['Descripcion'] ?></td>
                         <td style="text-align: center;">
-                            <?php
-                            $estado = strtolower($row['Estado']);
-                            if ($estado === 'pendiente') {
-                                echo '<span class="estado-tag estado-pendiente">Pendiente</span>';
-                            } elseif ($estado === 'en proceso') {
-                                echo '<span class="estado-tag estado-proceso">En Proceso</span>';
-                            } elseif ($estado === 'resuelto') {
-                                echo '<span class="estado-tag estado-resuelto">Resuelto</span>';
-                            } else {
-                                echo '<span class="estado-tag">' . htmlspecialchars($row['Estado']) . '</span>';
-                            }
-                            ?>
+                            <select class="estado-select <?= $estado ?>" onchange="actualizarEstado(this, <?= $row['Id_Incidentes'] ?>)">
+                                <option value="pendiente" <?= $estado === 'pendiente' ? 'selected' : '' ?>>Pendiente</option>
+                                <option value="proceso" <?= $estado === 'en proceso' ? 'selected' : '' ?>>En Proceso</option>
+                                <option value="resuelto" <?= $estado === 'resuelto' ? 'selected' : '' ?>>Resuelto</option>
+
+                            </select>
                         </td>
                         <td><?= $row['Fecha_Creacion'] ?></td>
                     </tr>
