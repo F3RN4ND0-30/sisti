@@ -1,0 +1,166 @@
+/* ficha_mantenimiento.css - Inspirado en el dashboard */
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #f5f7fa;
+    color: #2c3e50;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+h2 {
+    margin-top: 40px;
+    font-size: 28px;
+    font-weight: 600;
+    color: #1d3557;
+    border-bottom: 2px solid #2563eb;
+    padding-bottom: 10px;
+    text-align: center;
+    animation: fadeInDown 0.6s ease;
+}
+
+form {
+    background: white;
+    padding: 30px;
+    margin-top: 30px;
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+    width: 100%;
+    max-width: 700px;
+    animation: fadeInUp 0.7s ease;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+td {
+    padding: 12px 10px;
+    vertical-align: top;
+    font-weight: 500;
+    color: #333;
+}
+
+input[type="text"],
+textarea,
+select {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 14px;
+    transition: border-color 0.3s ease;
+    font-family: inherit;
+}
+
+input[type="text"]:focus,
+textarea:focus,
+select:focus {
+    border-color: #2563eb;
+    outline: none;
+}
+
+textarea {
+    resize: vertical;
+    min-height: 80px;
+}
+
+button[type="submit"] {
+    background: linear-gradient(135deg, #2563eb, #1d4ed8);
+    color: white;
+    padding: 12px 25px;
+    font-size: 16px;
+    font-weight: bold;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    box-shadow: 0 5px 15px rgba(37, 99, 235, 0.3);
+    transition: background 0.3s ease, transform 0.2s ease;
+    margin-top: 20px;
+    display: block;
+    width: 100%;
+    max-width: 300px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+button[type="submit"]:hover {
+    background: #1e40af;
+    transform: translateY(-2px);
+}
+
+button[type="submit"]:active {
+    transform: scale(0.97);
+}
+
+.form-container {
+    max-width: 800px;
+    width: 90%;
+    margin: 0 auto;
+    padding: 40px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Animaciones */
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+    h2 {
+        font-size: 22px;
+        margin-top: 30px;
+    }
+
+    form {
+        padding: 20px;
+        margin-top: 20px;
+    }
+
+    td {
+        display: block;
+        width: 100%;
+        padding: 8px 0;
+    }
+
+    td:first-child {
+        font-weight: bold;
+        margin-bottom: 5px;
+    }
+
+    table {
+        display: block;
+    }
+
+    button[type="submit"] {
+        width: 100%;
+        font-size: 15px;
+    }
+}

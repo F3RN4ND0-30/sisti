@@ -1,0 +1,113 @@
+/* fichas.css - inspirado en dashboard.css */
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f5f7fa;
+    color: #2c3e50;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Título principal */
+h2 {
+    margin-top: 40px;
+    font-size: 30px;
+    font-weight: 600;
+    color: #1d3557;
+    text-align: center;
+    border-bottom: 2px solid #2563eb;
+    padding-bottom: 10px;
+    animation: fadeInDown 0.5s ease;
+}
+
+/* Contenedor principal */
+.ficha-container {
+    margin-top: 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    align-items: center;
+    width: 100%;
+    max-width: 600px;
+}
+
+/* Botones */
+.boton-ficha {
+    background: linear-gradient(135deg, #2563eb, #1d4ed8);
+    color: white;
+    padding: 15px 30px;
+    font-size: 16px;
+    font-weight: bold;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    box-shadow: 0 5px 15px rgba(37, 99, 235, 0.3);
+    transition: all 0.3s ease;
+    width: 100%;
+    max-width: 400px;
+    animation: fadeInUp 0.6s ease forwards;
+    opacity: 0;
+}
+
+.boton-ficha:hover {
+    background: #1e40af;
+    transform: translateY(-3px);
+}
+
+.boton-ficha:active {
+    transform: scale(0.98);
+}
+
+/* Animaciones */
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.boton-ficha:nth-child(1) {
+    animation-delay: 0.3s;
+}
+
+.boton-ficha:nth-child(2) {
+    animation-delay: 0.5s;
+}
+
+.boton-ficha:nth-child(3) {
+    animation-delay: 0.7s;
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+    h2 {
+        font-size: 24px;
+        padding: 0 10px;
+    }
+
+    .boton-ficha {
+        font-size: 14px;
+        padding: 12px 24px;
+        max-width: 90%;
+    }
+}
