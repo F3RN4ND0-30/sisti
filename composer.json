@@ -19,9 +19,9 @@
     }
   ],
   "require": {
-    "php": ">=7.4"
+    "php": ">=7.4",
+    "phpoffice/phpspreadsheet": "^4.5"
   },
-  "require-dev": {},
   "config": {
     "optimize-autoloader": true
   }

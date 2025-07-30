@@ -1,7 +1,7 @@
 <?php
 
 // Configuración
-$servidor = 'DESKTOP-B340BGP\SQLEXPRESS';
+$servidor = 'DESKTOP-V7Q6881\SQLEXPRESS';
 $basedatos = 'DB_HELPDESK';
 
 // Modo de autenticación (cambiar aquí)

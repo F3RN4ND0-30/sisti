@@ -34,7 +34,7 @@ function is_active_hd($path_fragment)
         <ul class="list-unstyled components">
             <!-- Dashboard -->
             <li <?php echo is_active_hd('/sisvis/escritorio.php') ? 'class="active"' : ''; ?>>
-                <a href="../sisvis/escritorio.php" class="dashboard">
+                <a href="../../sisvis/escritorio.php" class="dashboard">
                     <i class="material-icons">dashboard</i>
                     <span>Inicio</span>
                 </a>
@@ -72,8 +72,8 @@ function is_active_hd($path_fragment)
                     <li <?php echo is_active_hd('/reportes/general.php') ? 'class="active"' : ''; ?>>
                         <a href="../reportes/general.php">Reporte General</a>
                     </li>
-                    <li <?php echo is_active_hd('/reportes/atencion.php') ? 'class="active"' : ''; ?>>
-                        <a href="../reportes/atencion.php">Reporte de Atención</a>
+                    <li <?php echo is_active_hd('/reportes/reporte_atencion/fichas.php') ? 'class="active"' : ''; ?>>
+                        <a href="../reporte_atencion/fichas.php">Reporte de Atención</a>
                     </li>
                     <li <?php echo is_active_hd('/reportes/estadisticas.php') ? 'class="active"' : ''; ?>>
                         <a href="../reportes/estadisticas.php">Estadísticas</a>
