@@ -41,23 +41,23 @@ function is_active_hd($path_fragment)
             </li>
 
             <!-- Gestión de Tickets -->
-            <li class="dropdown <?php echo is_active_hd('/tickets/') ? 'active' : ''; ?>">
+            <li class="dropdown <?php echo is_active_hd('/tickets/gestickets/') ? 'active' : ''; ?>">
                 <a href="#ticketsSubmenu" class="dropdown-toggle" aria-expanded="false">
                     <i class="material-icons">confirmation_number</i>
                     <span>Gestión de Tickets</span>
                 </a>
                 <ul class="collapse list-unstyled menu" id="ticketsSubmenu">
-                    <li <?php echo is_active_hd('/tickets/crear.php') ? 'class="active"' : ''; ?>>
-                        <a href="../tickets/crear.php">Crear Ticket</a>
+                    <li <?php echo is_active_hd('/tickets/gestickets/crear-ticket.php') ? 'class="active"' : ''; ?>>
+                        <a href="../tickets/gestickets/crear-ticket.php">Crear Ticket</a>
                     </li>
-                    <li <?php echo is_active_hd('/tickets/mis-tickets.php') ? 'class="active"' : ''; ?>>
-                        <a href="../tickets/mis-tickets.php">Mis Tickets</a>
+                    <li <?php echo is_active_hd('/tickets/gestickets/mis-tickets.php') ? 'class="active"' : ''; ?>>
+                        <a href="../tickets/gestickets/mis-tickets.php">Mis Tickets</a>
                     </li>
-                    <li <?php echo is_active_hd('/tickets/todos.php') ? 'class="active"' : ''; ?>>
-                        <a href="../tickets/todos.php">Todos los Tickets</a>
+                    <li <?php echo is_active_hd('/tickets/gestickets/todos-tickets.php') ? 'class="active"' : ''; ?>>
+                        <a href="../tickets/gestickets/todos-tickets.php">Todos los Tickets</a>
                     </li>
-                    <li <?php echo is_active_hd('/tickets/seguimiento.php') ? 'class="active"' : ''; ?>>
-                        <a href="../tickets/seguimiento.php">Seguimiento</a>
+                    <li <?php echo is_active_hd('/tickets/gestickets/seguimiento-tickets.php') ? 'class="active"' : ''; ?>>
+                        <a href="../tickets/gestickets/seguimiento-tickets.php">Seguimiento</a>
                     </li>
                 </ul>
             </li>
@@ -195,7 +195,7 @@ function is_active_hd($path_fragment)
                                         <hr class="dropdown-divider">
                                     </li>
                                     <li>
-                                        <a class="dropdown-item text-danger" href="../logout.php">
+                                        <a class="dropdown-item text-danger" href="../../logout.php">
                                             <i class="material-icons">power_settings_new</i>
                                             Cerrar Sesión
                                         </a>
