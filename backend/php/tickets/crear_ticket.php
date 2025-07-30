@@ -50,20 +50,31 @@ try {
     $stmtTicket->execute([':codigo' => $nuevoCodigo]);
     $ticketId = $conexion->lastInsertId();
 
-    // Insertar en tb_Incidentes
+    // Obtener IP del cliente
+    function obtenerIPCliente()
+    {
+        if (!empty($_SERVER['HTTP_CLIENT_IP'])) return $_SERVER['HTTP_CLIENT_IP'];
+        if (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) return explode(',', $_SERVER['HTTP_X_FORWARDED_FOR'])[0];
+        return $_SERVER['REMOTE_ADDR'] ?? '0.0.0.0';
+    }
+
+    $ip_pc = obtenerIPCliente();
+
+    // Insertar en tb_Incidentes con IP
     $stmtIncidente = $conexion->prepare("
-    INSERT INTO tb_Incidentes (
-        Id_Tickets, Id_Usuarios, Id_UsuariosExternos, Id_Areas, Descripcion, Id_Estados_Incidente, Fecha_Creacion
-    ) VALUES (
-        :idTicket, NULL, :idUsuarioExterno, :idArea, :descripcion, :estado, GETDATE()
-    )
-");
+        INSERT INTO tb_Incidentes (
+            Id_Tickets, Id_Usuarios, Id_UsuariosExternos, Id_Areas, Descripcion, Id_Estados_Incidente, Fecha_Creacion, Ip_PC
+        ) VALUES (
+            :idTicket, NULL, :idUsuarioExterno, :idArea, :descripcion, :estado, GETDATE(), :ip_pc
+        )
+        ");
     $stmtIncidente->execute([
         ':idTicket' => $ticketId,
         ':idUsuarioExterno' => $usuarioId,
         ':idArea' => $area,
         ':descripcion' => $descripcion,
-        ':estado' => 1
+        ':estado' => 1,
+        ':ip_pc' => $ip_pc
     ]);
 
     $conexion->commit();
