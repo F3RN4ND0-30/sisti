@@ -1,5 +1,5 @@
 <?php
-require_once $_SERVER['DOCUMENT_ROOT'] . '/HelpDesk_MPP2.0/backend/bd/conexion.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/sishelpdesk/backend/bd/conexion.php';
 
 header('Content-Type: application/json');
 

@@ -18,6 +18,9 @@ function is_active_hd($path_fragment)
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 <!-- Material Icons -->
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<!-- Rutas absolutas -->
+<link rel="stylesheet" href="/sishelpdesk/backend/css/navbar/navbar.css">
+<link rel="icon" type="image/png" href="/sishelpdesk/backend/img/logoPisco.png" />
 
 <div class="wrapper">
     <div class="body-overlay"></div>
@@ -26,7 +29,7 @@ function is_active_hd($path_fragment)
     <nav id="sidebar">
         <div class="sidebar-header">
             <h3>
-                <img src="/helpdesk_mpp2.0/backend/img/logoPisco.png" class="img-fluid" />
+                <img src="/sishelpdesk/backend/img/logoPisco.png" class="img-fluid" />
                 <span class="sidebar-text">HELPDESK</span>
             </h3>
         </div>
@@ -34,7 +37,7 @@ function is_active_hd($path_fragment)
         <ul class="list-unstyled components">
             <!-- Dashboard -->
             <li <?php echo is_active_hd('/sisvis/escritorio.php') ? 'class="active"' : ''; ?>>
-                <a href="../../sisvis/escritorio.php" class="dashboard">
+                <a href="/sishelpdesk/frontend/sisvis/escritorio.php" class="dashboard">
                     <i class="material-icons">dashboard</i>
                     <span>Inicio</span>
                 </a>
@@ -48,16 +51,16 @@ function is_active_hd($path_fragment)
                 </a>
                 <ul class="collapse list-unstyled menu" id="ticketsSubmenu">
                     <li <?php echo is_active_hd('/tickets/gestickets/crear-ticket.php') ? 'class="active"' : ''; ?>>
-                        <a href="../tickets/gestickets/crear-ticket.php">Crear Ticket</a>
+                        <a href="/sishelpdesk/frontend/tickets/gestickets/crear-ticket.php">Crear Ticket</a>
                     </li>
                     <li <?php echo is_active_hd('/tickets/gestickets/mis-tickets.php') ? 'class="active"' : ''; ?>>
-                        <a href="../tickets/gestickets/mis-tickets.php">Mis Tickets</a>
+                        <a href="/sishelpdesk/frontend/tickets/gestickets/mis-tickets.php">Mis Tickets</a>
                     </li>
                     <li <?php echo is_active_hd('/tickets/gestickets/todos-tickets.php') ? 'class="active"' : ''; ?>>
-                        <a href="../tickets/gestickets/todos-tickets.php">Todos los Tickets</a>
+                        <a href="/sishelpdesk/frontend/tickets/gestickets/todos-tickets.php">Todos los Tickets</a>
                     </li>
                     <li <?php echo is_active_hd('/tickets/gestickets/seguimiento-tickets.php') ? 'class="active"' : ''; ?>>
-                        <a href="../tickets/gestickets/seguimiento-tickets.php">Seguimiento</a>
+                        <a href="/sishelpdesk/frontend/tickets/gestickets/seguimiento-tickets.php">Seguimiento</a>
                     </li>
                 </ul>
             </li>
@@ -70,13 +73,13 @@ function is_active_hd($path_fragment)
                 </a>
                 <ul class="collapse list-unstyled menu" id="reportesSubmenu">
                     <li <?php echo is_active_hd('/reportes/general.php') ? 'class="active"' : ''; ?>>
-                        <a href="/helpdesk_mpp2.0/frontend/reportes/general.php">Reporte General</a>
+                        <a href="/sishelpdesk/frontend/reportes/general.php">Reporte General</a>
                     </li>
-                    <li <?php echo is_active_hd('/reportes/reporte_atencion/fichas.php') ? 'class="active"' : ''; ?>>
-                        <a href="/helpdesk_mpp2.0/frontend/reportes/reporte_atencion/fichas.php">Reporte de Atención</a>
+                    <li <?php echo is_active_hd('/reportes/atencion.php') ? 'class="active"' : ''; ?>>
+                        <a href="/sishelpdesk/frontend/reportes/atencion.php">Reporte de Atención</a>
                     </li>
                     <li <?php echo is_active_hd('/reportes/estadisticas.php') ? 'class="active"' : ''; ?>>
-                        <a href="../reportes/estadisticas.php">Estadísticas</a>
+                        <a href="/sishelpdesk/frontend/reportes/estadisticas.php">Estadísticas</a>
                     </li>
                 </ul>
             </li>
@@ -90,13 +93,13 @@ function is_active_hd($path_fragment)
                     </a>
                     <ul class="collapse list-unstyled menu" id="adminSubmenu">
                         <li <?php echo is_active_hd('/admin/usuarios.php') ? 'class="active"' : ''; ?>>
-                            <a href="../admin/usuarios.php">Gestión de Usuarios</a>
+                            <a href="/sishelpdesk/frontend/admin/usuarios.php">Gestión de Usuarios</a>
                         </li>
                         <li <?php echo is_active_hd('/admin/equipos.php') ? 'class="active"' : ''; ?>>
-                            <a href="../admin/equipos.php">Registro de Equipos</a>
+                            <a href="/sishelpdesk/frontend/admin/equipos.php">Registro de Equipos</a>
                         </li>
                         <li <?php echo is_active_hd('/admin/categorias.php') ? 'class="active"' : ''; ?>>
-                            <a href="../admin/categorias.php">Categorías</a>
+                            <a href="/sishelpdesk/frontend/admin/categorias.php">Categorías</a>
                         </li>
                     </ul>
                 </li>
@@ -110,11 +113,11 @@ function is_active_hd($path_fragment)
                 </a>
                 <ul class="collapse list-unstyled menu" id="configSubmenu">
                     <li <?php echo is_active_hd('/configuracion/perfil.php') ? 'class="active"' : ''; ?>>
-                        <a href="../configuracion/perfil.php">Mi Perfil</a>
+                        <a href="/sishelpdesk/frontend/configuracion/perfil.php">Mi Perfil</a>
                     </li>
                     <?php if ($rol === 'administrador'): ?>
                         <li <?php echo is_active_hd('/configuracion/sistema.php') ? 'class="active"' : ''; ?>>
-                            <a href="../configuracion/sistema.php">Configuración del Sistema</a>
+                            <a href="/sishelpdesk/frontend/configuracion/sistema.php">Configuración del Sistema</a>
                         </li>
                     <?php endif; ?>
                 </ul>
@@ -127,7 +130,7 @@ function is_active_hd($path_fragment)
                         <i class="material-icons">power_settings_new</i>Cerrar Sesión</a>
                     <ul class="collapse list-unstyled menu" id="logoutSubmenu">
                         <li>
-                            <a href="../logout.php" style="color: #e74c3c;">Cerrar Sesión</a>
+                            <a href="/sishelpdesk/logout.php" style="color: #e74c3c;">Cerrar Sesión</a>
                         </li>
                     </ul>
                 </li>
@@ -145,7 +148,7 @@ function is_active_hd($path_fragment)
                         <i class="material-icons">menu</i>
                     </button>
 
-                    <a class="navbar-brand" href="../sisvis/escritorio.php">
+                    <a class="navbar-brand" href="/sishelpdesk/frontend/sisvis/escritorio.php">
                         <i class="material-icons">support_agent</i>
                         HelpDesk - Panel Principal
                     </a>
@@ -180,13 +183,13 @@ function is_active_hd($path_fragment)
                                         <hr class="dropdown-divider">
                                     </li>
                                     <li>
-                                        <a class="dropdown-item" href="../configuracion/perfil.php">
+                                        <a class="dropdown-item" href="/sishelpdesk/frontend/configuracion/perfil.php">
                                             <i class="material-icons">account_circle</i>
                                             Mi Perfil
                                         </a>
                                     </li>
                                     <li>
-                                        <a class="dropdown-item" href="../configuracion/perfil.php">
+                                        <a class="dropdown-item" href="/sishelpdesk/frontend/configuracion/perfil.php">
                                             <i class="material-icons">settings</i>
                                             Configuración
                                         </a>
@@ -195,7 +198,7 @@ function is_active_hd($path_fragment)
                                         <hr class="dropdown-divider">
                                     </li>
                                     <li>
-                                        <a class="dropdown-item text-danger" href="../../logout.php">
+                                        <a class="dropdown-item text-danger" href="/sishelpdesk/logout.php">
                                             <i class="material-icons">power_settings_new</i>
                                             Cerrar Sesión
                                         </a>

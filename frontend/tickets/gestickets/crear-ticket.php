@@ -19,9 +19,6 @@ require_once '../../../backend/bd/conexion.php';
 
     <!-- CSS -->
     <link rel="stylesheet" href="../../../backend/css/vistas/escritorio.css">
-    <link rel="stylesheet" href="../../../backend/css/navbar/navbar.css">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link rel="icon" type="image/png" href="../../../backend/img/logoPisco.png" />
 
     <style>
         .form-container {
@@ -214,12 +211,12 @@ require_once '../../../backend/bd/conexion.php';
                                 <option value="">Seleccione un área</option>
                                 <?php
                                 try {
-                                    $stmt = $conexion->prepare("SELECT IdArea, Nombre FROM tb_Areas WHERE Activo = 1 ORDER BY Nombre");
+                                    $stmt = $conexion->prepare("SELECT Id_Areas, Nombre FROM tb_Areas WHERE Estado = 1 ORDER BY Nombre");
                                     $stmt->execute();
                                     $areas = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                     foreach ($areas as $area) {
-                                        $selected = (isset($idArea) && $idArea == $area['IdArea']) ? 'selected' : '';
-                                        echo "<option value='" . $area['IdArea'] . "' $selected>" . htmlspecialchars($area['Nombre']) . "</option>";
+                                        $selected = (isset($idArea) && $idArea == $area['Id_Areas']) ? 'selected' : '';
+                                        echo "<option value='" . $area['Id_Areas'] . "' $selected>" . htmlspecialchars($area['Nombre']) . "</option>";
                                     }
                                 } catch (PDOException $e) {
                                     echo "<option value=''>Error al cargar áreas</option>";

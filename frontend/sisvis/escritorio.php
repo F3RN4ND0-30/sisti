@@ -18,9 +18,6 @@ if (!isset($_SESSION['hd_activo']) || $_SESSION['hd_activo'] !== true) {
 
     <!-- CSS Básico -->
     <link rel="stylesheet" href="../../backend/css/vistas/escritorio.css">
-    <link rel="stylesheet" href="../../backend/css/navbar/navbar.css">
-
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="icon" type="image/png" href="../../backend/img/logoPisco.png" />
 
     <!-- jQuery -->
