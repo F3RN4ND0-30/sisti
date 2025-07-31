@@ -11,6 +11,12 @@ body {
     align-items: center;
 }
 
+.main-content {
+    padding: 30px;
+    max-width: 100%;
+    overflow-x: hidden;
+}
+
 /* Título principal */
 h2 {
     margin-top: 40px;
@@ -23,22 +29,54 @@ h2 {
     animation: fadeInDown 0.5s ease;
 }
 
+.ficha-layout {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 50px;
+    flex-wrap: wrap;
+    /* para responsividad */
+    margin-top: 40px;
+}
+
 /* Contenedor principal */
 .ficha-container {
-    margin-top: 40px;
     display: flex;
     flex-direction: column;
-    gap: 20px;
-    align-items: center;
+    align-items: flex-start; /* alinea botones a la izquierda */
+    gap: 0; /* puedes usar gap o margin-bottom en botones */
     width: 100%;
-    max-width: 600px;
+    max-width: 400px;
+}
+
+.ficha-imagen img {
+    max-width: 400px;
+    width: 100%;
+    height: auto;
+    border-radius: 12px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    animation: fadeInRight 0.8s ease;
+    margin-left: 80px
+}
+
+/* Animación para la imagen */
+@keyframes fadeInRight {
+    from {
+        opacity: 0;
+        transform: translateX(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
 }
 
 /* Botones */
 .boton-ficha {
     background: linear-gradient(135deg, #2563eb, #1d4ed8);
     color: white;
-    padding: 15px 30px;
+    padding: 20px 35px;
     font-size: 16px;
     font-weight: bold;
     border: none;
@@ -48,6 +86,9 @@ h2 {
     transition: all 0.3s ease;
     width: 100%;
     max-width: 400px;
+    margin: 0 auto;
+    display: block;
+    margin-bottom: 50px;
     animation: fadeInUp 0.6s ease forwards;
     opacity: 0;
 }
@@ -59,6 +100,107 @@ h2 {
 
 .boton-ficha:active {
     transform: scale(0.98);
+}
+
+/* Animaciones con delay */
+.delay-1 {
+    animation-delay: 0.3s;
+}
+
+.delay-2 {
+    animation-delay: 0.5s;
+}
+
+.delay-3 {
+    animation-delay: 0.7s;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.welcome-card {
+    background: white;
+    border-radius: 15px;
+    padding: 25px 30px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    max-width: 700px;
+    width: 90%;
+    text-align: center;
+    margin-top: 20px;
+    animation: fadeInUp 0.5s ease;
+}
+
+.welcome-card h3 {
+    color: #1d3557;
+    margin-bottom: 10px;
+}
+
+.welcome-card p {
+    color: #555;
+}
+
+.col-md-8,
+.col-md-4,
+.col-lg-3,
+.col-md-6,
+.col-lg-12 {
+    position: relative;
+    width: 100%;
+    padding-right: 15px;
+    padding-left: 15px;
+}
+
+.col-lg-12 {
+    flex: 0 0 100%;
+    max-width: 100%;
+}
+
+.row {
+    display: flex;
+    flex-wrap: wrap;
+    margin-right: -15px;
+    margin-left: -15px;
+}
+
+/* Activity card */
+.activity-card {
+    background: white;
+    margin-top: 40px;
+    border-radius: 15px;
+    padding: 25px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+    animation: fadeInUp 0.8s ease-out 0.5s both;
+    border: 1px solid #f0f0f0;
+}
+
+.activity-card h4 {
+    color: #2c3e50;
+    margin-bottom: 15px;
+    font-size: 22px;
+    display: flex;
+    align-items: center;
+}
+
+.activity-card h4 i {
+    margin-right: 10px;
+    color: #2563eb;
+    vertical-align: middle;
+}
+
+.activity-card p {
+    line-height: 1.6;
+    color: #555;
+    margin: 0;
 }
 
 /* Animaciones */
