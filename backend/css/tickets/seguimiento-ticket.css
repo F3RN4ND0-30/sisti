@@ -270,6 +270,25 @@ form button:hover::before {
     box-shadow: 0 10px 30px rgba(37, 99, 235, 0.6);
 }
 
+#btnRegresarFrontend {
+    background: #2563eb;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    padding: 8px 20px;
+    font-weight: 700;
+    font-size: 14px;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+    box-shadow: 0 5px 15px rgba(37, 99, 235, 0.4);
+    transition: all 0.3s ease;
+}
+
+#btnRegresarFrontend:hover {
+    background: #1d4ed8;
+    box-shadow: 0 10px 30px rgba(37, 99, 235, 0.6);
+}
+
 @media (max-width: 768px) {
     .seguimiento-container {
         margin: 15px;
