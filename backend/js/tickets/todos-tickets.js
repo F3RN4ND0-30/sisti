@@ -419,7 +419,7 @@ function cambiarEstadoDirecto(selectElement) {
   showLoading();
 
   // Petición AJAX
-  fetch("/sishelpdesk/backend/php/desk/actualizar_estado.php", {
+  fetch("/helpdesk_mpp2.0/backend/php/desk/actualizar_estado.php", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(data),

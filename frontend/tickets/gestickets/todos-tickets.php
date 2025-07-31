@@ -18,9 +18,9 @@ require_once '../../../backend/bd/conexion.php';
     <title>Todos los Tickets | HelpDesk MPP</title>
 
     <!-- CSS -->
-    <link rel="stylesheet" href="/sishelpdesk/backend/css/vistas/gestickets/todos-tickets.css">
+    <link rel="stylesheet" href="/helpdesk_mpp2.0/backend/css/vistas/gestickets/todos-tickets.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link rel="icon" type="image/png" href="/sishelpdesk/backend/img/logoPisco.png" />
+    <link rel="icon" type="image/png" href="/helpdesk_mpp2.0/backend/img/logoPisco.png" />
 
     <!-- DataTables CSS -->
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
@@ -220,7 +220,7 @@ require_once '../../../backend/bd/conexion.php';
                     <i class="material-icons">confirmation_number</i>
                     Lista de Tickets
                 </h3>
-                <a href="/sishelpdesk/frontend/tickets/gestickets/crear-ticket.php" class="btn btn-primary hover-lift">
+                <a href="/helpdesk_mpp2.0/frontend/tickets/gestickets/crear-ticket.php" class="btn btn-primary hover-lift">
                     <i class="material-icons">add</i>
                     Nuevo Ticket
                 </a>
@@ -364,7 +364,7 @@ require_once '../../../backend/bd/conexion.php';
     <script src="https://cdn.jsdelivr.net/npm/selectize@0.15.2/dist/js/selectize.min.js"></script>
 
     <!-- Sistema de filtros avanzados -->
-    <script src="/sishelpdesk/backend/js/tickets/todos-tickets.js"></script>
+    <script src="/helpdesk_mpp2.0/backend/js/tickets/todos-tickets.js"></script>
 
 
 </body>
