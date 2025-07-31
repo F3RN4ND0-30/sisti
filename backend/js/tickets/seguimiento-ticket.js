@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
         resultadoDiv.innerHTML = 'Cargando...';
 
         try {
-            const res = await fetch(`../../backend/php/api/seguimiento_ticket.php?ticket=${encodeURIComponent(ticket)}`);
+            const res = await fetch(`/helpdesk_mpp2.0/backend/php/api/seguimiento_ticket.php?ticket=${encodeURIComponent(ticket)}`);
             const data = await res.json();
 
             if (!data.success) {
@@ -62,8 +62,16 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    document.getElementById('btnRegresar').addEventListener('click', () => {
-        // Cambia la URL a la raíz del programa, ajusta si es otra ruta
-        window.location.href = '/helpdesk_mpp2.0/';
-    });
+    function agregarRedireccion(idBoton, urlDestino) {
+        const btn = document.getElementById(idBoton);
+        if (btn) {
+            btn.addEventListener('click', () => {
+                window.location.href = urlDestino;
+            });
+        }
+    }
+
+    agregarRedireccion('btnRegresar', '/helpdesk_mpp2.0/');
+    agregarRedireccion('btnRegresarFrontend', '/helpdesk_mpp2.0/frontend/sisvis/escritorio.php');
+
 });

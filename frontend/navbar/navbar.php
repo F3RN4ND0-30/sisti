@@ -34,7 +34,7 @@ function is_active_hd($path_fragment)
         <ul class="list-unstyled components">
             <!-- Dashboard -->
             <li <?php echo is_active_hd('/sisvis/escritorio.php') ? 'class="active"' : ''; ?>>
-                <a href="../../sisvis/escritorio.php" class="dashboard">
+                <a href="/helpdesk_mpp2.0/frontend/sisvis/escritorio.php" class="dashboard">
                     <i class="material-icons">dashboard</i>
                     <span>Inicio</span>
                 </a>
@@ -48,7 +48,7 @@ function is_active_hd($path_fragment)
                 </a>
                 <ul class="collapse list-unstyled menu" id="ticketsSubmenu">
                     <li <?php echo is_active_hd('/tickets/gestickets/crear-ticket.php') ? 'class="active"' : ''; ?>>
-                        <a href="../tickets/gestickets/crear-ticket.php">Crear Ticket</a>
+                        <a href="/helpdesk_mpp2.0/frontend/tickets/gestickets/crear-ticket.php">Crear Ticket</a>
                     </li>
                     <li <?php echo is_active_hd('/tickets/gestickets/mis-tickets.php') ? 'class="active"' : ''; ?>>
                         <a href="../tickets/gestickets/mis-tickets.php">Mis Tickets</a>
