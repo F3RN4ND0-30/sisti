@@ -73,10 +73,10 @@ function is_active_hd($path_fragment)
                 </a>
                 <ul class="collapse list-unstyled menu" id="reportesSubmenu">
                     <li <?php echo is_active_hd('/reportes/general.php') ? 'class="active"' : ''; ?>>
-                        <a href="/helpdesk_mpp2.0/frontend/reportes/general.php">Reporte General</a>
+                        <a href="/helpdesk_mpp2.0/frontend/reportes/reporte_dias/reporte_ticket.php">Reporte General</a>
                     </li>
                     <li <?php echo is_active_hd('/reportes/atencion.php') ? 'class="active"' : ''; ?>>
-                        <a href="/helpdesk_mpp2.0/frontend/reportes/atencion.php">Reporte de Atención</a>
+                        <a href="/helpdesk_mpp2.0/frontend/reportes/reporte_atencion/fichas.php">Reporte de Atención</a>
                     </li>
                     <li <?php echo is_active_hd('/reportes/estadisticas.php') ? 'class="active"' : ''; ?>>
                         <a href="/helpdesk_mpp2.0/frontend/reportes/estadisticas.php">Estadísticas</a>
