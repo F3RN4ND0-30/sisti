@@ -46,6 +46,9 @@ if (!isset($_SESSION['hd_activo']) || $_SESSION['hd_activo'] !== true) {
                 <div class="col-md-8">
                     <h2>¡Bienvenido, <?php echo $_SESSION['hd_nombres']; ?>!</h2>
                     <p class="mb-0">Sistema de HelpDesk - Gestión de Incidencias y Soporte Técnico</p>
+                    <?php
+                    date_default_timezone_set('America/Lima');
+                    ?>
                     <small>Municipalidad Provincial de Pisco | <?php echo date('d/m/Y H:i'); ?></small>
                 </div>
                 <div class="col-md-4 text-right">
@@ -117,7 +120,10 @@ if (!isset($_SESSION['hd_activo']) || $_SESSION['hd_activo'] !== true) {
                 language: {
                     url: '//cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json'
                 },
-                responsive: true
+                responsive: true,
+                order: [
+                    [5, 'desc']
+                ]
             });
         });
     </script>
