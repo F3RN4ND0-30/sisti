@@ -79,7 +79,7 @@ function is_active_hd($path_fragment)
                         <a href="/sisti/frontend/reportes/reporte_atencion/fichas.php">Reporte de Atención</a>
                     </li>
                     <li <?php echo is_active_hd('/reportes/estadisticas.php') ? 'class="active"' : ''; ?>>
-                        <a href="/sisti/frontend/reportes/estadisticas.php">Estadísticas</a>
+                        <a href="/sisti/frontend/reportes/estadisticas/estadisticas.php">Estadísticas</a>
                     </li>
                 </ul>
             </li>
