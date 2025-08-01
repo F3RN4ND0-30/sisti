@@ -1,7 +1,7 @@
 function actualizarEstado(selectElement, idIncidente) {
   const nuevoEstado = selectElement.value;
 
-  fetch("/sishelpdesk/backend/php/desk/actualizar_estado.php", {
+  fetch("/sisti/backend/php/desk/actualizar_estado.php", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({

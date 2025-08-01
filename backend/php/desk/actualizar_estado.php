@@ -1,15 +1,15 @@
 <?php
-require_once $_SERVER['DOCUMENT_ROOT'] . '/sishelpdesk/backend/bd/conexion.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/sisti/backend/bd/conexion.php';
 
 // Leer JSON del body
 $data = json_decode(file_get_contents('php://input'), true);
 $id_incidente = $data['id_incidente'] ?? null;
 $nuevo_estado_nombre = strtolower(trim($data['nuevo_estado'] ?? ''));
 
-// Mapeo simplificado del frontend a la BD
+// CORRECCIÓN: Mapeo correcto del frontend a la BD
 $estadoMap = [
     'pendiente' => 'pendiente',
-    'proceso' => 'en proceso',
+    'en proceso' => 'en proceso',  // ← CORREGIDO: coincide con lo que envía JS
     'resuelto' => 'resuelto'
 ];
 
@@ -17,8 +17,20 @@ $nuevo_estado_nombre = $estadoMap[$nuevo_estado_nombre] ?? null;
 
 header('Content-Type: application/json');
 
+// Debug para ayudar a identificar problemas
+error_log("DEBUG - Estado recibido: " . ($data['nuevo_estado'] ?? 'null'));
+error_log("DEBUG - Estado procesado: " . ($nuevo_estado_nombre ?? 'null'));
+
 if (!$id_incidente || !$nuevo_estado_nombre) {
-    echo json_encode(['exito' => false, 'mensaje' => 'Datos incompletos.']);
+    echo json_encode([
+        'exito' => false,
+        'mensaje' => 'Datos incompletos.',
+        'debug' => [
+            'id_incidente' => $id_incidente,
+            'estado_original' => $data['nuevo_estado'] ?? null,
+            'estado_procesado' => $nuevo_estado_nombre
+        ]
+    ]);
     exit;
 }
 
@@ -37,10 +49,28 @@ try {
             ':id' => $id_incidente
         ]);
 
-        echo json_encode(['exito' => true]);
+        // Verificar que se actualizó
+        if ($updateStmt->rowCount() > 0) {
+            echo json_encode([
+                'exito' => true,
+                'mensaje' => 'Estado actualizado correctamente'
+            ]);
+        } else {
+            echo json_encode([
+                'exito' => false,
+                'mensaje' => 'No se pudo actualizar el registro'
+            ]);
+        }
     } else {
-        echo json_encode(['exito' => false, 'mensaje' => 'Estado no válido.']);
+        echo json_encode([
+            'exito' => false,
+            'mensaje' => 'Estado no válido: ' . $nuevo_estado_nombre
+        ]);
     }
 } catch (PDOException $e) {
-    echo json_encode(['exito' => false, 'mensaje' => $e->getMessage()]);
+    error_log("Error SQL: " . $e->getMessage());
+    echo json_encode([
+        'exito' => false,
+        'mensaje' => 'Error de base de datos: ' . $e->getMessage()
+    ]);
 }

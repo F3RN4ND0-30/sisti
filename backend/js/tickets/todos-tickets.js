@@ -1,5 +1,5 @@
 /**
- * TODOS-TICKETS.JS - Sistema Completo Unificado
+ * TODOS-TICKETS.JS - VERSIÓN OPTIMIZADA FINAL
  */
 
 let table;
@@ -7,30 +7,59 @@ let selectizeArea;
 let notificacionActiva = false;
 const loadingOverlay = document.getElementById("loadingOverlay");
 
-// Mostrar/Ocultar loading
+// ================== LOADING ==================
 function showLoading() {
   if (loadingOverlay) loadingOverlay.classList.add("active");
 }
-
 function hideLoading() {
   if (loadingOverlay) loadingOverlay.classList.remove("active");
 }
 
-// ===== INICIALIZACIÓN PRINCIPAL =====
-document.addEventListener("DOMContentLoaded", function () {
+// ================== INICIALIZACIÓN ==================
+document.addEventListener("DOMContentLoaded", () => {
   inicializarTabla();
   inicializarSelectize();
   inicializarFiltrosBasicos();
   inicializarFiltrosAvanzados();
   inicializarBotonesFecha();
+
+  // Intento inicial
+  inicializarBadges();
+
+  // Refuerzo después de carga total
+  window.addEventListener("load", () => setTimeout(inicializarBadges, 500));
 });
 
-// Inicializar DataTable
+// ================== BADGES ==================
+function getBadgeClass(estado) {
+  switch (estado) {
+    case "Pendiente": return "badge-pendiente";
+    case "En Proceso": return "badge-proceso";
+    case "Resuelto": return "badge-resuelto";
+    default: return "badge-default";
+  }
+}
+
+function inicializarBadges() {
+  const selects = document.querySelectorAll(".estado-select");
+  if (selects.length === 0) {
+    console.log("⚠️ No hay selects, reintento en 1s...");
+    setTimeout(inicializarBadges, 1000);
+    return;
+  }
+  selects.forEach((select) => {
+    const clase = getBadgeClass(select.value);
+    if (!select.classList.contains(clase)) {
+      select.className = "estado-select " + clase;
+    }
+  });
+  console.log(`✅ Badges aplicados a ${selects.length} elementos`);
+}
+
+// ================== DATATABLE ==================
 function inicializarTabla() {
   table = $("#ticketsTable").DataTable({
-    language: {
-      url: "//cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json",
-    },
+    language: { url: "//cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json" },
     responsive: true,
     pageLength: 25,
     order: [[5, "desc"]],
@@ -41,574 +70,248 @@ function inicializarTabla() {
       { targets: [5], className: "date-column" },
     ],
     drawCallback: function () {
-      // Aplicar animaciones a las filas
+      setTimeout(inicializarBadges, 200);
       $(this.api().table().node())
         .find("tbody tr")
-        .each(function (index) {
-          $(this).css("--row-index", index + 1);
-          $(this).addClass("fade-in");
-        });
+        .each((index, row) => $(row).addClass("fade-in").css("--row-index", index + 1));
     },
+    initComplete: () => setTimeout(inicializarBadges, 400),
   });
 }
 
-// Inicializar Selectize para áreas
+// ================== SELECTIZE ==================
 function inicializarSelectize() {
-  console.log("Inicializando Selectize...");
-
   if (typeof $.fn.selectize !== "undefined") {
     try {
-      if ($("#filtroArea")[0].selectize) {
-        $("#filtroArea")[0].selectize.destroy();
-      }
-
-      selectizeArea = $("#filtroArea").selectize({
-        placeholder: "Escribir para buscar área...",
-        allowEmptyOption: true,
-        searchField: ["text"],
-        onChange: function (valor) {
-          aplicarFiltroArea(valor);
-        },
-      })[0].selectize;
-
-      console.log("Selectize OK");
-    } catch (error) {
-      console.error("Error Selectize:", error);
+      if ($("#filtroArea")[0].selectize) $("#filtroArea")[0].selectize.destroy();
+      selectizeArea = $("#filtroArea")
+        .selectize({
+          placeholder: "Escribir para buscar área...",
+          allowEmptyOption: true,
+          searchField: ["text"],
+          onChange: aplicarFiltroArea,
+        })[0].selectize;
+    } catch (e) {
+      console.error("Error Selectize:", e);
       $("#filtroArea").on("change", function () {
         aplicarFiltroArea($(this).val());
       });
     }
   } else {
-    console.log("Selectize no disponible");
     $("#filtroArea").on("change", function () {
       aplicarFiltroArea($(this).val());
     });
   }
 }
 
-// Inicializar filtros básicos (existentes)
+// ================== FILTROS ==================
 function inicializarFiltrosBasicos() {
-  // Filtro de estado mejorado
   $("#filtroEstado")
     .off("change")
     .on("change", function () {
-      const estadoId = this.value;
-      console.log("Estado seleccionado:", estadoId);
-      aplicarFiltroEstado(estadoId);
+      aplicarFiltroEstado(this.value, $(this).find("option:selected").text());
     });
 
-  // Limpiar filtros con animación
   $("#limpiarFiltros")
     .off("click")
-    .on("click", function () {
-      limpiarTodosFiltros();
-    });
+    .on("click", limpiarTodosFiltros);
 }
 
-// Inicializar filtros avanzados
 function inicializarFiltrosAvanzados() {
-  // Búsqueda general
   $("#filtroBusqueda")
     .off("input")
-    .on(
-      "input",
-      retrasarEjecucion(function () {
-        const termino = $(this).val();
-        table.search(termino).draw();
-      }, 500)
-    );
+    .on("input", retrasarEjecucion(function () {
+      table.search($(this).val()).draw();
+    }, 500));
 
-  // Fechas personalizadas
-  $("#filtroFechaDesde, #filtroFechaHasta")
-    .off("change")
-    .on("change", function () {
-      aplicarFiltroFechaPersonalizada();
-    });
+  $("#filtroFechaDesde, #filtroFechaHasta").off("change").on("change", aplicarFiltroFechaPersonalizada);
 
-  // Toggle filtros avanzados
-  $("#filtersToggle")
-    .off("click")
-    .on("click", function (e) {
-      e.preventDefault();
-      alternarFiltrosAvanzados();
-    });
+  $("#filtersToggle").off("click").on("click", alternarFiltrosAvanzados);
 }
 
-// Inicializar botones de fecha rápida
 function inicializarBotonesFecha() {
-  $(document)
-    .off("click", ".date-quick-btn")
-    .on("click", ".date-quick-btn", function (e) {
-      e.preventDefault();
-
-      $(".date-quick-btn").removeClass("active");
-      $(this).addClass("active");
-
-      const filtro = $(this).data("filter");
-      aplicarFiltroFechaRapida(filtro);
-    });
-}
-
-// ===== FILTROS =====
-
-// Filtro de estado por ID
-function aplicarFiltroEstado(estadoId) {
-  // Limpiar filtros anteriores de estado
-  $.fn.dataTable.ext.search = $.fn.dataTable.ext.search.filter(
-    (fn) => fn.nombre !== "estado"
-  );
-
-  if (estadoId && estadoId !== "") {
-    const filtroEstado = function (settings, data, dataIndex) {
-      const fila = $(settings.nTable).find("tbody tr").eq(dataIndex);
-      const estadoFila = fila.attr("data-estado-id");
-      return estadoFila == estadoId;
-    };
-    filtroEstado.nombre = "estado";
-    $.fn.dataTable.ext.search.push(filtroEstado);
-  }
-
-  table.draw();
-}
-
-// Filtro de área
-function aplicarFiltroArea(areaNombre) {
-  if (!areaNombre || areaNombre === "") {
-    table.column(2).search("").draw();
-    return;
-  }
-  table
-    .column(2)
-    .search("^" + areaNombre + "$", true, false)
-    .draw();
-}
-
-// Filtro de fecha personalizada
-function aplicarFiltroFechaPersonalizada() {
-  const desde = $("#filtroFechaDesde").val();
-  const hasta = $("#filtroFechaHasta").val();
-
-  // Limpiar filtros de fecha anteriores
-  $.fn.dataTable.ext.search = $.fn.dataTable.ext.search.filter(
-    (fn) => fn.nombre !== "fecha"
-  );
-
-  if (desde || hasta) {
+  $(document).off("click", ".date-quick-btn").on("click", ".date-quick-btn", function (e) {
+    e.preventDefault();
     $(".date-quick-btn").removeClass("active");
+    $(this).addClass("active");
+    aplicarFiltroFechaRapida($(this).data("filter"));
+  });
+}
 
-    const filtroFecha = function (settings, data, dataIndex) {
-      const fechaColumna = data[5];
-      if (!fechaColumna) return true;
-
-      try {
-        const partes = fechaColumna.split(" ")[0].split("/");
-        const fecha = new Date(partes[2], partes[1] - 1, partes[0]);
-
-        const fechaDesde = desde ? new Date(desde) : null;
-        const fechaHasta = hasta ? new Date(hasta + "T23:59:59") : null;
-
-        if (fechaDesde && fechaHasta) {
-          return fecha >= fechaDesde && fecha <= fechaHasta;
-        } else if (fechaDesde) {
-          return fecha >= fechaDesde;
-        } else if (fechaHasta) {
-          return fecha <= fechaHasta;
-        }
-        return true;
-      } catch (error) {
-        return true;
-      }
-    };
-
-    filtroFecha.nombre = "fecha";
-    $.fn.dataTable.ext.search.push(filtroFecha);
+// ================== APLICAR FILTROS ==================
+function aplicarFiltroEstado(estadoId) {
+  $.fn.dataTable.ext.search = $.fn.dataTable.ext.search.filter(fn => fn.nombre !== "estado");
+  if (estadoId) {
+    const filtro = (settings, data, idx) =>
+      $(settings.nTable).find("tbody tr").eq(idx).attr("data-estado-id") == estadoId;
+    filtro.nombre = "estado";
+    $.fn.dataTable.ext.search.push(filtro);
   }
-
   table.draw();
 }
 
-// Filtro de fecha rápida
-function aplicarFiltroFechaRapida(tipoFiltro) {
-  // Limpiar filtros de fecha anteriores
-  $.fn.dataTable.ext.search = $.fn.dataTable.ext.search.filter(
-    (fn) => fn.nombre !== "fecha"
-  );
+function aplicarFiltroArea(area) {
+  table.column(2).search(area ? `^${area}$` : "", true, false).draw();
+}
 
+function aplicarFiltroFechaPersonalizada() {
+  const desde = $("#filtroFechaDesde").val(), hasta = $("#filtroFechaHasta").val();
+  filtrarPorFechas(desde, hasta);
+}
+
+function aplicarFiltroFechaRapida(tipo) {
   const hoy = new Date();
-  let desde = "";
-  let hasta = "";
+  let desde = "", hasta = "";
 
-  switch (tipoFiltro) {
-    case "todos":
-      $("#filtroFechaDesde").val("");
-      $("#filtroFechaHasta").val("");
-      table.draw();
-      return;
+  const formato = f => f.toISOString().split("T")[0];
 
-    case "hoy":
-      desde = hasta = formatearFecha(hoy);
-      break;
-
-    case "ayer":
-      const ayer = new Date(hoy.getTime() - 24 * 60 * 60 * 1000);
-      desde = hasta = formatearFecha(ayer);
-      break;
-
-    case "esta-semana":
-      const inicioSemana = new Date(hoy);
-      inicioSemana.setDate(hoy.getDate() - hoy.getDay());
-      desde = formatearFecha(inicioSemana);
-      hasta = formatearFecha(hoy);
-      break;
-
-    case "semana-pasada":
-      const finSemanaPasada = new Date(hoy);
-      finSemanaPasada.setDate(hoy.getDate() - hoy.getDay() - 1);
-      const inicioSemanaPasada = new Date(finSemanaPasada);
-      inicioSemanaPasada.setDate(finSemanaPasada.getDate() - 6);
-      desde = formatearFecha(inicioSemanaPasada);
-      hasta = formatearFecha(finSemanaPasada);
-      break;
-
-    case "este-mes":
-      const inicioMes = new Date(hoy.getFullYear(), hoy.getMonth(), 1);
-      desde = formatearFecha(inicioMes);
-      hasta = formatearFecha(hoy);
-      break;
+  switch (tipo) {
+    case "todos": break;
+    case "hoy": desde = hasta = formato(hoy); break;
+    case "ayer": let ay = new Date(hoy); ay.setDate(hoy.getDate() - 1); desde = hasta = formato(ay); break;
+    case "esta-semana": let ini = new Date(hoy); ini.setDate(hoy.getDate() - hoy.getDay()); desde = formato(ini); hasta = formato(hoy); break;
+    case "semana-pasada": let fin = new Date(hoy); fin.setDate(hoy.getDate() - hoy.getDay() - 1); let ini2 = new Date(fin); ini2.setDate(fin.getDate() - 6); desde = formato(ini2); hasta = formato(fin); break;
+    case "este-mes": desde = formato(new Date(hoy.getFullYear(), hoy.getMonth(), 1)); hasta = formato(hoy); break;
   }
 
   $("#filtroFechaDesde").val(desde);
   $("#filtroFechaHasta").val(hasta);
+  filtrarPorFechas(desde, hasta);
+}
 
+function filtrarPorFechas(desde, hasta) {
+  $.fn.dataTable.ext.search = $.fn.dataTable.ext.search.filter(fn => fn.nombre !== "fecha");
   if (desde || hasta) {
-    const filtroFecha = function (settings, data, dataIndex) {
-      const fechaColumna = data[5];
-      if (!fechaColumna) return true;
-
+    const fDesde = desde ? new Date(desde) : null, fHasta = hasta ? new Date(hasta + "T23:59:59") : null;
+    const filtro = (s, d) => {
       try {
-        const partes = fechaColumna.split(" ")[0].split("/");
-        const fecha = new Date(partes[2], partes[1] - 1, partes[0]);
-        const fechaDesde = desde ? new Date(desde) : null;
-        const fechaHasta = hasta ? new Date(hasta + "T23:59:59") : null;
-
-        if (fechaDesde && fechaHasta) {
-          return fecha >= fechaDesde && fecha <= fechaHasta;
-        } else if (fechaDesde) {
-          return fecha >= fechaDesde;
-        } else if (fechaHasta) {
-          return fecha <= fechaHasta;
-        }
-        return true;
-      } catch (error) {
-        return true;
-      }
+        const [dia, mes, anio] = d[5].split(" ")[0].split("/");
+        const fecha = new Date(anio, mes - 1, dia);
+        return (!fDesde || fecha >= fDesde) && (!fHasta || fecha <= fHasta);
+      } catch { return true; }
     };
-
-    filtroFecha.nombre = "fecha";
-    $.fn.dataTable.ext.search.push(filtroFecha);
+    filtro.nombre = "fecha";
+    $.fn.dataTable.ext.search.push(filtro);
   }
-
   table.draw();
 }
 
-// ===== UTILIDADES =====
-
-// Limpiar todos los filtros
+// ================== UTILIDADES ==================
 function limpiarTodosFiltros() {
-  // Limpiar inputs básicos
-  $("#filtroEstado, #filtroBusqueda, #filtroFechaDesde, #filtroFechaHasta").val(
-    ""
-  );
-
-  // Limpiar Selectize o select normal
-  if (selectizeArea) {
-    selectizeArea.setValue("");
-  } else {
-    $("#filtroArea").val("");
-  }
-
-  // Limpiar botones de fecha
+  $("#filtroEstado, #filtroBusqueda, #filtroFechaDesde, #filtroFechaHasta").val("");
+  if (selectizeArea) selectizeArea.setValue(""); else $("#filtroArea").val("");
   $(".date-quick-btn").removeClass("active");
   $('.date-quick-btn[data-filter="todos"]').addClass("active");
-
-  // Limpiar todos los filtros de DataTable
   $.fn.dataTable.ext.search = [];
   table.search("").columns().search("").draw();
-
-  // Efecto visual
   $("#limpiarFiltros").addClass("btn-success");
   setTimeout(() => $("#limpiarFiltros").removeClass("btn-success"), 1000);
-
   mostrarNotificacion("Filtros limpiados correctamente", "success");
 }
 
-// Toggle filtros avanzados
 function alternarFiltrosAvanzados() {
-  const contenido = $("#filtersContent");
-  const boton = $("#filtersToggle");
-
-  if (contenido.hasClass("collapsed")) {
-    contenido.removeClass("collapsed").addClass("expanded");
-    boton.html('<i class="material-icons">expand_less</i> Ocultar Filtros');
-  } else {
-    contenido.removeClass("expanded").addClass("collapsed");
-    boton.html('<i class="material-icons">expand_more</i> Más Filtros');
-  }
+  const c = $("#filtersContent"), b = $("#filtersToggle");
+  c.toggleClass("collapsed expanded");
+  b.html(c.hasClass("expanded") ? '<i class="material-icons">expand_less</i> Ocultar Filtros' : '<i class="material-icons">expand_more</i> Más Filtros');
 }
 
-// Formatear fecha para input
-function formatearFecha(fecha) {
-  const año = fecha.getFullYear();
-  const mes = String(fecha.getMonth() + 1).padStart(2, "0");
-  const dia = String(fecha.getDate()).padStart(2, "0");
-  return `${año}-${mes}-${dia}`;
-}
-
-// Retrasar ejecución (debounce)
 function retrasarEjecucion(func, espera) {
-  let timeout;
-  return function executedFunction(...args) {
-    const later = () => {
-      clearTimeout(timeout);
-      func.apply(this, args);
-    };
-    clearTimeout(timeout);
-    timeout = setTimeout(later, espera);
-  };
+  let t; return (...a) => { clearTimeout(t); t = setTimeout(() => func.apply(this, a), espera); };
 }
 
-// ===== CAMBIO DE ESTADO =====
+// ================== CAMBIO DE ESTADO ==================
+function obtenerIdEstado(estado) {
+  return { "Pendiente": "1", "En Proceso": "2", "Resuelto": "3" }[estado] || "1";
+}
 
-// Cambiar estado de ticket
-function cambiarEstadoDirecto(selectElement) {
-  const idIncidente = selectElement.getAttribute("data-id");
-  const nuevoEstadoTexto = selectElement.value.toLowerCase();
-  const estadoOriginal = selectElement.getAttribute("data-original");
+function cambiarEstadoDirecto(select) {
+  const id = select.dataset.id, nuevo = select.value, original = select.dataset.original;
+  if (nuevo === original) return;
 
-  if (selectElement.value === estadoOriginal) return;
-
-  // Mapeo de estados
-  let estadoMapeado = "";
-  switch (nuevoEstadoTexto) {
-    case "pendiente":
-      estadoMapeado = "pendiente";
-      break;
-    case "en proceso":
-      estadoMapeado = "proceso";
-      break;
-    case "resuelto":
-      estadoMapeado = "resuelto";
-      break;
-    default:
-      estadoMapeado = "pendiente";
-  }
-
-  const data = {
-    id_incidente: parseInt(idIncidente),
-    nuevo_estado: estadoMapeado,
-  };
-
-  // Efectos visuales
-  selectElement.style.opacity = "0.6";
-  selectElement.style.transform = "scale(0.95)";
-  selectElement.disabled = true;
-
-  const row = selectElement.closest("tr");
-  row.style.backgroundColor = "rgba(52, 152, 219, 0.1)";
-
+  const row = select.closest("tr");
   showLoading();
+  select.style.opacity = "0.6"; select.disabled = true; row.style.backgroundColor = "rgba(52,152,219,.1)";
 
-  // Petición AJAX
-  fetch("/sishelpdesk/backend/php/desk/actualizar_estado.php", {
+  fetch("/sisti/backend/php/desk/actualizar_estado.php", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(data),
+    body: JSON.stringify({ id_incidente: +id, nuevo_estado: nuevo }),
   })
-    .then((response) => response.json())
-    .then((data) => {
+    .then(r => r.json())
+    .then(r => {
       hideLoading();
-
-      if (data.exito) {
-        // Actualizar clase del select
-        selectElement.className =
-          "estado-select " + getBadgeClass(selectElement.value);
-        selectElement.setAttribute("data-original", selectElement.value);
-
-        // Restaurar apariencia
-        selectElement.style.opacity = "1";
-        selectElement.style.transform = "scale(1)";
-        selectElement.disabled = false;
-
-        // Animación de éxito
-        row.style.backgroundColor = "rgba(39, 174, 96, 0.1)";
-        setTimeout(() => (row.style.backgroundColor = ""), 2000);
-
-        // Actualizar estadísticas y notificar
+      if (r.exito) {
+        select.dataset.original = nuevo;
+        select.className = "estado-select " + getBadgeClass(nuevo);
+        row.dataset.estadoId = obtenerIdEstado(nuevo);
+        row.style.backgroundColor = "rgba(39,174,96,.1)";
+        setTimeout(() => row.style.backgroundColor = "", 2000);
+        select.style.opacity = "1"; select.disabled = false;
         actualizarEstadisticasGenerales();
         mostrarNotificacion("Estado actualizado correctamente", "success");
-      } else {
-        revertirCambio(selectElement, estadoOriginal);
-        mostrarNotificacion("Error: " + data.mensaje, "error");
-      }
+      } else revertirCambio(select, original, r.mensaje);
     })
-    .catch((error) => {
-      hideLoading();
-      console.error("Error:", error);
-      revertirCambio(selectElement, estadoOriginal);
-      mostrarNotificacion("Error de conexión al actualizar el estado", "error");
-    });
+    .catch(() => { hideLoading(); revertirCambio(select, original, "Error de conexión"); });
 }
 
-// Obtener clase CSS para badge de estado
-function getBadgeClass(estado) {
-  switch (estado.toLowerCase()) {
-    case "pendiente":
-      return "badge-pendiente";
-    case "en proceso":
-      return "badge-proceso";
-    case "resuelto":
-      return "badge-resuelto";
-    default:
-      return "badge-pendiente";
-  }
+function revertirCambio(select, original, msg) {
+  select.value = original;
+  select.className = "estado-select " + getBadgeClass(original);
+  select.style.opacity = "1"; select.disabled = false;
+  select.closest("tr").style.backgroundColor = "";
+  mostrarNotificacion(msg, "error");
 }
 
-// Revertir cambios en caso de error
-function revertirCambio(selectElement, estadoOriginal) {
-  selectElement.value = estadoOriginal;
-  selectElement.style.opacity = "1";
-  selectElement.style.transform = "scale(1)";
-  selectElement.disabled = false;
-  selectElement.closest("tr").style.backgroundColor = "";
-}
-
-// ===== ESTADÍSTICAS =====
-
-// Actualizar estadísticas generales
+// ================== ESTADÍSTICAS ==================
 function actualizarEstadisticasGenerales() {
   const xhr = new XMLHttpRequest();
   xhr.open("POST", "", true);
   xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-  xhr.onreadystatechange = function () {
+  xhr.onreadystatechange = () => {
     if (xhr.readyState === 4 && xhr.status === 200) {
       try {
-        const response = JSON.parse(xhr.responseText);
-        if (response.total !== undefined) {
-          animarNumero("total-general", response.total);
-          animarNumero("pendientes-general", response.pendientes);
-          animarNumero("proceso-general", response.proceso);
-          animarNumero("resueltos-general", response.resueltos);
-        }
-      } catch (e) {
-        console.log("Respuesta no es JSON válido");
-      }
+        const r = JSON.parse(xhr.responseText);
+        ["total", "pendientes", "proceso", "resueltos"].forEach(k => animarNumero(`${k}-general`, r[k]));
+      } catch {}
     }
   };
   xhr.send("ajax=estadisticas_generales");
 }
 
-// Animar números en estadísticas
-function animarNumero(elementId, valorFinal) {
-  const elemento = document.getElementById(elementId);
-  if (!elemento) return;
-
-  const valorInicial = parseInt(elemento.textContent) || 0;
-  const diferencia = valorFinal - valorInicial;
-  const duracion = 1000;
-  const incremento = diferencia / (duracion / 16);
-
-  let valorActual = valorInicial;
-
-  const timer = setInterval(() => {
-    valorActual += incremento;
-    if (
-      (incremento > 0 && valorActual >= valorFinal) ||
-      (incremento < 0 && valorActual <= valorFinal)
-    ) {
-      valorActual = valorFinal;
-      clearInterval(timer);
-    }
-    elemento.textContent = Math.round(valorActual);
+function animarNumero(id, fin) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  let ini = +el.textContent || 0, dif = fin - ini, paso = dif / (1000 / 16);
+  const t = setInterval(() => {
+    ini += paso;
+    if ((paso > 0 && ini >= fin) || (paso < 0 && ini <= fin)) { ini = fin; clearInterval(t); }
+    el.textContent = Math.round(ini);
   }, 16);
 }
 
-// ===== NOTIFICACIONES =====
-
-// Mostrar notificación
-function mostrarNotificacion(mensaje, tipo = "info") {
+// ================== NOTIFICACIONES ==================
+function mostrarNotificacion(msg, tipo = "info") {
   if (notificacionActiva) return;
-
   notificacionActiva = true;
 
-  let contenedor = document.getElementById("notificaciones");
-  if (!contenedor) {
-    contenedor = document.createElement("div");
-    contenedor.id = "notificaciones";
-    contenedor.style.cssText = `
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            z-index: 10000;
-            max-width: 400px;
-        `;
-    document.body.appendChild(contenedor);
-  }
+  let c = document.getElementById("notificaciones");
+  if (!c) { c = document.createElement("div"); c.id = "notificaciones"; c.style = "position:fixed;top:20px;right:20px;z-index:10000;max-width:400px"; document.body.appendChild(c); }
 
-  const notificacion = document.createElement("div");
-  notificacion.className = `notificacion notificacion-${tipo}`;
-  notificacion.style.cssText = `
-        background: ${tipo === "success" ? "#d4edda" : "#f8d7da"};
-        color: ${tipo === "success" ? "#155724" : "#721c24"};
-        border: 1px solid ${tipo === "success" ? "#c3e6cb" : "#f5c6cb"};
-        border-radius: 8px;
-        padding: 12px 16px;
-        margin-bottom: 10px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-        transform: translateX(100%);
-        transition: all 0.3s ease;
-        opacity: 0;
-        cursor: pointer;
-    `;
-  notificacion.textContent = mensaje;
+  const n = document.createElement("div");
+  n.className = `notificacion notificacion-${tipo}`;
+  n.style = `background:${tipo === "success" ? "#d4edda" : "#f8d7da"};color:${tipo === "success" ? "#155724" : "#721c24"};border:1px solid ${tipo === "success" ? "#c3e6cb" : "#f5c6cb"};border-radius:8px;padding:12px 16px;margin-bottom:10px;box-shadow:0 4px 12px rgba(0,0,0,.15);transform:translateX(100%);transition:all .3s ease;opacity:0;cursor:pointer;`;
+  n.textContent = msg;
+  c.appendChild(n);
 
-  contenedor.appendChild(notificacion);
-
-  // Animar entrada
-  setTimeout(() => {
-    notificacion.style.transform = "translateX(0)";
-    notificacion.style.opacity = "1";
-  }, 100);
-
-  // Auto-ocultar
-  const ocultarNotificacion = () => {
-    notificacion.style.transform = "translateX(100%)";
-    notificacion.style.opacity = "0";
-    setTimeout(() => {
-      if (notificacion.parentNode) {
-        notificacion.parentNode.removeChild(notificacion);
-      }
-      notificacionActiva = false;
-    }, 300);
-  };
-
-  setTimeout(ocultarNotificacion, 3000);
-  notificacion.addEventListener("click", ocultarNotificacion);
+  setTimeout(() => { n.style.transform = "translateX(0)"; n.style.opacity = "1"; }, 100);
+  const ocultar = () => { n.style.transform = "translateX(100%)"; n.style.opacity = "0"; setTimeout(() => { n.remove(); notificacionActiva = false; }, 300); };
+  setTimeout(ocultar, 3000);
+  n.addEventListener("click", ocultar);
 }
 
-// ===== FUNCIONES AUXILIARES =====
-
-// Cerrar modal
-function cerrarModal(modalId) {
-  const modal = document.getElementById(modalId);
-  if (modal) modal.style.display = "none";
+// ================== MODALES ==================
+function cerrarModal(id) {
+  const m = document.getElementById(id);
+  if (m) m.style.display = "none";
 }
-
-// Cerrar modal al hacer click fuera
-window.onclick = function (event) {
-  const modals = document.querySelectorAll(".modal-overlay");
-  modals.forEach((modal) => {
-    if (event.target === modal) {
-      modal.style.display = "none";
-    }
-  });
-};
+window.onclick = e => document.querySelectorAll(".modal-overlay").forEach(m => { if (e.target === m) m.style.display = "none"; });
