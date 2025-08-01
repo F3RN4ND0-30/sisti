@@ -14,7 +14,7 @@ try {
     INNER JOIN tb_tickets t ON i.Id_Tickets = t.Id_Tickets
     INNER JOIN tb_areas a ON i.Id_Areas = a.Id_Areas
     INNER JOIN tb_estados_incidente e ON i.Id_Estados_Incidente = e.Id_Estados_Incidente
-    ORDER BY i.Fecha_Creacion DESC
+    ORDER BY i.Id_Incidentes DESC
 ");
 
     $incidentes = $stmt->fetchAll(PDO::FETCH_ASSOC);

@@ -1,8 +1,6 @@
 <?php
 require_once $_SERVER['DOCUMENT_ROOT'] . '/sisti/backend/bd/conexion.php';
 
-header('Content-Type: application/json');
-
 // Leer JSON del body
 $data = json_decode(file_get_contents('php://input'), true);
 $id_incidente = $data['id_incidente'] ?? null;

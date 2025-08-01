@@ -119,7 +119,7 @@ if (!isset($_SESSION['hd_activo']) || $_SESSION['hd_activo'] !== true) {
                 },
                 responsive: true,
                 order: [
-                    [5, 'desc']
+                    [0, 'desc']
                 ]
             });
         });
