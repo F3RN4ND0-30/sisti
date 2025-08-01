@@ -232,7 +232,8 @@ function cambiarEstadoDirecto(select) {
   showLoading();
   select.style.opacity = "0.6"; select.disabled = true; row.style.backgroundColor = "rgba(52,152,219,.1)";
 
-  fetch("/sisti/backend/php/desk/actualizar_estado.php", {
+  // Petición AJAX
+  fetch("/sishelpdesk/backend/php/desk/actualizar_estado.php", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ id_incidente: +id, nuevo_estado: nuevo }),
