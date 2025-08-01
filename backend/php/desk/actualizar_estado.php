@@ -1,5 +1,5 @@
 <?php
-require_once $_SERVER['DOCUMENT_ROOT'] . '/helpdesk_mpp2.0/backend/bd/conexion.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/sisti/backend/bd/conexion.php';
 
 // Leer JSON del body
 $data = json_decode(file_get_contents('php://input'), true);

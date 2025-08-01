@@ -3,8 +3,8 @@ session_name('HELPDESK_SISTEMA');
 session_start();
 
 if (!isset($_SESSION['hd_activo']) || $_SESSION['hd_activo'] !== true) {
-  header('location: ../login.php');
-  exit();
+    header('location: ../login.php');
+    exit();
 }
 ?>
 <!doctype html>
@@ -84,6 +84,10 @@ if (!isset($_SESSION['hd_activo']) || $_SESSION['hd_activo'] !== true) {
 
         <div class="indicador-tickets">
             <p id="ticketsAtendidos">Tickets atendidos: <strong>0</strong></p>
+            <div class="botones-exportar">
+                <button id="btnExportarExcel" class="btn-exportar">Exportar a Excel</button>
+                <button id="btnExportarPDF" class="btn-exportar">Exportar a PDF</button>
+            </div>
         </div>
 
         <div class="table-responsive">

@@ -30,7 +30,7 @@ if (!isset($_SESSION['hd_activo']) || $_SESSION['hd_activo'] !== true) {
 
         <h2>Ficha de Mantenimiento</h2>
 
-        <form method="POST" action="/HelpDesk_MPP2.0/backend/php/excel/generar_excel_mantenimiento.php">
+        <form method="POST" action="/sisti/backend/php/excel/generar_excel_mantenimiento.php">
             <input type="hidden" name="tipo" value="<?php echo htmlspecialchars($tipoFicha); ?>">
 
             <table>

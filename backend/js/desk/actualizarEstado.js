@@ -1,7 +1,7 @@
 function actualizarEstado(selectElement, idIncidente) {
   const nuevoEstado = selectElement.value;
 
-  fetch("/helpdesk_mpp2.0/backend/php/desk/actualizar_estado.php", {
+  fetch("/sisti/backend/php/desk/actualizar_estado.php", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
@@ -28,7 +28,7 @@ function actualizarEstado(selectElement, idIncidente) {
 }
 
 function actualizarEstadisticas() {
-  fetch("/HelpDesk_MPP2.0/backend/php/desk/obtener_estadisticas.php")
+  fetch("/sisti/backend/php/desk/obtener_estadisticas.php")
     .then((response) => response.json())
     .then((data) => {
       document.getElementById("total-hoy").textContent = data.total_hoy ?? 0;

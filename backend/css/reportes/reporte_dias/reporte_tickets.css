@@ -82,15 +82,16 @@ body {
     box-shadow: 0 0 12px #2563ebbb;
 }
 
-/* Indicador de tickets */
 .indicador-tickets {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     margin-bottom: 25px;
     font-size: 20px;
     font-weight: 600;
     color: #1d3557;
-    text-align: center;
-    user-select: none;
     animation: fadeInUp 0.5s ease;
+    padding: 0 20px;
 }
 
 /* Tabla */
@@ -124,6 +125,50 @@ body {
     border-bottom: 2px solid #1d4ed8;
 }
 
+.botones-exportar {
+    display: flex;
+    gap: 5px;
+}
+
+.botones-exportar button:first-child {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.botones-exportar button:last-child {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+}
+
+.btn-exportar {
+    background-color: #28a745;
+    color: white;
+    padding: 10px 20px;
+    font-size: 14px;
+    border: none;
+    border-radius: 8px !important;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.btn-exportar:hover {
+    background-color: #218838;
+}
+
+#btnExportarPDF {
+    background-color: #E50914;
+    color: white;
+    padding: 10px 20px;
+    font-size: 14px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+#btnExportarPDF:hover {
+    background-color: #b2070f;
+}
 
 .table th,
 .table td {
