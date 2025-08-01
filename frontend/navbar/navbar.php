@@ -198,7 +198,7 @@ function is_active_hd($path_fragment)
                                         <hr class="dropdown-divider">
                                     </li>
                                     <li>
-                                        <a class="dropdown-item text-danger" href="../../logout.php">
+                                        <a class="dropdown-item text-danger" href="/sisti/frontend/logout.php">
                                             <i class="material-icons">power_settings_new</i>
                                             Cerrar Sesión
                                         </a>

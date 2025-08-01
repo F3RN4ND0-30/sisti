@@ -1,19 +1,14 @@
 .modal {
     position: fixed;
-    z-index: 9999;
-    /* aseguramos que esté sobre todo */
-    left: 0;
     top: 0;
+    left: 0;
     width: 100vw;
     height: 100vh;
     background-color: rgba(0, 0, 0, 0.4);
-
-    display: flex;
-    justify-content: center;
+    display: none;
     align-items: center;
-
-    /* Para evitar scroll cuando el modal esté activo */
-    overflow: hidden;
+    justify-content: center;
+    z-index: 1000;
 }
 
 .modal-contenido {

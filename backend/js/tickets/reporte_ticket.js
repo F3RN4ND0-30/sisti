@@ -94,10 +94,44 @@ $(document).ready(function () {
                     res.detalle.forEach(procesarTicket);
                 }
 
-                tabla.draw();
-            },
-            error: function () {
-                alert('Error al cargar los datos del reporte.');
+                $.ajax({
+                    url: '/sisti/backend/php/api/api_reporte.php',
+                    method: 'GET',
+                    data: datos,
+                    dataType: 'json',
+                    success: function (res) {
+                        if (!res.success) {
+                            alert('Error: ' + (res.error || 'Respuesta inválida'));
+                            return;
+                        }
+
+                        $('#ticketsAtendidos strong').text(res.total_tickets);
+                        tabla.clear();
+
+                        const procesarTicket = (ticket) => {
+                            tabla.row.add([
+                                ticket.numero_ticket,
+                                `${ticket.nombre} ${ticket.apellido}`,
+                                ticket.dni,
+                                ticket.area,
+                                ticket.descripcion,
+                                getEstadoHTML(ticket.estado_texto),
+                                ticket.fecha_creacion
+                            ]);
+                        };
+
+                        if (tipo === 'semana') {
+                            res.detalle.forEach(d => d.tickets.forEach(procesarTicket));
+                        } else {
+                            res.detalle.forEach(procesarTicket);
+                        }
+
+                        tabla.draw();
+                    },
+                    error: function () {
+                        alert('Error al cargar los datos del reporte.');
+                    }
+                });
             }
         });
     }

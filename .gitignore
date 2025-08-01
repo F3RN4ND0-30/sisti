@@ -1,9 +1,6 @@
 # Archivos de configuración sensible
 .env
 
-# Librerías de Composer (se regeneran automáticamente)
-/vendor/
-
 # Archivos subidos por usuarios
 /subidas/
 
