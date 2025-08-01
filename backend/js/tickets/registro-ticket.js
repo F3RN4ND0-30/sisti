@@ -92,7 +92,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Botón "Ir al Inicio" redirige a la raíz del proyecto
     irInicioBtn.addEventListener('click', function () {
-        window.location.href = '/helpdesk_mpp2.0/';  // Cambia según tu ruta base real
+        window.location.href = '/sisti/';  // Cambia según tu ruta base real
     });
 
     // Cerrar modal si el usuario hace click fuera del contenido

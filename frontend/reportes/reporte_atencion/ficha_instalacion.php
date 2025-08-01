@@ -28,7 +28,7 @@ if (!isset($_SESSION['hd_activo']) || $_SESSION['hd_activo'] !== true) {
 
     <div class="form-container">
         <h2>Ficha de Instalación</h2>
-        <form method="POST" action="/HelpDesk_MPP2.0/backend/php/excel/generar_excel_instalacion.php">
+        <form method="POST" action="/sisti/backend/php/excel/generar_excel_instalacion.php">
             <input type="hidden" name="tipo" value="<?php echo htmlspecialchars($tipoFicha); ?>">
 
             <table>

@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
         resultadoDiv.innerHTML = 'Cargando...';
 
         try {
-            const res = await fetch(`/helpdesk_mpp2.0/backend/php/api/seguimiento_ticket.php?ticket=${encodeURIComponent(ticket)}`);
+            const res = await fetch(`/sisti/backend/php/api/seguimiento_ticket.php?ticket=${encodeURIComponent(ticket)}`);
             const data = await res.json();
 
             if (!data.success) {
@@ -71,7 +71,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    agregarRedireccion('btnRegresar', '/helpdesk_mpp2.0/');
-    agregarRedireccion('btnRegresarFrontend', '/helpdesk_mpp2.0/frontend/sisvis/escritorio.php');
+    agregarRedireccion('btnRegresar', '/sisti/');
+    agregarRedireccion('btnRegresarFrontend', '/sisti/frontend/sisvis/escritorio.php');
 
 });

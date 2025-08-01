@@ -59,7 +59,7 @@ $ubicaciones = [
 ];
 
 // Ruta a la plantilla
-$plantillaPath = $_SERVER['DOCUMENT_ROOT'] . '/HelpDesk_MPP2.0/backend/php/excel/plantillas/ficha_baja.xlsx';
+$plantillaPath = $_SERVER['DOCUMENT_ROOT'] . '/sisti/backend/php/excel/plantillas/ficha_baja.xlsx';
 $spreadsheet = IOFactory::load($plantillaPath);
 $sheet = $spreadsheet->getActiveSheet();
 

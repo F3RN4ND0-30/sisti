@@ -63,7 +63,7 @@ $(document).ready(function () {
                 }
 
                 $.ajax({
-                    url: '/helpdesk_mpp2.0/backend/php/api/api_reporte.php',
+                    url: '/sisti/backend/php/api/api_reporte.php',
                     method: 'GET',
                     data: datos,
                     dataType: 'json',
