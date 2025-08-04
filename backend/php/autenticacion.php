@@ -30,7 +30,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['iniciarSesion'])) {
                 $_SESSION['hd_nombre'] = $user['Nombre'] . ' ' . $user['Apellido_Paterno'];
                 $_SESSION['hd_rol'] = strtolower($user['NombreRol']);
 
-                header('Location:../frontend/sisvis/escritorio.php');
+                header('Location:/sisti/frontend/sisvis/escritorio.php');
                 exit();
             } else {
                 $mensajeError = "Credenciales incorrectas o usuario inactivo.";
