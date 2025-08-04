@@ -95,12 +95,14 @@ function is_active_hd($path_fragment)
                         <li <?php echo is_active_hd('/admin/usuarios.php') ? 'class="active"' : ''; ?>>
                             <a href="/sisti/frontend/admin/usuarios.php">Gestión de Usuarios</a>
                         </li>
+                        <!--
                         <li <?php echo is_active_hd('/admin/equipos.php') ? 'class="active"' : ''; ?>>
                             <a href="/sisti/frontend/admin/equipos.php">Registro de Equipos</a>
                         </li>
                         <li <?php echo is_active_hd('/admin/categorias.php') ? 'class="active"' : ''; ?>>
                             <a href="/sisti/frontend/admin/categorias.php">Categorías</a>
                         </li>
+                        -->
                     </ul>
                 </li>
             <?php endif; ?>
@@ -115,11 +117,13 @@ function is_active_hd($path_fragment)
                     <li <?php echo is_active_hd('/configuracion/perfil.php') ? 'class="active"' : ''; ?>>
                         <a href="/sisti/backend/php/configuracion/perfil.php">Mi Perfil</a>
                     </li>
+                    <!--
                     <?php if ($rol === 'administrador'): ?>
                         <li <?php echo is_active_hd('/configuracion/sistema.php') ? 'class="active"' : ''; ?>>
                             <a href="/sisti/frontend/configuracion/sistema.php">Configuración del Sistema</a>
                         </li>
                     <?php endif; ?>
+                    -->
                 </ul>
             </li>
 

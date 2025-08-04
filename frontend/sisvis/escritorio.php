@@ -52,7 +52,7 @@ require_once '../../backend/bd/conexion.php';
                 <div class="col-md-4 text-right">
                     <div class="user-role">
                         <h5><?php echo ucfirst($_SESSION['hd_rol']); ?></h5>
-                        <p><?php echo $_SESSION['hd_usuario']; ?></p>
+                        <h5><?php echo $_SESSION['hd_usuario']; ?></h5>
                     </div>
                 </div>
             </div>
