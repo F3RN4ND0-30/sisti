@@ -29,7 +29,6 @@ if (!isset($_SESSION['hd_activo']) || $_SESSION['hd_activo'] !== true) {
 
 <body>
     <?php include '../../navbar/navbar.php'; ?>
-
     <div class="dashboard">
         <h2 class="titulo-dashboard">Panel de Tickets de este Mes</h2>
 

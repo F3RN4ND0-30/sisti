@@ -183,15 +183,9 @@ function is_active_hd($path_fragment)
                                         <hr class="dropdown-divider">
                                     </li>
                                     <li>
-                                        <a class="dropdown-item" href="/sisti/frontend/configuracion/perfil.php">
+                                        <a class="dropdown-item" href="/sisti/backend/php/configuracion/perfil.php">
                                             <i class="material-icons">account_circle</i>
                                             Mi Perfil
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a class="dropdown-item" href="/sisti/frontend/configuracion/perfil.php">
-                                            <i class="material-icons">settings</i>
-                                            Configuración
                                         </a>
                                     </li>
                                     <li>

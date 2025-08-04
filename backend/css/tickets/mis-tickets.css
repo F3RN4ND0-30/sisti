@@ -73,6 +73,62 @@ body {
     transition: background-color 0.3s ease;
 }
 
+/* === Personalización de DataTables === */
+.dataTables_wrapper .dataTables_filter input {
+    padding: 6px 10px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    background-color: #f9f9f9;
+    font-size: 14px;
+    margin-left: 5px;
+}
+
+.dataTables_wrapper .dataTables_filter {
+    margin-bottom: 10px; /* o menos, ajusta el valor a lo que te guste */
+}
+
+.dataTables_wrapper .dataTables_length select {
+    padding: 6px 10px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    background-color: #f9f9f9;
+    font-size: 14px;
+    margin-right: 5px;
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button {
+    padding: 6px 12px;
+    border-radius: 6px;
+    background: #2563eb;
+    color: white !important;
+    margin: 2px;
+    font-weight: bold;
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button.current {
+    background-color: #1d4ed8 !important;
+    border: none;
+}
+
+.dataTables_wrapper .dataTables_info {
+    font-size: 14px;
+    color: #444;
+    margin-top: 10px;
+}
+
+.dataTables_wrapper .dataTables_paginate {
+    margin-top: 10px;
+}
+
+/* Evita que el fondo blanco del plugin sobrescriba tu sombra */
+.table.dataTable {
+    background: white;
+    box-shadow: 0 8px 22px rgb(0 0 0 / 0.12);
+    border-radius: 14px;
+    overflow: hidden;
+}
+
+
 /* === SELECTOR DE ESTADO === */
 .estado-select {
     padding: 6px 10px;
