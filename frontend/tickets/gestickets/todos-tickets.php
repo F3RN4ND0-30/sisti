@@ -51,12 +51,12 @@ require_once '../../../backend/bd/conexion.php';
         <div class="stats-grid">
             <?php
             try {
-                // Estadísticas GENERALES de todos los tickets (diferencia con escritorio que es solo del día)
+                // 🔥 CORRECCIÓN: Usar 'En proceso' con minúscula como está en la BD
                 $stmt = $conexion->prepare("
                     SELECT 
                         COUNT(*) as total,
                         SUM(CASE WHEN ei.Nombre = 'Pendiente' THEN 1 ELSE 0 END) as pendientes,
-                        SUM(CASE WHEN ei.Nombre = 'En Proceso' THEN 1 ELSE 0 END) as proceso,
+                        SUM(CASE WHEN ei.Nombre = 'En proceso' THEN 1 ELSE 0 END) as proceso,
                         SUM(CASE WHEN ei.Nombre = 'Resuelto' THEN 1 ELSE 0 END) as resueltos
                     FROM tb_Incidentes i
                     INNER JOIN tb_Estados_Incidente ei ON i.Id_Estados_Incidente = ei.Id_Estados_Incidente
@@ -273,16 +273,17 @@ require_once '../../../backend/bd/conexion.php';
 
                             $rowIndex = 1;
                             foreach ($tickets as $ticket) {
-                                // Determinar clase de estado
+                                $estadoNombre = trim($ticket['EstadoNombre']);
                                 $estadoClass = '';
-                                switch (strtolower($ticket['EstadoNombre'])) {
-                                    case 'pendiente':
+
+                                switch ($estadoNombre) {
+                                    case 'Pendiente':
                                         $estadoClass = 'badge-pendiente';
                                         break;
-                                    case 'en proceso':
+                                    case 'En proceso':
                                         $estadoClass = 'badge-proceso';
                                         break;
-                                    case 'resuelto':
+                                    case 'Resuelto':
                                         $estadoClass = 'badge-resuelto';
                                         break;
                                     default:
@@ -296,7 +297,7 @@ require_once '../../../backend/bd/conexion.php';
                                         <span class='ticket-code'>" . htmlspecialchars($ticket['Codigo_Ticket']) . "</span>
                                       </td>";
 
-                                // Usuario con información mejorada
+                                // Usuario
                                 echo "<td>
                                         <div class='user-info'>
                                             <span class='user-name'>" . htmlspecialchars($ticket['NombreCompleto']) . "</span>
@@ -308,7 +309,7 @@ require_once '../../../backend/bd/conexion.php';
                                         <span class='user-area'>" . htmlspecialchars($ticket['AreaNombre']) . "</span>
                                       </td>";
 
-                                // Descripción con tooltip
+                                // Descripción
                                 $descripcionCompleta = htmlspecialchars($ticket['Descripcion']);
                                 $descripcionCorta = htmlspecialchars(substr($ticket['Descripcion'], 0, 50));
                                 echo "<td class='description-cell'>
@@ -317,19 +318,19 @@ require_once '../../../backend/bd/conexion.php';
                                         </span>
                                       </td>";
 
-                                // Estado con select mejorado
+                                // Estado con select
                                 echo "<td>
                                         <select class='estado-select $estadoClass' 
                                                 data-id='" . $ticket['Id_Incidentes'] . "' 
                                                 onchange='cambiarEstadoDirecto(this)'
-                                                data-original='" . htmlspecialchars($ticket['EstadoNombre']) . "'>
-                                            <option value='Pendiente'" . ($ticket['EstadoNombre'] == 'Pendiente' ? ' selected' : '') . ">Pendiente</option>
-                                            <option value='En Proceso'" . ($ticket['EstadoNombre'] == 'En Proceso' ? ' selected' : '') . ">En Proceso</option>
-                                            <option value='Resuelto'" . ($ticket['EstadoNombre'] == 'Resuelto' ? ' selected' : '') . ">Resuelto</option>
+                                                data-original='" . htmlspecialchars($estadoNombre) . "'>
+                                            <option value='Pendiente'" . ($estadoNombre == 'Pendiente' ? ' selected' : '') . ">Pendiente</option>
+                                            <option value='En proceso'" . ($estadoNombre == 'En proceso' ? ' selected' : '') . ">En proceso</option>
+                                            <option value='Resuelto'" . ($estadoNombre == 'Resuelto' ? ' selected' : '') . ">Resuelto</option>
                                         </select>
                                       </td>";
 
-                                // Fecha formateada
+                                // Fecha
                                 $fechaFormateada = date('d/m/Y H:i', strtotime($ticket['Fecha_Creacion']));
                                 echo "<td>
                                         <span class='date-cell'>" . $fechaFormateada . "</span>
@@ -366,7 +367,6 @@ require_once '../../../backend/bd/conexion.php';
     <!-- Sistema de filtros avanzados -->
     <script src="/sisti/backend/js/tickets/todos-tickets.js"></script>
 
-
 </body>
 
 </html>
@@ -375,11 +375,12 @@ require_once '../../../backend/bd/conexion.php';
 // AJAX para actualizar estadísticas generales inline
 if (isset($_POST['ajax']) && $_POST['ajax'] === 'estadisticas_generales') {
     try {
+        // 🔥 CORRECCIÓN: Usar 'En proceso' con minúscula como está en la BD
         $stmt = $conexion->prepare("
             SELECT 
                 COUNT(*) as total,
                 SUM(CASE WHEN ei.Nombre = 'Pendiente' THEN 1 ELSE 0 END) as pendientes,
-                SUM(CASE WHEN ei.Nombre = 'En Proceso' THEN 1 ELSE 0 END) as proceso,
+                SUM(CASE WHEN ei.Nombre = 'En proceso' THEN 1 ELSE 0 END) as proceso,
                 SUM(CASE WHEN ei.Nombre = 'Resuelto' THEN 1 ELSE 0 END) as resueltos
             FROM tb_Incidentes i
             INNER JOIN tb_Estados_Incidente ei ON i.Id_Estados_Incidente = ei.Id_Estados_Incidente

@@ -25,7 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['iniciarSesion'])) {
 
             if ($user && password_verify($claveInput, $user['Clave'])) {
                 $_SESSION['hd_activo'] = true;
-                $_SESSION['hd_id'] = $user['Id_Usuarios'];
+                $_SESSION['hd_id'] = $user['Id_Usuaraios'];
                 $_SESSION['hd_usuario'] = $user['Usuario'];
                 $_SESSION['hd_nombre'] = $user['Nombre'] . ' ' . $user['Apellido_Paterno'];
                 $_SESSION['hd_rol'] = strtolower($user['NombreRol']);
