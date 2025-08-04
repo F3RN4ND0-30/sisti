@@ -1,13 +1,13 @@
 <?php
 
 // Configuración
-$servidor = 'DESKTOP-V7Q6881\SQLEXPRESS';
+$servidor = 'localhost';
 $basedatos = 'DB_HELPDESK';
 
 // Modo de autenticación (cambiar aquí)
 $usar_windows = true; // true = Windows Auth, false = SQL Auth
-$usuario_sql = 'saF';
-$password_sql = 'Muni1234';
+$usuario_sql = 'ZANDER';
+$password_sql = '12345';
 
 try {
     if ($usar_windows) {
