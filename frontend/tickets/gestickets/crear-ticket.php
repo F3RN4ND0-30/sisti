@@ -22,6 +22,10 @@ require_once '../../../backend/bd/conexion.php';
     <link rel="stylesheet" href="../../../backend/css/tickets/modal-ticket.css">
     <link rel="stylesheet" href="../../../backend/css/tickets/crear-ticket.css">
 
+    <!-- jQuery y Select2 -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
     <!-- JS  -->
     <script src="../../../backend/js/tickets/registro-ticket.js" defer></script>
@@ -69,8 +73,8 @@ require_once '../../../backend/bd/conexion.php';
                 <div class="form-row area-descripcion">
                     <div class="form-group">
                         <label for="area">Área</label>
-                        <select id="area" name="area" class="form-control" required>
-                            <option value="">Seleccione Área</option>
+                        <select id="area" name="area" required>
+                            <option value="">Seleccione o escriba para buscar</option>
                             <?php
                             try {
                                 $stmt = $conexion->prepare("SELECT Id_Areas, Nombre FROM tb_Areas WHERE Estado = 1");
@@ -111,6 +115,32 @@ require_once '../../../backend/bd/conexion.php';
             <button id="aceptar" class="boton boton-enviar">Aceptar</button>
         </div>
     </div>
+
+    <!-- Inicialización Select2 con resaltado -->
+    <script>
+        $(document).ready(function() {
+            function highlightMatch(text, term) {
+                const regex = new RegExp('(' + term + ')', 'gi');
+                return text.replace(regex, '<span class="highlight">$1</span>');
+            }
+
+            function customTemplate(state, container) {
+                const term = $('.select2-search__field').val();
+                if (!term) return state.text;
+                return highlightMatch(state.text, term);
+            }
+
+            $("#area").select2({
+                placeholder: "Seleccione o escriba para buscar",
+                allowClear: true,
+                width: '100%',
+                escapeMarkup: function(markup) {
+                    return markup;
+                },
+                templateResult: customTemplate
+            });
+        });
+    </script>
 </body>
 
 </html>

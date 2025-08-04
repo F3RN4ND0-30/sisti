@@ -26,23 +26,36 @@ $estadoMap = [
 
 $nuevo_estado_nombre = $estadoMap[$nuevo_estado_nombre] ?? null;
 
-// Validaciones
+// Validaciones iniciales
 if (!$id_incidente || !$nuevo_estado_nombre || !$id_usuario_actual) {
     echo json_encode([
         'exito' => false,
-        'mensaje' => 'Datos incompletos o sesión no válida.',
-        'debug' => [
-            'id_incidente' => $id_incidente,
-            'estado_raw' => $nuevo_estado_raw,
-            'estado_normalizado' => $nuevo_estado_nombre,
-            'id_usuario_sesion' => $id_usuario_actual
-        ]
+        'mensaje' => 'Datos incompletos o sesión no válida.'
     ]);
     exit;
 }
 
 try {
-    // Obtener ID del estado
+    // Verificar a quién está asignado el incidente
+    $stmt = $conexion->prepare("
+        SELECT Id_Usuarios 
+        FROM tb_incidentes 
+        WHERE Id_Incidentes = :id
+    ");
+    $stmt->execute([':id' => $id_incidente]);
+    $incidente = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if (!$incidente) {
+        echo json_encode([
+            'exito' => false,
+            'mensaje' => 'Incidente no encontrado.'
+        ]);
+        exit;
+    }
+
+    $id_usuario_asignado = $incidente['Id_Usuarios'];
+
+    // Obtener ID del nuevo estado
     $stmt = $conexion->prepare("
         SELECT Id_Estados_Incidente 
         FROM tb_estados_incidente 
@@ -54,41 +67,47 @@ try {
     if (!$estado) {
         echo json_encode([
             'exito' => false,
-            'mensaje' => "Estado no válido en la base de datos: $nuevo_estado_nombre"
+            'mensaje' => "Estado no válido: $nuevo_estado_nombre"
         ]);
         exit;
     }
 
     $id_estado = $estado['Id_Estados_Incidente'];
 
-    // Actualizar estado y asignar usuario actual
-    $updateStmt = $conexion->prepare("
-        UPDATE tb_incidentes 
-        SET Id_Estados_Incidente = :estado, 
-            Id_Usuarios = :usuario 
-        WHERE Id_Incidentes = :id
-    ");
-    $updateStmt->execute([
-        ':estado' => $id_estado,
-        ':usuario' => $id_usuario_actual,
-        ':id' => $id_incidente
-    ]);
-
-    if ($updateStmt->rowCount() > 0) {
-        echo json_encode([
-            'exito' => true,
-            'mensaje' => 'Estado actualizado y usuario asignado correctamente.'
+    // Si aún no tiene usuario asignado, lo asignamos al usuario actual
+    if ($id_usuario_asignado === null) {
+        $updateStmt = $conexion->prepare("
+            UPDATE tb_incidentes 
+            SET Id_Estados_Incidente = :estado, 
+                Id_Usuarios = :usuario 
+            WHERE Id_Incidentes = :id
+        ");
+        $updateStmt->execute([
+            ':estado' => $id_estado,
+            ':usuario' => $id_usuario_actual,
+            ':id' => $id_incidente
         ]);
     } else {
-        echo json_encode([
-            'exito' => false,
-            'mensaje' => 'No se modificó el registro (puede que ya tuviera el mismo estado o usuario).'
+        // Solo actualiza el estado, sin tocar Id_Usuarios
+        $updateStmt = $conexion->prepare("
+            UPDATE tb_incidentes 
+            SET Id_Estados_Incidente = :estado 
+            WHERE Id_Incidentes = :id
+        ");
+        $updateStmt->execute([
+            ':estado' => $id_estado,
+            ':id' => $id_incidente
         ]);
     }
+
+    echo json_encode([
+        'exito' => true,
+        'mensaje' => 'Estado actualizado correctamente.'
+    ]);
 } catch (PDOException $e) {
     error_log("Error SQL: " . $e->getMessage());
     echo json_encode([
         'exito' => false,
-        'mensaje' => 'Error de base de datos: ' . $e->getMessage()
+        'mensaje' => 'Error en base de datos: ' . $e->getMessage()
     ]);
 }

@@ -147,3 +147,57 @@
     border: 1px solid #f5c6cb;
     color: #721c24;
 }
+
+/* Ajustar altura y bordes del select */
+.select2-container--default .select2-selection--single {
+    height: 50px !important;
+    border: 2px solid #e5e7eb !important;
+    border-radius: 10px !important;
+    font-size: 15px !important;
+    display: flex !important;
+    align-items: center !important;
+    padding-left: 40px !important;
+    /* espacio para ícono */
+}
+
+/* Ícono dentro del select */
+.select2-container--default .select2-selection--single::before {
+    content: "\e7ee";
+    /* Material icon: domain */
+    font-family: 'Material Icons';
+    font-size: 22px;
+    color: #999;
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+/* Texto dentro */
+.select2-container .select2-selection--single .select2-selection__rendered {
+    color: #555;
+    line-height: 50px;
+    padding-left: 5px !important;
+}
+
+/* Flecha */
+.select2-container--default .select2-selection__arrow {
+    height: 100%;
+    right: 10px;
+}
+
+/* Foco */
+.select2-container--default .select2-selection--single:focus {
+    border-color: #2563eb;
+    box-shadow: 0 0 6px rgba(37, 99, 235, 0.3);
+    outline: none;
+}
+
+/* Resaltado */
+.highlight {
+    font-weight: bold;
+    color: #2563eb;
+    background: #eef2ff;
+    padding: 2px 4px;
+    border-radius: 4px;
+}

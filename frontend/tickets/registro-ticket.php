@@ -19,63 +19,6 @@ require_once '../../backend/bd/conexion.php';
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-
-    <!-- Estilos personalizados -->
-    <style>
-        /* Ajustar altura y bordes del select */
-        .select2-container--default .select2-selection--single {
-            height: 50px;
-            border: 2px solid #e5e7eb;
-            border-radius: 10px;
-            font-size: 15px;
-            display: flex;
-            align-items: center;
-            padding-left: 40px;
-            /* espacio para ícono */
-        }
-
-        /* Ícono dentro del select */
-        .select2-container--default .select2-selection--single::before {
-            content: "\e7ee";
-            /* Material icon: domain */
-            font-family: 'Material Icons';
-            font-size: 22px;
-            color: #999;
-            position: absolute;
-            left: 12px;
-            top: 50%;
-            transform: translateY(-50%);
-        }
-
-        /* Texto dentro */
-        .select2-container .select2-selection--single .select2-selection__rendered {
-            color: #555;
-            line-height: 50px;
-            padding-left: 5px !important;
-        }
-
-        /* Flecha */
-        .select2-container--default .select2-selection__arrow {
-            height: 100%;
-            right: 10px;
-        }
-
-        /* Foco */
-        .select2-container--default .select2-selection--single:focus {
-            border-color: #2563eb;
-            box-shadow: 0 0 6px rgba(37, 99, 235, 0.3);
-            outline: none;
-        }
-
-        /* Resaltado */
-        .highlight {
-            font-weight: bold;
-            color: #2563eb;
-            background: #eef2ff;
-            padding: 2px 4px;
-            border-radius: 4px;
-        }
-    </style>
 </head>
 
 <body>
