@@ -3,9 +3,10 @@ session_name('HELPDESK_SISTEMA');
 session_start();
 
 if (!isset($_SESSION['hd_activo']) || $_SESSION['hd_activo'] !== true) {
-    header('location: ../login.php');
+    header('Location: ../login.php');
     exit();
 }
+require_once '../../backend/bd/conexion.php';
 ?>
 
 <!doctype html>
@@ -41,7 +42,7 @@ if (!isset($_SESSION['hd_activo']) || $_SESSION['hd_activo'] !== true) {
         <div class="dashboard-stats">
             <div class="row">
                 <div class="col-md-8">
-                    <h2>¡Bienvenido, <?php echo $_SESSION['hd_nombres']; ?>!</h2>
+                    <h2>¡Bienvenido, <?php echo $_SESSION['hd_nombre']; ?>!</h2>
                     <p class="mb-0">Sistema de HelpDesk - Gestión de Incidencias y Soporte Técnico</p>
                     <?php
                     date_default_timezone_set('America/Lima');
@@ -51,7 +52,7 @@ if (!isset($_SESSION['hd_activo']) || $_SESSION['hd_activo'] !== true) {
                 <div class="col-md-4 text-right">
                     <div class="user-role">
                         <h5><?php echo ucfirst($_SESSION['hd_rol']); ?></h5>
-                        <p><?php echo $_SESSION['hd_correo']; ?></p>
+                        <p><?php echo $_SESSION['hd_usuario']; ?></p>
                     </div>
                 </div>
             </div>

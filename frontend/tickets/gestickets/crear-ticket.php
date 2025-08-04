@@ -19,75 +19,12 @@ require_once '../../../backend/bd/conexion.php';
 
     <!-- CSS -->
     <link rel="stylesheet" href="../../../backend/css/vistas/escritorio.css">
+    <link rel="stylesheet" href="../../../backend/css/tickets/modal-ticket.css">
+    <link rel="stylesheet" href="../../../backend/css/tickets/crear-ticket.css">
 
-    <style>
-        .form-container {
-            background: white;
-            border-radius: 10px;
-            padding: 30px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            margin-top: 20px;
-        }
 
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-group label {
-            font-weight: 600;
-            color: #333;
-            margin-bottom: 8px;
-            display: block;
-        }
-
-        .form-control {
-            width: 100%;
-            padding: 12px 15px;
-            border: 2px solid #e1e5e9;
-            border-radius: 8px;
-            font-size: 14px;
-            transition: border-color 0.3s;
-        }
-
-        .form-control:focus {
-            outline: none;
-            border-color: #3498db;
-            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, #3498db, #2980b9);
-            border: none;
-            padding: 12px 30px;
-            border-radius: 8px;
-            color: white;
-            font-weight: 600;
-            cursor: pointer;
-            transition: transform 0.2s;
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-2px);
-        }
-
-        .alert {
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-        }
-
-        .alert-success {
-            background-color: #d4edda;
-            border: 1px solid #c3e6cb;
-            color: #155724;
-        }
-
-        .alert-danger {
-            background-color: #f8d7da;
-            border: 1px solid #f5c6cb;
-            color: #721c24;
-        }
-    </style>
+    <!-- JS  -->
+    <script src="../../../backend/js/tickets/registro-ticket.js" defer></script>
 </head>
 
 <body>
@@ -104,157 +41,76 @@ require_once '../../../backend/bd/conexion.php';
         </div>
 
         <div class="form-container">
-            <?php
-            if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-                $dni = $_POST['dni'] ?? '';
-                $nombres = $_POST['nombres'] ?? '';
-                $apPaterno = $_POST['apPaterno'] ?? '';
-                $apMaterno = $_POST['apMaterno'] ?? '';
-                $idArea = $_POST['idArea'] ?? '';
-                $descripcion = $_POST['descripcion'] ?? '';
-                $prioridad = $_POST['prioridad'] ?? 'Normal';
-
-                if (!empty($dni) && !empty($nombres) && !empty($apPaterno) && !empty($idArea) && !empty($descripcion)) {
-                    try {
-                        $conexion->beginTransaction();
-
-                        // Verificar/crear usuario externo
-                        $stmt = $conexion->prepare("SELECT IdUsuarioExterno FROM tb_UsuariosExternos WHERE Dni = ?");
-                        $stmt->execute([$dni]);
-                        $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
-
-                        if (!$usuario) {
-                            $stmtUsuario = $conexion->prepare("
-                                INSERT INTO tb_UsuariosExternos (Dni, Nombres, ApellidoPaterno, ApellidoMaterno, FechaCreacion)
-                                VALUES (?, ?, ?, ?, GETDATE())
-                            ");
-                            $stmtUsuario->execute([$dni, $nombres, $apPaterno, $apMaterno]);
-                            $usuarioId = $conexion->lastInsertId();
-                        } else {
-                            $usuarioId = $usuario['IdUsuarioExterno'];
-                        }
-
-                        // Generar código de ticket
-                        $fechaActual = date('Ymd');
-                        $random = str_pad(rand(1, 9999), 4, '0', STR_PAD_LEFT);
-                        $codigoTicket = "TCK-$fechaActual-$random";
-
-                        // Insertar ticket
-                        $stmtTicket = $conexion->prepare("INSERT INTO tb_Tickets (CodigoTicket, FechaCreacion) VALUES (?, GETDATE())");
-                        $stmtTicket->execute([$codigoTicket]);
-                        $ticketId = $conexion->lastInsertId();
-
-                        // Insertar incidente
-                        $stmtIncidente = $conexion->prepare("
-                            INSERT INTO tb_Incidentes (IdTicket, IdUsuarioExterno, IdArea, Descripcion, IdEstadoIncidente, Prioridad, FechaCreacion)
-                            VALUES (?, ?, ?, ?, 1, ?, GETDATE())
-                        ");
-                        $stmtIncidente->execute([$ticketId, $usuarioId, $idArea, $descripcion, $prioridad]);
-
-                        $conexion->commit();
-                        echo '<div class="alert alert-success">✅ <strong>Ticket creado exitosamente!</strong><br>Código: <strong>' . $codigoTicket . '</strong></div>';
-
-                        // Limpiar variables para nueva entrada
-                        $dni = $nombres = $apPaterno = $apMaterno = $idArea = $descripcion = '';
-                    } catch (PDOException $e) {
-                        $conexion->rollBack();
-                        echo '<div class="alert alert-danger">❌ Error al crear ticket: ' . $e->getMessage() . '</div>';
-                    }
-                } else {
-                    echo '<div class="alert alert-danger">❌ Por favor complete todos los campos obligatorios.</div>';
-                }
-            }
-            ?>
-
-            <form method="POST">
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="dni">DNI *</label>
-                            <input type="text" class="form-control" id="dni" name="dni" maxlength="8"
-                                value="<?php echo htmlspecialchars($dni ?? ''); ?>" required>
+            <form id="formTicket">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="dni">DNI</label>
+                        <input type="text" id="dni" name="dni" class="form-control" maxlength="8" required autocomplete="off">
+                        <div id="dni-loader" style="display: none; position: absolute; right: 15px; top: 50%; transform: translateY(-50%);">
+                            <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCA0MDAgNDAwIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxjaXJjbGUgY3g9IjIwMCIgY3k9IjIwMCIgcj0iMTgwIiBzdHJva2U9IiMyNTYzZWIiIHN0cm9rZS13aWR0aD0iNDAiIGZpbGw9Im5vbmUiIHN0cm9rZS1kYXNoYXJyYXk9IjMwMCw1MDAiPjxhbmltYXRlVHJhbnNmb3JtIGF0dHJpYnV0ZU5hbWU9InRyYW5zZm9ybSIgZHVyPSIxcyIgcmVwZWF0Q291bnQ9ImluZGVmaW5pdGUiIHR5cGU9InJvdGF0ZSIgZnJvbT0iMCAyMDAgMjAwIiB0bz0iMzYwIDIwMCAyMDAiLz48L2NpcmNsZT48L3N2Zz4=" alt="Cargando" width="22">
                         </div>
                     </div>
+                    <div class="form-group">
+                        <label for="nombre">Nombres</label>
+                        <input type="text" id="nombre" name="nombre" class="form-control" readonly required>
 
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="nombres">Nombres *</label>
-                            <input type="text" class="form-control" id="nombres" name="nombres"
-                                value="<?php echo htmlspecialchars($nombres ?? ''); ?>" required>
-                        </div>
                     </div>
                 </div>
-
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="apPaterno">Apellido Paterno *</label>
-                            <input type="text" class="form-control" id="apPaterno" name="apPaterno"
-                                value="<?php echo htmlspecialchars($apPaterno ?? ''); ?>" required>
-                        </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="apPaterno">Apellido Paterno</label>
+                        <input type="text" id="apPaterno" name="apPaterno" class="form-control" readonly required>
                     </div>
-
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="apMaterno">Apellido Materno</label>
-                            <input type="text" class="form-control" id="apMaterno" name="apMaterno"
-                                value="<?php echo htmlspecialchars($apMaterno ?? ''); ?>">
-                        </div>
+                    <div class="form-group">
+                        <label for="apMaterno">Apellido Materno</label>
+                        <input type="text" id="apMaterno" name="apMaterno" class="form-control" readonly required>
                     </div>
                 </div>
-
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="idArea">Área Afectada *</label>
-                            <select class="form-control" id="idArea" name="idArea" required>
-                                <option value="">Seleccione un área</option>
-                                <?php
-                                try {
-                                    $stmt = $conexion->prepare("SELECT Id_Areas, Nombre FROM tb_Areas WHERE Estado = 1 ORDER BY Nombre");
-                                    $stmt->execute();
-                                    $areas = $stmt->fetchAll(PDO::FETCH_ASSOC);
-                                    foreach ($areas as $area) {
-                                        $selected = (isset($idArea) && $idArea == $area['Id_Areas']) ? 'selected' : '';
-                                        echo "<option value='" . $area['Id_Areas'] . "' $selected>" . htmlspecialchars($area['Nombre']) . "</option>";
-                                    }
-                                } catch (PDOException $e) {
-                                    echo "<option value=''>Error al cargar áreas</option>";
+                <div class="form-row area-descripcion">
+                    <div class="form-group">
+                        <label for="area">Área</label>
+                        <select id="area" name="area" class="form-control" required>
+                            <option value="">Seleccione Área</option>
+                            <?php
+                            try {
+                                $stmt = $conexion->prepare("SELECT Id_Areas, Nombre FROM tb_Areas WHERE Estado = 1");
+                                $stmt->execute();
+                                $areas = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                                foreach ($areas as $area) {
+                                    echo "<option value='" . htmlspecialchars($area['Id_Areas']) . "'>" . htmlspecialchars($area['Nombre']) . "</option>";
                                 }
-                                ?>
-                            </select>
-                        </div>
+                            } catch (PDOException $e) {
+                                echo "<option value=''>Error al cargar áreas</option>";
+                            }
+                            ?>
+                        </select>
                     </div>
-
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="prioridad">Prioridad</label>
-                            <select class="form-control" id="prioridad" name="prioridad">
-                                <option value="Baja" <?php echo (isset($prioridad) && $prioridad == 'Baja') ? 'selected' : ''; ?>>Baja</option>
-                                <option value="Normal" <?php echo (!isset($prioridad) || $prioridad == 'Normal') ? 'selected' : ''; ?>>Normal</option>
-                                <option value="Alta" <?php echo (isset($prioridad) && $prioridad == 'Alta') ? 'selected' : ''; ?>>Alta</option>
-                                <option value="Crítica" <?php echo (isset($prioridad) && $prioridad == 'Crítica') ? 'selected' : ''; ?>>Crítica</option>
-                            </select>
-                        </div>
+                    <div class="form-group">
+                        <label for="descripcion">Descripción del problema</label>
+                        <textarea id="descripcion" name="descripcion" class="form-control" rows="3" placeholder="Describa el problema..."></textarea>
                     </div>
                 </div>
-
-                <div class="form-group">
-                    <label for="descripcion">Descripción del Problema *</label>
-                    <textarea class="form-control" id="descripcion" name="descripcion" rows="4"
-                        placeholder="Describa detalladamente el problema técnico..." required><?php echo htmlspecialchars($descripcion ?? ''); ?></textarea>
-                </div>
-
-                <div class="form-group text-center">
-                    <button type="submit" class="btn btn-primary">
-                        <i class="material-icons" style="vertical-align: middle;">add</i>
-                        Crear Ticket
-                    </button>
+                <div class="form-row boton-submit">
+                    <div class="form-group" style="width: auto;">
+                        <button type="submit" class="btn-primary">Enviar Ticket</button>
+                    </div>
                 </div>
             </form>
         </div>
     </div>
 
+    <!-- Modal de Ticket Creado -->
+    <div id="modalTicket" class="modal" style="display:none;">
+        <div class="modal-contenido">
+            <span id="cerrarModal" class="cerrar">&times;</span>
+            <h3>✅ Ticket creado con éxito</h3>
+            <p id="mensajeModal"></p>
+            <p style="margin-top: 10px; font-style: italic; color: #555;">
+                Guarda el ticket para hacerle seguimiento a tu solicitud.
+            </p>
+            <button id="aceptar" class="boton boton-enviar">Aceptar</button>
+        </div>
+    </div>
 </body>
 
 </html>

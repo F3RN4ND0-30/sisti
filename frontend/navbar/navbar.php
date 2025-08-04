@@ -165,16 +165,16 @@ function is_active_hd($path_fragment)
                                     data-bs-toggle="dropdown" aria-expanded="false">
                                     <i class="material-icons">person</i>
                                     <span class="user-info">
-                                        <span class="user-name"><?php echo $_SESSION['hd_nombres']; ?></span>
+                                        <span class="user-name"><?php echo $_SESSION['hd_nombre']; ?></span>
                                         <small class="user-role"><?php echo ucfirst($_SESSION['hd_rol']); ?></small>
                                     </span>
                                 </a>
                                 <ul class="dropdown-menu dropdown-menu-end">
                                     <li class="dropdown-header">
                                         <div class="user-details">
-                                            <strong><?php echo $_SESSION['hd_nombres']; ?></strong>
+                                            <strong><?php echo $_SESSION['hd_nombre']; ?></strong>
                                             <br>
-                                            <small class="text-muted"><?php echo $_SESSION['hd_correo']; ?></small>
+                                            <small class="text-muted"><?php echo $_SESSION['hd_usuario']; ?></small>
                                             <br>
                                             <span class="badge bg-primary"><?php echo ucfirst($_SESSION['hd_rol']); ?></span>
                                         </div>
