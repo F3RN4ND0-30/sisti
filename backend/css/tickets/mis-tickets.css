@@ -1,0 +1,153 @@
+/* === RESET GLOBAL === */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* === CUERPO GENERAL === */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f5f7fa;
+    color: #2c3e50;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+}
+
+/* === CONTENEDOR PRINCIPAL === */
+.main-content {
+    padding: 30px 20px;
+    max-width: 100%;
+    width: 100%;
+    overflow-x: hidden;
+    flex-grow: 1;
+}
+
+/* === TÍTULO === */
+.activity-card h4 {
+    font-size: 28px;
+    font-weight: 700;
+    color: #1d3557;
+    text-align: center;
+    margin-bottom: 25px;
+    border-bottom: 3px solid #2563eb;
+    padding-bottom: 10px;
+    animation: fadeInDown 0.5s ease;
+}
+
+/* === TABLA DE INCIDENTES === */
+.table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    background: white;
+    box-shadow: 0 8px 22px rgb(0 0 0 / 0.12);
+    border-radius: 14px;
+    overflow: hidden;
+    animation: fadeInUp 0.5s ease;
+    font-size: 14.5px;
+}
+
+.table thead {
+    background-color: #2563eb !important;
+    color: #ffffff !important;
+}
+
+.table thead th {
+    color: #ffffff !important;
+    background-color: #2563eb !important;
+    font-weight: 700;
+}
+
+.table tbody td {
+    padding: 16px 20px;
+    border-bottom: 1px solid #e2e8f0;
+    vertical-align: middle;
+    white-space: nowrap;
+}
+
+.table tbody tr:hover {
+    background-color: #e8f0fe;
+    transition: background-color 0.3s ease;
+}
+
+/* === SELECTOR DE ESTADO === */
+.estado-select {
+    padding: 6px 10px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    font-weight: 600;
+    font-size: 13.5px;
+    cursor: pointer;
+    text-align: center;
+}
+
+/* Colores dinámicos */
+.estado-select.pendiente {
+    background-color: #ffecec;
+    color: #e74c3c;
+    border: 1px solid #e74c3c;
+}
+
+.estado-select.proceso {
+    background-color: #fff7dc;
+    color: #f39c12;
+    border: 1px solid #f39c12;
+}
+
+.estado-select.resuelto {
+    background-color: #e6ffed;
+    color: #27ae60;
+    border: 1px solid #27ae60;
+}
+
+/* === ANIMACIONES === */
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-25px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(25px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* === RESPONSIVE === */
+@media (max-width: 768px) {
+
+    .table th,
+    .table td {
+        padding: 12px;
+        font-size: 13px;
+    }
+
+    .activity-card h4 {
+        font-size: 24px;
+    }
+
+    .estado-select {
+        font-size: 13px;
+    }
+}
+
+@media (max-width: 480px) {
+    .main-content {
+        padding: 15px 10px;
+    }
+}
