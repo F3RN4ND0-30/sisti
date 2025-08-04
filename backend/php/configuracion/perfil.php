@@ -20,7 +20,7 @@ try {
             Id_Areas, 
             Id_Roles, 
             Activo, 
-            Fecha_Creacion, 
+            CONVERT(DATE, Fecha_Creacion) AS Fecha_Creacion, 
             Usuario, 
             Clave
         FROM tb_Usuarios 
@@ -44,102 +44,15 @@ try {
 <head>
     <meta charset="UTF-8">
     <title>Mi Perfil | HelpDesk</title>
-    <link rel="stylesheet" href="../css/vistas/escritorio.css">
-    <link rel="stylesheet" href="../css/navbar/navbar.css">
+    <link rel="stylesheet" href="../../css/vistas/escritorio.css">
+    <link rel="stylesheet" href="../../css/navbar/navbar.css">
+    <link rel="stylesheet" href="../../css/configuracion/perfil.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="icon" type="image/png" href="../img/logoPisco.png" />
-    <style>
-        .user-role p {
-            color: #fff;
-            font-weight: bold;
-            font-size: 16px;
-            opacity: 1;
-        }
-
-        .perfil-container {
-            max-width: 800px;
-            margin: 30px auto;
-            padding: 30px;
-            background: white;
-            border-radius: 15px;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
-        }
-
-        .perfil-header {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
-        .perfil-avatar {
-            width: 120px;
-            height: 120px;
-            border-radius: 50%;
-            background: #2563eb;
-            color: white;
-            font-size: 50px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 15px;
-            box-shadow: 0 5px 15px rgba(37, 99, 235, 0.3);
-        }
-
-        .perfil-header h2 {
-            margin: 10px 0 5px;
-            font-size: 26px;
-            color: #2c3e50;
-        }
-
-        .perfil-header p {
-            color: #6c757d;
-            font-size: 16px;
-        }
-
-        .perfil-item {
-            margin-bottom: 20px;
-        }
-
-        .perfil-item label {
-            font-weight: 600;
-            color: #333;
-            display: block;
-            margin-bottom: 6px;
-        }
-
-        .form-control {
-            width: 100%;
-            padding: 10px 15px;
-            border: 2px solid #e5e7eb;
-            border-radius: 10px;
-            background: #f9fafb;
-            font-size: 15px;
-            color: #555;
-        }
-
-        .btn {
-            padding: 12px 20px;
-            border-radius: 8px;
-            font-weight: bold;
-            cursor: pointer;
-            border: none;
-            transition: 0.3s;
-            display: block;
-            margin: 25px auto 0;
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, #3498db, #2980b9);
-            color: white;
-        }
-
-        .btn-primary:hover {
-            background: linear-gradient(135deg, #2980b9, #2471a3);
-        }
-    </style>
 </head>
 
 <body>
-    <?php include '../navbar/navbar.php'; ?>
+    <?php include '../../../frontend/navbar/navbar.php'; ?>
 
     <div class="main-content">
         <div class="dashboard-stats">
@@ -167,16 +80,40 @@ try {
                 <p><?= htmlspecialchars($usuario['Usuario']) ?></p>
             </div>
 
-            <div class="perfil-item">
-                <label>DNI:</label>
-                <input type="text" value="<?= htmlspecialchars($usuario['Dni']) ?>" class="form-control" disabled>
-            </div>
-            <div class="perfil-item">
-                <label>Fecha de Creación:</label>
-                <input type="text" value="<?= htmlspecialchars($usuario['Fecha_Creacion']) ?>" class="form-control" disabled>
-            </div>
+            <div class="perfil-datos">
+                <div class="perfil-row">
+                    <div class="perfil-item">
+                        <label>Nombre de Usuario:</label>
+                        <input type="text" value="<?= htmlspecialchars($usuario['Nombre']) ?>" class="form-control" disabled>
+                    </div>
+                    <div class="perfil-item">
+                        <label>Apellido Paterno:</label>
+                        <input type="text" value="<?= htmlspecialchars($usuario['Apellido_Paterno']) ?>" class="form-control" disabled>
+                    </div>
+                </div>
 
-            <button class="btn btn-primary">Editar Perfil</button>
+                <div class="perfil-row">
+                    <div class="perfil-item">
+                        <label>Apellido Materno:</label>
+                        <input type="text" value="<?= htmlspecialchars($usuario['Apellido_Materno']) ?>" class="form-control" disabled>
+                    </div>
+                    <div class="perfil-item">
+                        <label>Usuario:</label>
+                        <input type="text" value="<?= htmlspecialchars($usuario['Usuario']) ?>" class="form-control" disabled>
+                    </div>
+                </div>
+
+                <div class="perfil-row">
+                    <div class="perfil-item">
+                        <label>DNI:</label>
+                        <input type="text" value="<?= htmlspecialchars($usuario['Dni']) ?>" class="form-control" disabled>
+                    </div>
+                    <div class="perfil-item">
+                        <label>Fecha de Creación:</label>
+                        <input type="text" value="<?= htmlspecialchars($usuario['Fecha_Creacion']) ?>" class="form-control" disabled>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </body>
