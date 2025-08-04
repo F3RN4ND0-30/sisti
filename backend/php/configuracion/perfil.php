@@ -40,6 +40,7 @@ try {
 
 <!doctype html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <title>Mi Perfil | HelpDesk</title>
@@ -54,39 +55,89 @@ try {
             font-size: 16px;
             opacity: 1;
         }
+
         .perfil-container {
             max-width: 800px;
             margin: 30px auto;
             padding: 30px;
             background: white;
             border-radius: 15px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
         }
-        .perfil-header { text-align: center; margin-bottom: 30px; }
+
+        .perfil-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
         .perfil-avatar {
-            width: 120px; height: 120px; border-radius: 50%;
-            background: #2563eb; color: white; font-size: 50px;
-            display: flex; align-items: center; justify-content: center;
-            margin: 0 auto 15px; box-shadow: 0 5px 15px rgba(37,99,235,0.3);
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: #2563eb;
+            color: white;
+            font-size: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+            box-shadow: 0 5px 15px rgba(37, 99, 235, 0.3);
         }
-        .perfil-header h2 { margin: 10px 0 5px; font-size: 26px; color: #2c3e50; }
-        .perfil-header p { color: #6c757d; font-size: 16px; }
-        .perfil-item { margin-bottom: 20px; }
-        .perfil-item label { font-weight: 600; color: #333; display: block; margin-bottom: 6px; }
+
+        .perfil-header h2 {
+            margin: 10px 0 5px;
+            font-size: 26px;
+            color: #2c3e50;
+        }
+
+        .perfil-header p {
+            color: #6c757d;
+            font-size: 16px;
+        }
+
+        .perfil-item {
+            margin-bottom: 20px;
+        }
+
+        .perfil-item label {
+            font-weight: 600;
+            color: #333;
+            display: block;
+            margin-bottom: 6px;
+        }
+
         .form-control {
-            width: 100%; padding: 10px 15px; border: 2px solid #e5e7eb;
-            border-radius: 10px; background: #f9fafb; font-size: 15px; color: #555;
+            width: 100%;
+            padding: 10px 15px;
+            border: 2px solid #e5e7eb;
+            border-radius: 10px;
+            background: #f9fafb;
+            font-size: 15px;
+            color: #555;
         }
+
         .btn {
-            padding: 12px 20px; border-radius: 8px; font-weight: bold; cursor: pointer;
-            border: none; transition: 0.3s; display: block; margin: 25px auto 0;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            border: none;
+            transition: 0.3s;
+            display: block;
+            margin: 25px auto 0;
         }
+
         .btn-primary {
-            background: linear-gradient(135deg, #3498db, #2980b9); color: white;
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
         }
-        .btn-primary:hover { background: linear-gradient(135deg, #2980b9, #2471a3); }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #2980b9, #2471a3);
+        }
     </style>
 </head>
+
 <body>
     <?php include '../navbar/navbar.php'; ?>
 
@@ -110,7 +161,7 @@ try {
         <div class="perfil-container">
             <div class="perfil-header">
                 <div class="perfil-avatar">
-                    <?= strtoupper(substr($usuario['Nombre'],0,1)) ?>
+                    <?= strtoupper(substr($usuario['Nombre'], 0, 1)) ?>
                 </div>
                 <h2><?= htmlspecialchars($usuario['Nombre'] . ' ' . $usuario['Apellido_Paterno'] . ' ' . $usuario['Apellido_Materno']) ?></h2>
                 <p><?= htmlspecialchars($usuario['Usuario']) ?></p>
@@ -129,4 +180,5 @@ try {
         </div>
     </div>
 </body>
+
 </html>
