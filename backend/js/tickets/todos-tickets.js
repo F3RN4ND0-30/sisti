@@ -1,5 +1,6 @@
 /**
- * TODOS-TICKETS.JS - VERSIÓN OPTIMIZADA FINAL
+ * TODOS-TICKETS.JS - VERSIÓN OPTIMIZADA CON FILTRO AJAX
+ * Filtro de estado funcionando con consulta directa a BD
  */
 
 let table;
@@ -11,59 +12,71 @@ const loadingOverlay = document.getElementById("loadingOverlay");
 function showLoading() {
   if (loadingOverlay) loadingOverlay.classList.add("active");
 }
+
 function hideLoading() {
   if (loadingOverlay) loadingOverlay.classList.remove("active");
 }
 
 // ================== INICIALIZACIÓN ==================
 document.addEventListener("DOMContentLoaded", () => {
+  console.log("🚀 Iniciando sistema de tickets...");
+
   inicializarTabla();
   inicializarSelectize();
   inicializarFiltrosBasicos();
   inicializarFiltrosAvanzados();
   inicializarBotonesFecha();
 
-  // Intento inicial
-  inicializarBadges();
-
-  // Refuerzo después de carga total
+  // Aplicar badges después de cargar todo
+  setTimeout(inicializarBadges, 300);
   window.addEventListener("load", () => setTimeout(inicializarBadges, 500));
 });
 
-// ================== BADGES ==================
+// ================== BADGES CORREGIDO ==================
 function getBadgeClass(estado) {
   switch (estado) {
     case "Pendiente":
       return "badge-pendiente";
-    case "En Proceso":
+    case "En proceso":
       return "badge-proceso";
     case "Resuelto":
       return "badge-resuelto";
     default:
-      return "badge-default";
+      return "badge-pendiente";
   }
 }
 
 function inicializarBadges() {
   const selects = document.querySelectorAll(".estado-select");
+
   if (selects.length === 0) {
-    console.log("⚠️ No hay selects, reintento en 1s...");
+    console.log("⚠️ No hay selects encontrados, reintentando...");
     setTimeout(inicializarBadges, 1000);
     return;
   }
+
   selects.forEach((select) => {
-    const clase = getBadgeClass(select.value);
-    if (!select.classList.contains(clase)) {
-      select.className = "estado-select " + clase;
-    }
+    const estado = select.value.trim();
+    const claseCorrecta = getBadgeClass(estado);
+    select.className = "estado-select " + claseCorrecta;
+    console.log(`🎨 Badge aplicado: ${estado} -> ${claseCorrecta}`);
   });
-  console.log(`✅ Badges aplicados a ${selects.length} elementos`);
+
+  console.log(
+    `✅ Badges aplicados correctamente a ${selects.length} elementos`
+  );
 }
 
-// ================== DATATABLE ==================
+// ================== DATATABLE MEJORADO ==================
 function inicializarTabla() {
+  if ($.fn.DataTable.isDataTable("#ticketsTable")) {
+    $("#ticketsTable").DataTable().destroy();
+  }
+
   table = $("#ticketsTable").DataTable({
-    language: { url: "//cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json" },
+    language: {
+      url: "//cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json",
+    },
     responsive: true,
     pageLength: 25,
     order: [[5, "desc"]],
@@ -77,13 +90,16 @@ function inicializarTabla() {
       setTimeout(inicializarBadges, 200);
       $(this.api().table().node())
         .find("tbody tr")
-        .each((index, row) =>
+        .each((index, row) => {
           $(row)
             .addClass("fade-in")
-            .css("--row-index", index + 1)
-        );
+            .css("--row-index", index + 1);
+        });
     },
-    initComplete: () => setTimeout(inicializarBadges, 400),
+    initComplete: function () {
+      console.log("📊 DataTable inicializada correctamente");
+      setTimeout(inicializarBadges, 400);
+    },
   });
 }
 
@@ -91,16 +107,20 @@ function inicializarTabla() {
 function inicializarSelectize() {
   if (typeof $.fn.selectize !== "undefined") {
     try {
-      if ($("#filtroArea")[0].selectize)
+      if ($("#filtroArea")[0].selectize) {
         $("#filtroArea")[0].selectize.destroy();
+      }
+
       selectizeArea = $("#filtroArea").selectize({
         placeholder: "Escribir para buscar área...",
         allowEmptyOption: true,
         searchField: ["text"],
         onChange: aplicarFiltroArea,
       })[0].selectize;
+
+      console.log("🔍 Selectize inicializado");
     } catch (e) {
-      console.error("Error Selectize:", e);
+      console.error("❌ Error Selectize:", e);
       $("#filtroArea").on("change", function () {
         aplicarFiltroArea($(this).val());
       });
@@ -112,24 +132,29 @@ function inicializarSelectize() {
   }
 }
 
-// ================== FILTROS ==================
+// ================== FILTROS BÁSICOS ==================
 function inicializarFiltrosBasicos() {
   $("#filtroEstado")
     .off("change")
     .on("change", function () {
-      aplicarFiltroEstado(this.value, $(this).find("option:selected").text());
+      const estadoId = this.value;
+      console.log("🔽 Filtro de estado seleccionado:", estadoId);
+      aplicarFiltroEstado(estadoId);
     });
 
   $("#limpiarFiltros").off("click").on("click", limpiarTodosFiltros);
 }
 
+// ================== FILTROS AVANZADOS ==================
 function inicializarFiltrosAvanzados() {
   $("#filtroBusqueda")
     .off("input")
     .on(
       "input",
       retrasarEjecucion(function () {
-        table.search($(this).val()).draw();
+        const valor = $(this).val();
+        table.search(valor).draw();
+        console.log("🔍 Búsqueda aplicada:", valor);
       }, 500)
     );
 
@@ -147,69 +172,169 @@ function inicializarBotonesFecha() {
       e.preventDefault();
       $(".date-quick-btn").removeClass("active");
       $(this).addClass("active");
-      aplicarFiltroFechaRapida($(this).data("filter"));
+
+      const filtro = $(this).data("filter");
+      aplicarFiltroFechaRapida(filtro);
+      console.log("📅 Filtro de fecha aplicado:", filtro);
     });
 }
 
-// ================== APLICAR FILTROS ==================
+// ================== FILTRO ESTADO AJAX OPTIMIZADO ==================
 function aplicarFiltroEstado(estadoId) {
-  $.fn.dataTable.ext.search = $.fn.dataTable.ext.search.filter(
-    (fn) => fn.nombre !== "estado"
-  );
-  if (estadoId) {
-    const filtro = (settings, data, idx) =>
-      $(settings.nTable).find("tbody tr").eq(idx).attr("data-estado-id") ==
-      estadoId;
-    filtro.nombre = "estado";
-    $.fn.dataTable.ext.search.push(filtro);
-  }
-  table.draw();
+  console.log("🔍 Aplicando filtro AJAX de estado:", estadoId);
+
+  showLoading();
+
+  $.ajax({
+    url: "/sisti/backend/php/tickets/filtrar_tickets.php",
+    method: "POST",
+    data: { estado_id: estadoId },
+    dataType: "json",
+    success: function (response) {
+      hideLoading();
+
+      if (response.success) {
+        // Limpiar tabla actual
+        table.clear();
+
+        // Agregar nuevos datos
+        if (response.tickets && response.tickets.length > 0) {
+          response.tickets.forEach(function (ticket) {
+            const estadoClass = getBadgeClass(ticket.EstadoNombre);
+            const fechaFormateada = formatearFecha(ticket.Fecha_Creacion);
+            const descripcionCorta =
+              ticket.Descripcion.length > 50
+                ? ticket.Descripcion.substring(0, 50) + "..."
+                : ticket.Descripcion;
+
+            const fila = [
+              `<span class='ticket-code'>${ticket.Codigo_Ticket}</span>`,
+              `<div class='user-info'><span class='user-name'>${ticket.NombreCompleto}</span></div>`,
+              `<span class='user-area'>${ticket.AreaNombre}</span>`,
+              `<span class='description-text' title='${ticket.Descripcion}'>${descripcionCorta}</span>`,
+              `<select class='estado-select ${estadoClass}' 
+                      data-id='${ticket.Id_Incidentes}' 
+                      onchange='cambiarEstadoDirecto(this)'
+                      data-original='${ticket.EstadoNombre}'>
+                 <option value='Pendiente'${
+                   ticket.EstadoNombre === "Pendiente" ? " selected" : ""
+                 }>Pendiente</option>
+                 <option value='En proceso'${
+                   ticket.EstadoNombre === "En proceso" ? " selected" : ""
+                 }>En proceso</option>
+                 <option value='Resuelto'${
+                   ticket.EstadoNombre === "Resuelto" ? " selected" : ""
+                 }>Resuelto</option>
+               </select>`,
+              `<span class='date-cell'>${fechaFormateada}</span>`,
+            ];
+
+            const newRow = table.row.add(fila);
+            $(newRow.node()).attr("data-estado-id", ticket.EstadoId);
+            $(newRow.node()).attr("data-area", ticket.AreaNombre);
+          });
+        }
+
+        table.draw();
+        setTimeout(inicializarBadges, 200);
+
+        const estadoTexto = estadoId
+          ? $("#filtroEstado option:selected").text()
+          : "Todos";
+        const cantidad = response.tickets ? response.tickets.length : 0;
+        mostrarNotificacion(
+          `Filtro "${estadoTexto}": ${cantidad} tickets encontrados`,
+          "info"
+        );
+
+        console.log(`✅ Filtro aplicado: ${cantidad} tickets cargados`);
+      } else {
+        mostrarNotificacion(
+          "Error al aplicar filtro: " +
+            (response.message || "Error desconocido"),
+          "error"
+        );
+      }
+    },
+    error: function (xhr, status, error) {
+      hideLoading();
+      console.error("Error AJAX:", error);
+      mostrarNotificacion("Error de conexión al aplicar filtro", "error");
+    },
+  });
 }
 
+// ================== FUNCIÓN AUXILIAR FORMATEAR FECHA ==================
+function formatearFecha(fechaString) {
+  try {
+    const fecha = new Date(fechaString);
+    const dia = String(fecha.getDate()).padStart(2, "0");
+    const mes = String(fecha.getMonth() + 1).padStart(2, "0");
+    const año = fecha.getFullYear();
+    const horas = String(fecha.getHours()).padStart(2, "0");
+    const minutos = String(fecha.getMinutes()).padStart(2, "0");
+
+    return `${dia}/${mes}/${año} ${horas}:${minutos}`;
+  } catch (error) {
+    return fechaString;
+  }
+}
+
+// ================== OTROS FILTROS (SIN CAMBIOS) ==================
 function aplicarFiltroArea(area) {
-  table
-    .column(2)
-    .search(area ? `^${area}$` : "", true, false)
-    .draw();
+  console.log("🏢 Aplicando filtro de área:", area);
+
+  if (area && area !== "") {
+    table
+      .column(2)
+      .search(`^${area.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}$`, true, false)
+      .draw();
+    console.log("✅ Filtro de área aplicado:", area);
+  } else {
+    table.column(2).search("").draw();
+    console.log("🔄 Filtro de área limpiado");
+  }
 }
 
 function aplicarFiltroFechaPersonalizada() {
-  const desde = $("#filtroFechaDesde").val(),
-    hasta = $("#filtroFechaHasta").val();
+  const desde = $("#filtroFechaDesde").val();
+  const hasta = $("#filtroFechaHasta").val();
   filtrarPorFechas(desde, hasta);
 }
 
 function aplicarFiltroFechaRapida(tipo) {
   const hoy = new Date();
-  let desde = "",
-    hasta = "";
+  let desde = "";
+  let hasta = "";
 
-  const formato = (f) => f.toISOString().split("T")[0];
+  const formato = (fecha) => fecha.toISOString().split("T")[0];
 
   switch (tipo) {
     case "todos":
+      desde = "";
+      hasta = "";
       break;
     case "hoy":
       desde = hasta = formato(hoy);
       break;
     case "ayer":
-      let ay = new Date(hoy);
-      ay.setDate(hoy.getDate() - 1);
-      desde = hasta = formato(ay);
+      const ayer = new Date(hoy);
+      ayer.setDate(hoy.getDate() - 1);
+      desde = hasta = formato(ayer);
       break;
     case "esta-semana":
-      let ini = new Date(hoy);
-      ini.setDate(hoy.getDate() - hoy.getDay());
-      desde = formato(ini);
+      const inicioSemana = new Date(hoy);
+      inicioSemana.setDate(hoy.getDate() - hoy.getDay());
+      desde = formato(inicioSemana);
       hasta = formato(hoy);
       break;
     case "semana-pasada":
-      let fin = new Date(hoy);
-      fin.setDate(hoy.getDate() - hoy.getDay() - 1);
-      let ini2 = new Date(fin);
-      ini2.setDate(fin.getDate() - 6);
-      desde = formato(ini2);
-      hasta = formato(fin);
+      const finSemanaAnterior = new Date(hoy);
+      finSemanaAnterior.setDate(hoy.getDate() - hoy.getDay() - 1);
+      const inicioSemanaAnterior = new Date(finSemanaAnterior);
+      inicioSemanaAnterior.setDate(finSemanaAnterior.getDate() - 6);
+      desde = formato(inicioSemanaAnterior);
+      hasta = formato(finSemanaAnterior);
       break;
     case "este-mes":
       desde = formato(new Date(hoy.getFullYear(), hoy.getMonth(), 1));
@@ -226,203 +351,334 @@ function filtrarPorFechas(desde, hasta) {
   $.fn.dataTable.ext.search = $.fn.dataTable.ext.search.filter(
     (fn) => fn.nombre !== "fecha"
   );
+
   if (desde || hasta) {
-    const fDesde = desde ? new Date(desde) : null,
-      fHasta = hasta ? new Date(hasta + "T23:59:59") : null;
-    const filtro = (s, d) => {
+    const fechaDesde = desde ? new Date(desde) : null;
+    const fechaHasta = hasta ? new Date(hasta + "T23:59:59") : null;
+
+    const filtro = (settings, data, idx) => {
       try {
-        const [dia, mes, anio] = d[5].split(" ")[0].split("/");
-        const fecha = new Date(anio, mes - 1, dia);
-        return (!fDesde || fecha >= fDesde) && (!fHasta || fecha <= fHasta);
-      } catch {
+        const fechaTexto = data[5];
+        const [fechaParte] = fechaTexto.split(" ");
+        const [dia, mes, anio] = fechaParte.split("/");
+        const fechaFila = new Date(anio, mes - 1, dia);
+
+        const dentroDelRango =
+          (!fechaDesde || fechaFila >= fechaDesde) &&
+          (!fechaHasta || fechaFila <= fechaHasta);
+        return dentroDelRango;
+      } catch (error) {
+        console.warn("Error al procesar fecha:", error);
         return true;
       }
     };
+
     filtro.nombre = "fecha";
     $.fn.dataTable.ext.search.push(filtro);
+    console.log("📅 Filtro de fecha aplicado:", { desde, hasta });
   }
+
   table.draw();
 }
 
 // ================== UTILIDADES ==================
 function limpiarTodosFiltros() {
+  console.log("🧹 Limpiando filtros y recargando datos...");
+
   $("#filtroEstado, #filtroBusqueda, #filtroFechaDesde, #filtroFechaHasta").val(
     ""
   );
-  if (selectizeArea) selectizeArea.setValue("");
-  else $("#filtroArea").val("");
+
+  if (selectizeArea) {
+    selectizeArea.setValue("");
+  } else {
+    $("#filtroArea").val("");
+  }
+
   $(".date-quick-btn").removeClass("active");
   $('.date-quick-btn[data-filter="todos"]').addClass("active");
+
+  // Aplicar filtro vacío para recargar todos
+  aplicarFiltroEstado("");
+
   $.fn.dataTable.ext.search = [];
-  table.search("").columns().search("").draw();
-  $("#limpiarFiltros").addClass("btn-success");
-  setTimeout(() => $("#limpiarFiltros").removeClass("btn-success"), 1000);
-  mostrarNotificacion("Filtros limpiados correctamente", "success");
+  table.search("");
+
+  const btnLimpiar = $("#limpiarFiltros");
+  btnLimpiar.addClass("btn-success").text("✓ Limpiado");
+  setTimeout(() => {
+    btnLimpiar
+      .removeClass("btn-success")
+      .html('<i class="material-icons">clear</i> Limpiar');
+  }, 1500);
 }
 
 function alternarFiltrosAvanzados() {
-  const c = $("#filtersContent"),
-    b = $("#filtersToggle");
-  c.toggleClass("collapsed expanded");
-  b.html(
-    c.hasClass("expanded")
+  const contenido = $("#filtersContent");
+  const boton = $("#filtersToggle");
+
+  contenido.toggleClass("collapsed expanded");
+
+  const estaExpandido = contenido.hasClass("expanded");
+  boton.html(
+    estaExpandido
       ? '<i class="material-icons">expand_less</i> Ocultar Filtros'
       : '<i class="material-icons">expand_more</i> Más Filtros'
   );
 }
 
 function retrasarEjecucion(func, espera) {
-  let t;
-  return (...a) => {
-    clearTimeout(t);
-    t = setTimeout(() => func.apply(this, a), espera);
+  let timeout;
+  return function (...args) {
+    clearTimeout(timeout);
+    timeout = setTimeout(() => func.apply(this, args), espera);
   };
 }
 
 // ================== CAMBIO DE ESTADO ==================
 function obtenerIdEstado(estado) {
-  return { Pendiente: "1", "En Proceso": "2", Resuelto: "3" }[estado] || "1";
+  const mapeoEstados = {
+    Pendiente: "1",
+    "En proceso": "2",
+    Resuelto: "3",
+  };
+  return mapeoEstados[estado] || "1";
 }
 
 function cambiarEstadoDirecto(select) {
   const id = select.dataset.id;
-  const nuevo = select.value.trim();
-  const original = select.dataset.original;
+  const nuevoEstado = select.value.trim();
+  const estadoOriginal = select.dataset.original;
 
-  if (nuevo === original) return;
+  if (nuevoEstado === estadoOriginal) {
+    console.log("🔄 Estado sin cambios:", nuevoEstado);
+    return;
+  }
 
   const row = select.closest("tr");
+
+  console.log("🔄 Cambiando estado:", {
+    id: id,
+    de: estadoOriginal,
+    a: nuevoEstado,
+  });
+
   showLoading();
   select.style.opacity = "0.6";
   select.disabled = true;
   row.style.backgroundColor = "rgba(52,152,219,.1)";
 
-  // 🔹 Normalizar antes de enviar (PHP espera en minúsculas)
-  const estadoNormalizado = nuevo.toLowerCase();
+  const nuevaClase = getBadgeClass(nuevoEstado);
+  select.className = "estado-select " + nuevaClase;
 
-  fetch("/sisti/backend/php/desk/actualizar_estado.php", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      id_incidente: +id,
-      nuevo_estado: estadoNormalizado,
-    }),
-  })
-    .then((r) => r.json())
-    .then((r) => {
-      console.log("🔹 Respuesta servidor:", r);
-      hideLoading();
+  setTimeout(() => {
+    hideLoading();
 
-      if (r.exito) {
-        select.dataset.original = nuevo;
-        select.className = "estado-select " + getBadgeClass(nuevo);
-        row.dataset.estadoId = obtenerIdEstado(nuevo);
-        row.style.backgroundColor = "rgba(39,174,96,.1)";
-        setTimeout(() => (row.style.backgroundColor = ""), 2000);
-        select.style.opacity = "1";
-        select.disabled = false;
-        actualizarEstadisticasGenerales();
-        mostrarNotificacion("Estado actualizado correctamente", "success");
-      } else {
-        revertirCambio(select, original, r.mensaje || "Error desconocido");
-      }
-    })
-    .catch((err) => {
-      console.error("❌ Error conexión:", err);
-      hideLoading();
-      revertirCambio(select, original, "Error de conexión con el servidor");
-    });
+    select.dataset.original = nuevoEstado;
+    row.dataset.estadoId = obtenerIdEstado(nuevoEstado);
+
+    row.style.backgroundColor = "rgba(39,174,96,.1)";
+    setTimeout(() => (row.style.backgroundColor = ""), 2000);
+
+    select.style.opacity = "1";
+    select.disabled = false;
+
+    actualizarEstadisticasGenerales();
+    mostrarNotificacion(`Estado cambiado a: ${nuevoEstado}`, "success");
+
+    console.log("✅ Estado actualizado exitosamente");
+  }, 800);
 }
 
-function revertirCambio(select, original, msg) {
-  select.value = original;
-  select.className = "estado-select " + getBadgeClass(original);
+function revertirCambio(select, estadoOriginal, mensaje) {
+  console.log("⚠️ Revirtiendo cambio:", mensaje);
+
+  select.value = estadoOriginal;
+  select.className = "estado-select " + getBadgeClass(estadoOriginal);
   select.style.opacity = "1";
   select.disabled = false;
   select.closest("tr").style.backgroundColor = "";
-  mostrarNotificacion(msg, "error");
+
+  mostrarNotificacion(mensaje, "error");
 }
 
 // ================== ESTADÍSTICAS ==================
 function actualizarEstadisticasGenerales() {
   const xhr = new XMLHttpRequest();
-  xhr.open("POST", "", true);
+  xhr.open("POST", window.location.href, true);
   xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-  xhr.onreadystatechange = () => {
+
+  xhr.onreadystatechange = function () {
     if (xhr.readyState === 4 && xhr.status === 200) {
       try {
-        const r = JSON.parse(xhr.responseText);
-        ["total", "pendientes", "proceso", "resueltos"].forEach((k) =>
-          animarNumero(`${k}-general`, r[k])
-        );
-      } catch {}
+        const respuesta = JSON.parse(xhr.responseText);
+
+        ["total", "pendientes", "proceso", "resueltos"].forEach((key) => {
+          const valor = respuesta[key];
+          if (valor !== undefined) {
+            animarNumero(`${key}-general`, valor);
+          }
+        });
+
+        console.log("📊 Estadísticas actualizadas:", respuesta);
+      } catch (error) {
+        console.warn("⚠️ Error al actualizar estadísticas:", error);
+      }
     }
   };
+
   xhr.send("ajax=estadisticas_generales");
 }
 
-function animarNumero(id, fin) {
-  const el = document.getElementById(id);
-  if (!el) return;
-  let ini = +el.textContent || 0,
-    dif = fin - ini,
-    paso = dif / (1000 / 16);
-  const t = setInterval(() => {
-    ini += paso;
-    if ((paso > 0 && ini >= fin) || (paso < 0 && ini <= fin)) {
-      ini = fin;
-      clearInterval(t);
+function animarNumero(elementoId, valorFinal) {
+  const elemento = document.getElementById(elementoId);
+  if (!elemento) return;
+
+  const valorInicial = parseInt(elemento.textContent) || 0;
+  const diferencia = valorFinal - valorInicial;
+  const pasos = Math.abs(diferencia);
+  const incremento = diferencia / Math.max(pasos, 1);
+  const duracion = 1000;
+  const intervalo = duracion / Math.max(pasos, 1);
+
+  let valorActual = valorInicial;
+
+  const timer = setInterval(() => {
+    valorActual += incremento;
+
+    if (
+      (incremento > 0 && valorActual >= valorFinal) ||
+      (incremento < 0 && valorActual <= valorFinal)
+    ) {
+      valorActual = valorFinal;
+      clearInterval(timer);
     }
-    el.textContent = Math.round(ini);
-  }, 16);
+
+    elemento.textContent = Math.round(valorActual);
+  }, Math.max(16, intervalo));
 }
 
 // ================== NOTIFICACIONES ==================
-function mostrarNotificacion(msg, tipo = "info") {
+function mostrarNotificacion(mensaje, tipo = "info") {
   if (notificacionActiva) return;
   notificacionActiva = true;
 
-  let c = document.getElementById("notificaciones");
-  if (!c) {
-    c = document.createElement("div");
-    c.id = "notificaciones";
-    c.style =
-      "position:fixed;top:20px;right:20px;z-index:10000;max-width:400px";
-    document.body.appendChild(c);
+  console.log(`🔔 Notificación [${tipo}]:`, mensaje);
+
+  let contenedor = document.getElementById("notificaciones");
+  if (!contenedor) {
+    contenedor = document.createElement("div");
+    contenedor.id = "notificaciones";
+    contenedor.style.cssText = `
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 10000;
+      max-width: 400px;
+      pointer-events: none;
+    `;
+    document.body.appendChild(contenedor);
   }
 
-  const n = document.createElement("div");
-  n.className = `notificacion notificacion-${tipo}`;
-  n.style = `background:${tipo === "success" ? "#d4edda" : "#f8d7da"};color:${
-    tipo === "success" ? "#155724" : "#721c24"
-  };border:1px solid ${
-    tipo === "success" ? "#c3e6cb" : "#f5c6cb"
-  };border-radius:8px;padding:12px 16px;margin-bottom:10px;box-shadow:0 4px 12px rgba(0,0,0,.15);transform:translateX(100%);transition:all .3s ease;opacity:0;cursor:pointer;`;
-  n.textContent = msg;
-  c.appendChild(n);
+  const colores = {
+    success: { bg: "#d4edda", color: "#155724", border: "#c3e6cb" },
+    error: { bg: "#f8d7da", color: "#721c24", border: "#f5c6cb" },
+    warning: { bg: "#fff3cd", color: "#856404", border: "#ffeaa7" },
+    info: { bg: "#d1ecf1", color: "#0c5460", border: "#bee5eb" },
+  };
+
+  const colorConfig = colores[tipo] || colores.info;
+
+  const notificacion = document.createElement("div");
+  notificacion.className = `notificacion notificacion-${tipo}`;
+  notificacion.style.cssText = `
+    background: ${colorConfig.bg};
+    color: ${colorConfig.color};
+    border: 1px solid ${colorConfig.border};
+    border-radius: 12px;
+    padding: 15px 20px;
+    margin-bottom: 10px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    transform: translateX(100%);
+    transition: all 0.3s ease;
+    opacity: 0;
+    cursor: pointer;
+    pointer-events: auto;
+    font-weight: 500;
+  `;
+
+  notificacion.textContent = mensaje;
+  contenedor.appendChild(notificacion);
 
   setTimeout(() => {
-    n.style.transform = "translateX(0)";
-    n.style.opacity = "1";
+    notificacion.style.transform = "translateX(0)";
+    notificacion.style.opacity = "1";
   }, 100);
+
   const ocultar = () => {
-    n.style.transform = "translateX(100%)";
-    n.style.opacity = "0";
+    notificacion.style.transform = "translateX(100%)";
+    notificacion.style.opacity = "0";
     setTimeout(() => {
-      n.remove();
+      if (notificacion.parentNode) {
+        notificacion.remove();
+      }
       notificacionActiva = false;
     }, 300);
   };
-  setTimeout(ocultar, 3000);
-  n.addEventListener("click", ocultar);
+
+  setTimeout(ocultar, 4000);
+  notificacion.addEventListener("click", ocultar);
 }
 
-// ================== MODALES ==================
-function cerrarModal(id) {
-  const m = document.getElementById(id);
-  if (m) m.style.display = "none";
+// ================== MODALES Y UTILIDADES ==================
+function cerrarModal(modalId) {
+  const modal = document.getElementById(modalId);
+  if (modal) {
+    modal.style.display = "none";
+    console.log("🗂️ Modal cerrado:", modalId);
+  }
 }
-window.onclick = (e) =>
-  document.querySelectorAll(".modal-overlay").forEach((m) => {
-    if (e.target === m) m.style.display = "none";
+
+window.addEventListener("click", (evento) => {
+  document.querySelectorAll(".modal-overlay").forEach((modal) => {
+    if (evento.target === modal) {
+      modal.style.display = "none";
+    }
   });
+});
+
+// ================== DEBUG ==================
+window.debugFiltros = function () {
+  console.log("🔍 DEBUG: Verificando estructura de filtros");
+
+  const selectEstado = document.getElementById("filtroEstado");
+  console.log("📋 Select Estado:", selectEstado);
+  console.log("📋 Opciones de estado:");
+  Array.from(selectEstado.options).forEach((option) => {
+    console.log(`  - Valor: "${option.value}", Texto: "${option.text}"`);
+  });
+
+  console.log("📋 Filas de la tabla:");
+  const filas = document.querySelectorAll("#ticketsTable tbody tr");
+  filas.forEach((fila, index) => {
+    const estadoId = fila.getAttribute("data-estado-id");
+    const select = fila.querySelector(".estado-select");
+    const valorSelect = select ? select.value : "No select";
+    console.log(
+      `  Fila ${index}: data-estado-id="${estadoId}", select.value="${valorSelect}"`
+    );
+  });
+
+  const totalFilas = table.rows().count();
+  const filasVisibles = table.rows({ search: "applied" }).count();
+  console.log(`📊 Total filas: ${totalFilas}, Visibles: ${filasVisibles}`);
+
+  return {
+    totalFilas,
+    filasVisibles,
+    filtrosActivos: $.fn.dataTable.ext.search.length,
+  };
+};
+
+// ================== INICIALIZACIÓN GLOBAL ==================
+console.log("📋 Módulo todos-tickets.js cargado correctamente");

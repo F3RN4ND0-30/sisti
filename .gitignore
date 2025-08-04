@@ -4,6 +4,9 @@
 # Archivos subidos por usuarios
 /subidas/
 
+# archivos del vendor
+/vendor/
+
 # Reportes generados
 /reportes/*.pdf
 
