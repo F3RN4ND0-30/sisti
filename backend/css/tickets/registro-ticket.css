@@ -7,7 +7,8 @@
     box-sizing: border-box;
 }
 
-html, body {
+html,
+body {
     height: 100%;
     font-family: 'Inter', sans-serif;
     background: #f3f4f6;
@@ -53,9 +54,12 @@ html, body {
 }
 
 @keyframes float {
-    0%, 100% {
+
+    0%,
+    100% {
         transform: translateY(0) rotate(0);
     }
+
     50% {
         transform: translateY(-20px) rotate(180deg);
     }
@@ -72,6 +76,7 @@ html, body {
         opacity: 0;
         transform: translateX(-50px);
     }
+
     to {
         opacity: 1;
         transform: translateX(0);
@@ -93,12 +98,19 @@ html, body {
 }
 
 @keyframes bounce {
-    0%, 100%, 20%, 50%, 80% {
+
+    0%,
+    100%,
+    20%,
+    50%,
+    80% {
         transform: translateY(0);
     }
+
     40% {
         transform: translateY(-10px);
     }
+
     60% {
         transform: translateY(-5px);
     }
@@ -128,6 +140,7 @@ html, body {
         opacity: 0;
         transform: translateY(30px);
     }
+
     to {
         opacity: 1;
         transform: translateY(0);
@@ -223,6 +236,59 @@ textarea.control-formulario {
     font-size: 14px;
 }
 
+/* Ajustar altura y bordes del select */
+.select2-container--default .select2-selection--single {
+    height: 50px !important;
+    border: 2px solid #e5e7eb !important;
+    border-radius: 10px !important;
+    font-size: 15px !important;
+    display: flex !important;
+    align-items: center !important;
+    padding-left: 40px !important;
+    /* espacio para ícono */
+}
+
+/* Ícono dentro del select */
+.select2-container--default .select2-selection--single::before {
+    content: "\e7ee";
+    /* Material icon: domain */
+    font-family: 'Material Icons';
+    font-size: 22px;
+    color: #999;
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+/* Texto dentro */
+.select2-container .select2-selection--single .select2-selection__rendered {
+    color: #555;
+    line-height: 50px;
+    padding-left: 5px !important;
+}
+
+/* Flecha */
+.select2-container--default .select2-selection__arrow {
+    height: 100%;
+    right: 10px;
+}
+
+/* Foco */
+.select2-container--default .select2-selection--single:focus {
+    border-color: #2563eb;
+    box-shadow: 0 0 6px rgba(37, 99, 235, 0.3);
+    outline: none;
+}
+
+/* Resaltado */
+.highlight {
+    font-weight: bold;
+    color: #2563eb;
+    background: #eef2ff;
+    padding: 2px 4px;
+    border-radius: 4px;
+}
 
 /* Responsivo */
 @media (max-width: 768px) {
