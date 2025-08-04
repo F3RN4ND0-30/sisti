@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const form = document.getElementById('formTicket');
     const modal = document.getElementById('modalTicket');
     const mensajeModal = document.getElementById('mensajeModal');
-    const cerrarModal = document.getElementById('cerrarModal');
+    const irInicio = document.getElementById('irInicio');
     const aceptar = document.getElementById('aceptar');
 
     async function buscarDNI(dni) {
@@ -82,9 +82,9 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    if (cerrarModal) {
-        cerrarModal.addEventListener('click', function () {
-            modal.style.display = 'none';
+    if (irInicio) {
+        irInicio.addEventListener('click', function () {
+            window.location.href = '/sisti/';
         });
     }
 
@@ -97,7 +97,7 @@ document.addEventListener('DOMContentLoaded', function () {
     if (modal) {
         window.addEventListener('click', function (event) {
             if (event.target === modal) {
-                modal.style.display = 'none';
+                window.location.href = '/sisti/';
             }
         });
     }

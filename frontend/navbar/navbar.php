@@ -113,7 +113,7 @@ function is_active_hd($path_fragment)
                 </a>
                 <ul class="collapse list-unstyled menu" id="configSubmenu">
                     <li <?php echo is_active_hd('/configuracion/perfil.php') ? 'class="active"' : ''; ?>>
-                        <a href="/sisti/frontend/configuracion/perfil.php">Mi Perfil</a>
+                        <a href="/sisti/backend/php/configuracion/perfil.php">Mi Perfil</a>
                     </li>
                     <?php if ($rol === 'administrador'): ?>
                         <li <?php echo is_active_hd('/configuracion/sistema.php') ? 'class="active"' : ''; ?>>

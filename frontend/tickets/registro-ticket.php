@@ -13,7 +13,69 @@ require_once '../../backend/bd/conexion.php';
     <link rel="stylesheet" href="../../backend/css/tickets/registro-ticket.css">
     <link rel="stylesheet" href="../../backend/css/tickets/modal-ticket.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-    <script src="../../backend/js/tickets/registro-ticket.js" defer></script>
+    <script src="../../backend/js/tickets/registro-ticket.js"></script>
+
+    <!-- jQuery y Select2 -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+    <!-- Estilos personalizados -->
+    <style>
+        /* Ajustar altura y bordes del select */
+        .select2-container--default .select2-selection--single {
+            height: 50px;
+            border: 2px solid #e5e7eb;
+            border-radius: 10px;
+            font-size: 15px;
+            display: flex;
+            align-items: center;
+            padding-left: 40px;
+            /* espacio para ícono */
+        }
+
+        /* Ícono dentro del select */
+        .select2-container--default .select2-selection--single::before {
+            content: "\e7ee";
+            /* Material icon: domain */
+            font-family: 'Material Icons';
+            font-size: 22px;
+            color: #999;
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        /* Texto dentro */
+        .select2-container .select2-selection--single .select2-selection__rendered {
+            color: #555;
+            line-height: 50px;
+            padding-left: 5px !important;
+        }
+
+        /* Flecha */
+        .select2-container--default .select2-selection__arrow {
+            height: 100%;
+            right: 10px;
+        }
+
+        /* Foco */
+        .select2-container--default .select2-selection--single:focus {
+            border-color: #2563eb;
+            box-shadow: 0 0 6px rgba(37, 99, 235, 0.3);
+            outline: none;
+        }
+
+        /* Resaltado */
+        .highlight {
+            font-weight: bold;
+            color: #2563eb;
+            background: #eef2ff;
+            padding: 2px 4px;
+            border-radius: 4px;
+        }
+    </style>
 </head>
 
 <body>
@@ -55,9 +117,10 @@ require_once '../../backend/bd/conexion.php';
                             <span class="material-icons icono-control-formulario">account_circle</span>
                         </div>
 
+                        <!-- Select con buscador directo -->
                         <div class="grupo-formulario tiene-retroalimentacion">
-                            <select id="area" name="area" class="control-formulario" required>
-                                <option value="">Seleccione Área</option>
+                            <select id="area" name="area" required>
+                                <option value="">Seleccione o escriba para buscar</option>
                                 <?php
                                 try {
                                     $stmt = $conexion->prepare("SELECT Id_Areas, Nombre FROM tb_Areas WHERE Estado = 1");
@@ -71,7 +134,6 @@ require_once '../../backend/bd/conexion.php';
                                 }
                                 ?>
                             </select>
-                            <span class="material-icons icono-control-formulario">domain</span>
                         </div>
 
                         <div class="grupo-formulario tiene-retroalimentacion">
@@ -93,7 +155,7 @@ require_once '../../backend/bd/conexion.php';
         </div>
     </div>
 
-    <!-- Modal de Ticket Creado -->
+    <!-- Modal -->
     <div id="modalTicket" class="modal" style="display:none;">
         <div class="modal-contenido">
             <span id="cerrarModal" class="cerrar">&times;</span>
@@ -105,6 +167,32 @@ require_once '../../backend/bd/conexion.php';
             <button id="irInicio" class="boton boton-enviar">Ir al Inicio</button>
         </div>
     </div>
+
+    <!-- Inicialización Select2 con resaltado -->
+    <script>
+        $(document).ready(function() {
+            function highlightMatch(text, term) {
+                const regex = new RegExp('(' + term + ')', 'gi');
+                return text.replace(regex, '<span class="highlight">$1</span>');
+            }
+
+            function customTemplate(state, container) {
+                const term = $('.select2-search__field').val();
+                if (!term) return state.text;
+                return highlightMatch(state.text, term);
+            }
+
+            $("#area").select2({
+                placeholder: "Seleccione o escriba para buscar",
+                allowClear: true,
+                width: '100%',
+                escapeMarkup: function(markup) {
+                    return markup;
+                },
+                templateResult: customTemplate
+            });
+        });
+    </script>
 </body>
 
 </html>

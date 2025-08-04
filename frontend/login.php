@@ -3,7 +3,7 @@ session_name('HELPDESK_SISTEMA');
 session_start();
 
 if (isset($_SESSION['hd_activo']) && $_SESSION['hd_activo'] === true) {
-    header('Location:/sisvis/escritorio.php');
+    header('Location:/sisti/frontend/sisvis/escritorio.php');
     exit();
 }
 
