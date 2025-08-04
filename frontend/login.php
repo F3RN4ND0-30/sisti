@@ -2,35 +2,75 @@
 session_name('HELPDESK_SISTEMA');
 session_start();
 
-// Solo redirigir si hay sesión activa
 if (isset($_SESSION['hd_activo']) && $_SESSION['hd_activo'] === true) {
     header('Location: sisvis/escritorio.php');
     exit();
 }
 
-include_once '../backend/php/autenticacion.php';
+require_once '../backend/bd/conexion.php';
+
+$mensajeError = '';
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['iniciarSesion'])) {
+    $usuarioInput = trim($_POST['correo'] ?? '');
+    $claveInput = trim($_POST['clave'] ?? '');
+
+    error_log("DEBUG LOGIN - Usuario ingresado: '$usuarioInput'");
+    error_log("DEBUG LOGIN - Clave ingresada: '" . ($claveInput ? '****' : '') . "'");
+
+    if ($usuarioInput === '' || $claveInput === '') {
+        $mensajeError = "Debe ingresar usuario y contraseña.";
+        error_log("DEBUG LOGIN - Faltan campos.");
+    } else {
+        try {
+            $stmt = $conexion->prepare("SELECT * FROM tb_Usuarios WHERE Usuario = :usuario AND Activo = 1");
+            $stmt->execute([':usuario' => $usuarioInput]);
+            $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            error_log("DEBUG LOGIN - Resultado de la consulta: " . print_r($user, true));
+
+            if ($user) {
+                $hashBD = $user['Clave'];
+
+                if (password_verify($claveInput, $hashBD)) {
+                    // Login exitoso
+                    $_SESSION['hd_activo'] = true;
+                    $_SESSION['hd_id'] = $user['Id_Usuarios'];
+                    $_SESSION['hd_usuario'] = $user['Usuario'];
+                    $_SESSION['hd_nombre'] = $user['Nombre'] . ' ' . $user['Apellido_Paterno'];
+                    $_SESSION['hd_rol'] = $user['Id_Roles'];
+
+                    header('Location: sisvis/escritorio.php');
+                    exit();
+                } else {
+                    $mensajeError = "Credenciales incorrectas.";
+                    error_log("DEBUG LOGIN - Contraseña incorrecta.");
+                }
+            } else {
+                $mensajeError = "Usuario no encontrado o cuenta inactiva.";
+                error_log("DEBUG LOGIN - Usuario no encontrado.");
+            }
+        } catch (PDOException $e) {
+            error_log("ERROR LOGIN: " . $e->getMessage());
+            $mensajeError = "Error en la base de datos.";
+        }
+    }
+}
 ?>
 <!DOCTYPE html>
 <html lang="es">
 
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HelpDesk | MPP</title>
-
-    <script src="../backend/js/sweetalert.js"></script>
-    <link rel="stylesheet" type="text/css" href="../backend/css/material.css">
+    <title>Login | HelpDesk</title>
     <link rel="stylesheet" href="../backend/css/login/estilologin.css">
     <link rel="icon" type="image/png" href="../backend/img/logoPisco.png" />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert@2.1.2"></script>
 </head>
 
 <body>
     <div class="contenedor-login">
-
-        <div class="columna-imagen">
-            <!-- Solo animación de fondo -->
-        </div>
+        <div class="columna-imagen"></div>
 
         <div class="columna-formulario">
             <div class="caja-formulario">
@@ -38,62 +78,49 @@ include_once '../backend/php/autenticacion.php';
                     <div class="cabecera-formulario">
                         <div class="titulo">
                             <img src="../backend/img/logo-helpdesk-pisco.png" class="logo-imagen">
-                            <h2></h2>
                             <p>Municipalidad Provincial de Pisco</p>
                         </div>
 
-                        <?php
-                        if (isset($mensajeError)) {
-                            echo '
-                                <script type="text/javascript">
-                                swal("Error de autenticación", "' . $mensajeError . '", "error");
-                                </script>';
-                        }
-                        ?>
+                        <?php if (!empty($mensajeError)): ?>
+                            <script>
+                                swal("Error de autenticación", "<?= htmlspecialchars($mensajeError) ?>", "error");
+                            </script>
+                        <?php endif; ?>
 
-                        <form autocomplete="off" method="post" role="form">
-
+                        <form method="post" autocomplete="off">
                             <div class="grupo-formulario tiene-retroalimentacion">
                                 <i class="material-icons icono-control-formulario">person</i>
-                                <input type="text" id="correo" name="correo"
-                                    value="<?php if (isset($_POST['correo'])) echo $_POST['correo'] ?>"
+                                <input type="text" name="correo"
+                                    value="<?= htmlspecialchars($_POST['correo'] ?? '') ?>"
                                     class="control-formulario"
-                                    placeholder="Correo electrónico del técnico"
+                                    placeholder="Usuario técnico"
                                     required>
-                                <span id="error-correo" style="color: #e74c3c;"></span>
                             </div>
 
                             <div class="grupo-formulario">
                                 <i class="material-icons icono-control-formulario">lock</i>
-                                <input type="password" id="clave" name="clave"
+                                <input type="password" name="clave"
                                     class="control-formulario"
                                     placeholder="Contraseña"
                                     required>
-                                <span id="error-clave" style="color: #e74c3c;"></span>
                             </div>
 
                             <div class="acciones">
-                                <button class="boton boton-enviar" name='iniciarSesion' type="submit">
+                                <button class="boton boton-enviar" name="iniciarSesion" type="submit">
                                     ACCEDER AL SISTEMA
                                 </button>
                             </div>
-
                         </form>
 
                         <div class="informacion-acceso">
                             <p><strong>Acceso solo para personal técnico autorizado</strong></p>
                             <p>Si no tienes cuenta, contacta al administrador del sistema</p>
                         </div>
-
                     </div>
                 </div>
             </div>
         </div>
     </div>
-
-    <script src="../backend/js/jquery-3.3.1.min.js"></script>
-    <script type="text/javascript" src="../backend/js/validacion-login.js"></script>
-
 </body>
 
 </html>
