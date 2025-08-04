@@ -7,55 +7,13 @@ if (isset($_SESSION['hd_activo']) && $_SESSION['hd_activo'] === true) {
     exit();
 }
 
-require_once '../backend/bd/conexion.php';
+$mensajeError = $_SESSION['hd_error'] ?? '';
+$debugData = $_SESSION['hd_debug'] ?? null;
 
-$mensajeError = '';
+// Limpiar errores de sesión
+unset($_SESSION['hd_error']);
+unset($_SESSION['hd_debug']);
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['iniciarSesion'])) {
-    $usuarioInput = trim($_POST['correo'] ?? '');
-    $claveInput = trim($_POST['clave'] ?? '');
-
-    error_log("DEBUG LOGIN - Usuario ingresado: '$usuarioInput'");
-    error_log("DEBUG LOGIN - Clave ingresada: '" . ($claveInput ? '****' : '') . "'");
-
-    if ($usuarioInput === '' || $claveInput === '') {
-        $mensajeError = "Debe ingresar usuario y contraseña.";
-        error_log("DEBUG LOGIN - Faltan campos.");
-    } else {
-        try {
-            $stmt = $conexion->prepare("SELECT * FROM tb_Usuarios WHERE Usuario = :usuario AND Activo = 1");
-            $stmt->execute([':usuario' => $usuarioInput]);
-            $user = $stmt->fetch(PDO::FETCH_ASSOC);
-
-            error_log("DEBUG LOGIN - Resultado de la consulta: " . print_r($user, true));
-
-            if ($user) {
-                $hashBD = $user['Clave'];
-
-                if (password_verify($claveInput, $hashBD)) {
-                    // Login exitoso
-                    $_SESSION['hd_activo'] = true;
-                    $_SESSION['hd_id'] = $user['Id_Usuarios'];
-                    $_SESSION['hd_usuario'] = $user['Usuario'];
-                    $_SESSION['hd_nombre'] = $user['Nombre'] . ' ' . $user['Apellido_Paterno'];
-                    $_SESSION['hd_rol'] = $user['Id_Roles'];
-
-                    header('Location: sisvis/escritorio.php');
-                    exit();
-                } else {
-                    $mensajeError = "Credenciales incorrectas.";
-                    error_log("DEBUG LOGIN - Contraseña incorrecta.");
-                }
-            } else {
-                $mensajeError = "Usuario no encontrado o cuenta inactiva.";
-                error_log("DEBUG LOGIN - Usuario no encontrado.");
-            }
-        } catch (PDOException $e) {
-            error_log("ERROR LOGIN: " . $e->getMessage());
-            $mensajeError = "Error en la base de datos.";
-        }
-    }
-}
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -71,7 +29,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['iniciarSesion'])) {
 <body>
     <div class="contenedor-login">
         <div class="columna-imagen"></div>
-
         <div class="columna-formulario">
             <div class="caja-formulario">
                 <div class="contenido-interno">
@@ -84,14 +41,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['iniciarSesion'])) {
                         <?php if (!empty($mensajeError)): ?>
                             <script>
                                 swal("Error de autenticación", "<?= htmlspecialchars($mensajeError) ?>", "error");
+                                <?php if ($debugData): ?>
+                                    console.log("DEBUG LOGIN:");
+                                    console.log("Usuario:", <?= json_encode($debugData['usuario'] ?? '') ?>);
+                                    console.log("Clave:", <?= json_encode($debugData['clave'] ?? '') ?>);
+                                    console.log("Resultado:", <?= json_encode($debugData['resultado'] ?? null) ?>);
+                                <?php endif; ?>
                             </script>
                         <?php endif; ?>
 
-                        <form method="post" autocomplete="off">
+                        <form method="post" action="/sisti/backend/php/autenticacion.php" autocomplete="off">
                             <div class="grupo-formulario tiene-retroalimentacion">
                                 <i class="material-icons icono-control-formulario">person</i>
-                                <input type="text" name="correo"
-                                    value="<?= htmlspecialchars($_POST['correo'] ?? '') ?>"
+                                <input type="text" name="usuario"
+                                    value="<?= htmlspecialchars($_POST['usuario'] ?? '') ?>"
                                     class="control-formulario"
                                     placeholder="Usuario técnico"
                                     required>
