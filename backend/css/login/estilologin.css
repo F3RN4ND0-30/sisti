@@ -115,8 +115,8 @@ body {
 }
 
 .logo-imagen {
-    width: 80px;
-    height: 80px;
+    width: 130px;
+    height: 130px;
     margin-bottom: 20px;
     border-radius: 50%;
     background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
@@ -344,6 +344,25 @@ body {
 /* Efectos adicionales */
 .onda {
     display: none;
+}
+
+.boton-volver {
+    background: linear-gradient(135deg, #e2e8f0 0%, #cbd5e1 100%);
+    color: #1e293b;
+    font-weight: 600;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+}
+
+.boton-volver:hover {
+    background: linear-gradient(135deg, #cbd5e1 0%, #94a3b8 100%);
+    color: #111827;
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+}
+
+.boton-volver:active {
+    transform: translateY(-1px);
 }
 
 /* Responsivo */
