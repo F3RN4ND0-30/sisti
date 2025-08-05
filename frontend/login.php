@@ -34,7 +34,7 @@ unset($_SESSION['hd_debug']);
                 <div class="contenido-interno">
                     <div class="cabecera-formulario">
                         <div class="titulo">
-                            <img src="../backend/img/logo-helpdesk-pisco.png" class="logo-imagen">
+                            <img src="../backend/img/logoPisco.png" class="logo-imagen">
                             <p>Municipalidad Provincial de Pisco</p>
                         </div>
 
@@ -72,6 +72,7 @@ unset($_SESSION['hd_debug']);
                                 <button class="boton boton-enviar" name="iniciarSesion" type="submit">
                                     ACCEDER AL SISTEMA
                                 </button>
+                                <a href="/sisti/index.php" class="boton boton-volver">VOLVER AL INICIO</a>
                             </div>
                         </form>
 

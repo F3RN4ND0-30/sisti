@@ -84,7 +84,7 @@ function is_active_hd($path_fragment)
                 </ul>
             </li>
 
-            <?php if ($rol === 'admin'): ?>
+            <?php if ($rol === 'administrador'): ?>
                 <!-- Administración (solo administradores) -->
                 <li class="dropdown <?php echo is_active_hd('/admin/') ? 'active' : ''; ?>">
                     <a href="#adminSubmenu" class="dropdown-toggle" aria-expanded="false">
