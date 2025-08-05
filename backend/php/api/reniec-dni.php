@@ -1,84 +1,74 @@
 <?php
 header('Content-Type: application/json');
 
-// Configuración del servicio
-$numruc = '20148421103';
-$numdniusu = '71864348'; // DNI del funcionario autorizado
-$password = '1234'; // Clave de acceso real o token proporcionado por la entidad
-$maxIntentos = 5;
-$intentos = 0;
-
-// Leer JSON crudo del body
 $input = json_decode(file_get_contents('php://input'), true);
 
-// Validar input
+// Validar el DNI
 if (!isset($input['numdni']) || !preg_match('/^\d{8}$/', $input['numdni'])) {
     echo json_encode(['status' => 'error', 'message' => 'DNI inválido']);
     exit;
 }
 
-$numdni = $input['numdni'];
-$datosValidos = false;
+$dni = $input['numdni'];
 
-while ($intentos < $maxIntentos && !$datosValidos) {
-    $intentos++;
+// Configuración
+$url = 'https://api.consultasperu.com/api/v1/query';
+$token = 'e00f2de5c7b2b35b356181eed5147c8c13ecc7a61f7c6f797cbd7e654aec54f3';
 
-    // Construir URL con parámetros codificados
-    $url = "https://ws2.pide.gob.pe/Rest/RENIEC/Consultar?" . http_build_query([
-        'nuDniConsulta' => $numdni,
-        'nuDniUsuario' => $numdniusu,
-        'nuRucUsuario' => $numruc,
-        'password' => $password,
-        'out' => 'json'
-    ]);
+// Body de la petición
+$fields = [
+    'token' => $token,
+    'type_document' => 'dni',
+    'document_number' => $dni
+];
 
-    // Opcional: usar context para mejorar el manejo de errores
-    $context = stream_context_create([
-        'http' => [
-            'method' => 'GET',
-            'timeout' => 5
-        ]
-    ]);
+// Enviar petición con cURL
+$ch = curl_init();
+curl_setopt($ch, CURLOPT_URL, $url);
+curl_setopt($ch, CURLOPT_POST, true);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($fields));
+curl_setopt($ch, CURLOPT_HTTPHEADER, [
+    'Content-Type: application/x-www-form-urlencoded'
+]);
 
-    $response = @file_get_contents($url, false, $context);
+$response = curl_exec($ch);
+$error = curl_error($ch);
+$httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+curl_close($ch);
 
-    if ($response === false) {
-        sleep(1);
-        continue;
-    }
-
-    $data = json_decode($response, true);
-    $persona = $data['consultarResponse']['return']['datosPersona'] ?? null;
-
-    // Validar respuesta
-    if (
-        $persona &&
-        !empty($persona['apPrimer']) &&
-        !empty($persona['apSegundo']) &&
-        !empty($persona['prenombres']) &&
-        !empty($persona['direccion']) &&
-        $persona['direccion'] !== '-'
-    ) {
-        $datosValidos = true;
-
-        echo json_encode([
-            'status' => 'success',
-            'numDNI' => $numdni,
-            'apPrimer' => $persona['apPrimer'],
-            'apSegundo' => $persona['apSegundo'],
-            'prenombres' => $persona['prenombres'],
-            'direccion' => $persona['direccion'],
-            'intentos' => $intentos
-        ]);
-        exit;
-    }
-
-    sleep(1); // Espera entre intentos
+// Verificar error de conexión
+if ($response === false) {
+    echo json_encode(['status' => 'error', 'message' => 'cURL error: ' . $error]);
+    exit;
 }
 
-// Si no se logró obtener datos válidos
-echo json_encode([
-    'status' => 'error',
-    'message' => "No se pudieron obtener datos completos para el DNI $numdni después de $maxIntentos intentos."
-]);
-exit;
+// Decodificar respuesta
+$result = json_decode($response, true);
+
+// Validar datos devueltos
+if (
+    $httpCode === 200 &&
+    isset($result['success']) && $result['success'] === true &&
+    isset($result['data'])
+) {
+    $data = $result['data'];
+
+    echo json_encode([
+        'status' => 'success',
+        'numDNI' => $dni,
+        'prenombres' => $data['name'] ?? '',
+        'apPrimer' => $data['first_last_name'] ?? '',
+        'apSegundo' => $data['second_last_name'] ?? '',
+        'direccion' => $data['address'] ?? '',
+        'fecha_nacimiento' => $data['date_of_birth'] ?? '',
+        'genero' => $data['gender'] ?? ''
+    ]);
+    exit;
+} else {
+    echo json_encode([
+        'status' => 'error',
+        'message' => $result['message'] ?? 'No se pudo obtener la información'
+    ]);
+    exit;
+}
