@@ -9,6 +9,7 @@ require_once '../../backend/bd/conexion.php';
 
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registrar Incidencia | HelpDesk</title>
     <link rel="stylesheet" href="../../backend/css/tickets/registro-ticket.css">
     <link rel="stylesheet" href="../../backend/css/tickets/modal-ticket.css">
@@ -107,6 +108,7 @@ require_once '../../backend/bd/conexion.php';
             <p style="margin-top: 10px; font-style: italic; color: #555;">
                 Guarda el ticket para hacerle seguimiento a tu solicitud.
             </p>
+            <button id="copiarTicket" class="boton boton-copiar" style="margin-bottom: 10px;">Copiar Ticket</button>
             <button id="irInicio" class="boton boton-enviar">Ir al Inicio</button>
         </div>
     </div>

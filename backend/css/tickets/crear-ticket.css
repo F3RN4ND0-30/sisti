@@ -4,6 +4,9 @@
     padding: 30px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     margin-top: 20px;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 /* Fila de dos campos por defecto */
@@ -11,6 +14,7 @@
     display: flex;
     gap: 20px;
     margin-bottom: 20px;
+    flex-wrap: wrap;
 }
 
 /* Cada grupo ocupa mitad del ancho */
@@ -18,31 +22,15 @@
     flex: 1;
 }
 
-/* Fila especial: Área (igual a DNI) y Descripción (igual a Nombres) */
-.form-row.area-descripcion .form-group:first-child {
-    flex: 1;
-    /* Área */
-}
-
+/* Fila especial: Área y Descripción */
+.form-row.area-descripcion .form-group:first-child,
 .form-row.area-descripcion .form-group:last-child {
     flex: 1;
-    /* Descripción */
 }
 
 /* Botón alineado a la derecha */
 .form-row.boton-submit {
     justify-content: flex-end;
-}
-
-/* Responsive para móviles */
-@media (max-width: 768px) {
-    .form-row {
-        flex-direction: column;
-    }
-
-    .form-row .form-group {
-        width: 100% !important;
-    }
 }
 
 /* Etiquetas de los campos */
@@ -113,6 +101,44 @@
     left: 100%;
 }
 
+/* Botón especial de copiar */
+.boton-copiar {
+    position: relative;
+    background: linear-gradient(135deg, #2563eb, #1e40af);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    margin-top: 10px;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 14px;
+    font-weight: 500;
+    box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
+    transition: transform 0.2s, box-shadow 0.2s;
+    overflow: hidden;
+}
+
+.boton-copiar:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(37, 99, 235, 0.4);
+}
+
+.boton-copiar::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s;
+}
+
+.boton-copiar:hover::before {
+    left: 100%;
+}
+
+
 /* Estilo alternativo del botón */
 .btn-primary {
     background: linear-gradient(135deg, #3498db, #2980b9);
@@ -148,7 +174,7 @@
     color: #721c24;
 }
 
-/* Ajustar altura y bordes del select */
+/* Select2 */
 .select2-container--default .select2-selection--single {
     height: 50px !important;
     border: 2px solid #e5e7eb !important;
@@ -157,13 +183,11 @@
     display: flex !important;
     align-items: center !important;
     padding-left: 40px !important;
-    /* espacio para ícono */
+    position: relative;
 }
 
-/* Ícono dentro del select */
 .select2-container--default .select2-selection--single::before {
     content: "\e7ee";
-    /* Material icon: domain */
     font-family: 'Material Icons';
     font-size: 22px;
     color: #999;
@@ -173,20 +197,17 @@
     transform: translateY(-50%);
 }
 
-/* Texto dentro */
 .select2-container .select2-selection--single .select2-selection__rendered {
     color: #555;
     line-height: 50px;
     padding-left: 5px !important;
 }
 
-/* Flecha */
 .select2-container--default .select2-selection__arrow {
     height: 100%;
     right: 10px;
 }
 
-/* Foco */
 .select2-container--default .select2-selection--single:focus {
     border-color: #2563eb;
     box-shadow: 0 0 6px rgba(37, 99, 235, 0.3);
@@ -200,4 +221,76 @@
     background: #eef2ff;
     padding: 2px 4px;
     border-radius: 4px;
+}
+
+/* ============================
+   RESPONSIVE DESIGN PARA MÓVILES
+   ============================ */
+@media (max-width: 768px) {
+    .navbar {
+        display: flex !important;
+        /* Forzar flex */
+        align-items: center;
+        /* Centrar vertical */
+        justify-content: space-between;
+        /* Espacio entre items, si hay más */
+        flex-wrap: nowrap;
+        /* No que haga wrap */
+    }
+
+    /* Ajustar botón dentro del navbar */
+    .navbar .btn,
+    .navbar button {
+        display: inline-flex;
+        /* Flex para centrar contenido */
+        align-items: center;
+        /* Centrado vertical */
+        justify-content: center;
+        /* Centrado horizontal */
+        width: auto !important;
+        /* No tomar todo el ancho */
+        max-width: 150px;
+        /* Puedes ajustar ancho máximo */
+        padding: 8px 16px;
+        /* Padding cómodo */
+        margin: 0;
+        /* Sin margen que tire hacia arriba */
+        white-space: nowrap;
+        /* No permitir salto de línea */
+    }
+
+    /* Si tienes otros elementos en navbar, evitar que el botón los empuje */
+    .navbar .btn.full-width {
+        width: 100%;
+    }
+
+    .form-container {
+        padding: 20px;
+    }
+
+    .form-row {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .form-row .form-group {
+        width: 100% !important;
+    }
+
+    .boton {
+        width: 100%;
+    }
+
+    .form-row.boton-submit {
+        justify-content: center;
+    }
+
+    .btn-primary {
+        width: 100%;
+        text-align: center;
+    }
+
+    .select2-container--default .select2-selection--single {
+        padding-left: 35px !important;
+    }
 }

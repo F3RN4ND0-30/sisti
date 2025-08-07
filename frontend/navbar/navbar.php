@@ -110,7 +110,7 @@ function obtenerPrimerNombre($nombre_completo)
                 </ul>
             </li>
 
-            <?php if ($rol === 'admin'): ?>
+            <?php if ($rol === 'administrador'): ?>
                 <!-- Administración (solo administradores) -->
                 <?php
                 $rutas_admin = ['/admin/'];
@@ -169,7 +169,7 @@ function obtenerPrimerNombre($nombre_completo)
                     </button>
 
                     <!-- BRAND RESPONSIVO -->
-                    <a class="navbar-brand" href="/sisti/frontend/sisvis/escritorio.php">
+                    <a class="navbar-brand" href="/frontend/sisvis/escritorio.php">
                         <i class="material-icons brand-icon">support_agent</i>
                         <!-- Texto completo para desktop -->
                         <span class="brand-text-full d-none d-lg-inline">HelpDesk - Panel Principal</span>

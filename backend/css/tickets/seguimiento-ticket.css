@@ -290,12 +290,22 @@ form button:hover::before {
 }
 
 @media (max-width: 768px) {
+    /* Contenedor principal: margenes y padding móviles */
     .seguimiento-container {
-        margin: 15px;
-        padding: 20px 15px;
+        margin: 20px 10px;
+        padding: 25px 15px;
         max-width: 100%;
+        border-radius: 12px;
     }
 
+    /* Título adaptado */
+    .seguimiento-container h2 {
+        font-size: 24px;
+        margin-bottom: 20px;
+        text-align: center;
+    }
+
+    /* Formulario apilado verticalmente */
     form {
         flex-direction: column;
         gap: 15px;
@@ -304,21 +314,23 @@ form button:hover::before {
     form input[type="text"],
     form button {
         width: 100%;
-        font-size: 14px;
+        font-size: 15px;
         padding: 12px 15px;
+        border-radius: 10px;
     }
 
+    form button {
+        padding: 12px;
+    }
+
+    /* Información del ticket: una sola columna */
     .ticket-info {
         grid-template-columns: 1fr;
-    }
-
-    /* Reduce un poco el tamaño de texto */
-    .seguimiento-container h2 {
-        font-size: 24px;
+        gap: 15px;
     }
 
     .ticket-info div {
-        padding: 12px 15px;
+        padding: 14px 16px;
     }
 
     .ticket-info label {
@@ -329,65 +341,49 @@ form button:hover::before {
         font-size: 14px;
     }
 
-    /* Botón regresar: alineado a la derecha sin float, con flexbox */
-    #btnRegresar {
+    /* Botón regresar */
+    #btnRegresar,
+    #btnRegresarFrontend {
         padding: 8px 16px;
         font-size: 13px;
         display: inline-block;
         margin-left: auto;
-        /* para que se vaya a la derecha */
-        cursor: pointer;
     }
 
-    /* Contenedor para botón con flex */
     .boton-regresar-container {
         display: flex;
         justify-content: flex-end;
         margin-top: 20px;
     }
 
-    /* Adaptar barra estado a vertical para móviles */
-    .estado-container {
-        flex-direction: column;
-        align-items: flex-start;
-        padding: 0 10px;
-        margin-top: 30px;
-        position: relative;
-    }
-
-    .estado-container::before {
-        content: '';
-        position: absolute;
-        top: 40px;
-        left: 20px;
-        width: 4px;
-        height: calc(100% - 80px);
-        background-color: #e5e7eb;
-        z-index: 0;
-        transform: none;
-    }
-
     .estado-paso {
         width: 100%;
         display: flex;
         align-items: center;
-        gap: 15px;
+        gap: 6px;
         margin-bottom: 25px;
-        text-align: left;
         position: relative;
         z-index: 1;
+        text-align: left;
     }
 
     .estado-paso .circle {
-        margin: 0;
-        flex-shrink: 0;
-        height: 35px;
-        width: 35px;
+        height: 34px;
+        width: 34px;
         font-size: 14px;
+        flex-shrink: 0;
+        margin: 0;
     }
 
     .estado-paso .label {
         font-size: 14px;
         color: #374151;
+        line-height: 1;
+    }
+
+    /* Mensaje de error centrado y espaciado */
+    .no-found {
+        font-size: 14px;
+        margin-top: 30px;
     }
 }

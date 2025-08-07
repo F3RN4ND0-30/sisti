@@ -9,6 +9,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const mensajeModal = document.getElementById('mensajeModal');
     const irInicio = document.getElementById('irInicio');
     const aceptar = document.getElementById('aceptar');
+    const copiarTicket = document.getElementById('copiarTicket');
 
     async function buscarDNI(dni) {
         if (dni.length !== 8) return;
@@ -79,6 +80,29 @@ document.addEventListener('DOMContentLoaded', function () {
                 console.error('Error en el envío del formulario:', error);
                 alert('❌ Error inesperado al registrar el ticket.');
             }
+        });
+    }
+
+    if (copiarTicket) {
+        copiarTicket.addEventListener('click', function () {
+            const texto = mensajeModal.textContent.trim();
+            if (!texto) {
+                alert('⚠️ No hay ticket para copiar.');
+                return;
+            }
+
+            // Extraer solo el código del ticket (asumiendo que el mensaje es "Código: XYZ123")
+            const ticket = texto.replace(/^Código:\s*/, '');
+
+            navigator.clipboard.writeText(ticket).then(() => {
+                copiarTicket.textContent = '✔️ Copiado';
+                setTimeout(() => {
+                    copiarTicket.textContent = 'Copiar Ticket';
+                }, 2000);
+            }).catch(err => {
+                console.error('Error al copiar al portapapeles:', err);
+                alert('❌ No se pudo copiar el ticket.');
+            });
         });
     }
 
