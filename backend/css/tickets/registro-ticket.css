@@ -294,20 +294,81 @@ textarea.control-formulario {
 @media (max-width: 768px) {
     .contenedor-login {
         flex-direction: column;
+        height: auto;
+        min-height: 100vh;
+        overflow-y: auto;
     }
 
     .columna-imagen {
-        flex: 0 0 40%;
+        flex: none;
+        width: 100%;
+        padding: 30px 20px;
+        text-align: center;
         order: 1;
-        padding: 20px;
     }
 
     .columna-formulario {
+        flex: none;
+        width: 100%;
+        padding: 30px 20px;
         order: 2;
-        padding: 20px;
     }
 
     .caja-formulario {
         max-width: 100%;
+        width: 100%;
+    }
+
+    .titulo h2 {
+        font-size: 26px;
+    }
+
+    .titulo p {
+        font-size: 14px;
+    }
+
+    .grupo-formulario {
+        margin-bottom: 20px;
+    }
+
+    .control-formulario {
+        height: 50px;
+        font-size: 14px;
+        padding-left: 45px;
+    }
+
+    .icono-control-formulario {
+        font-size: 18px;
+        left: 15px;
+    }
+
+    textarea.control-formulario {
+        height: 90px;
+    }
+
+    .boton {
+        height: 50px;
+        font-size: 16px;
+    }
+
+    .informacion-acceso {
+        font-size: 13px;
+        padding: 12px;
+    }
+
+    /* Ajustes para Select2 en móviles */
+    .select2-container--default .select2-selection--single {
+        height: 50px !important;
+        font-size: 14px !important;
+        padding-left: 35px !important;
+    }
+
+    .select2-container--default .select2-selection--single::before {
+        font-size: 20px;
+        left: 10px;
+    }
+
+    .select2-container--default .select2-selection__arrow {
+        right: 8px;
     }
 }

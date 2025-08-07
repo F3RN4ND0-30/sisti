@@ -27,7 +27,8 @@
 }
 
 .kpi-card.proceso {
-    border-left: 6px solid #f39c12; /* naranja oscuro */
+    border-left: 6px solid #f39c12;
+    /* naranja oscuro */
 }
 
 .kpi-card.pendiente {
@@ -74,13 +75,27 @@
 }
 
 @media (max-width: 768px) {
+    .kpis {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .kpi-card {
+        width: 100%;
+    }
+
     .graficos {
         grid-template-columns: 1fr;
+        gap: 25px;
+    }
+
+    .grafico-container {
+        width: 100%;
+        max-width: 100%;
     }
 
     .graficos canvas {
-        max-width: 100%;
         min-width: 100%;
-        height: 350px;
+        height: auto;
     }
 }

@@ -11,7 +11,7 @@ if (!isset($_SESSION['hd_activo']) || $_SESSION['hd_activo'] !== true) {
 <html lang="es">
 
 <head>
-    <!-- ... cabecera original ... -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <!-- CSS -->
     <link rel="stylesheet" href="../../../backend/css/navbar/navbar.css" />

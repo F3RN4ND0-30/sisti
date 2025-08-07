@@ -253,36 +253,109 @@ body {
     }
 }
 
-/* Responsive */
 @media (max-width: 768px) {
     .filter-section {
         flex-direction: column;
         align-items: stretch;
+        gap: 15px;
+        margin-bottom: 25px;
+    }
+
+    .filter-section label {
+        font-size: 14px;
+        text-align: left;
     }
 
     .filter-section select,
     .filter-section input[type="month"] {
-        min-width: 100%;
-    }
-
-    .table th,
-    .table td {
+        width: 100%;
+        font-size: 14px;
         padding: 10px 12px;
-        font-size: 13px;
     }
 
     .titulo-reporte,
     .main-content>h2 {
-        font-size: 26px;
+        font-size: 24px;
+        padding-bottom: 10px;
+        margin-bottom: 25px;
     }
 
     .indicador-tickets {
-        font-size: 18px;
+        font-size: 16px;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+        padding: 0;
+    }
+
+    .table th,
+    .table td {
+        padding: 8px 10px;
+        font-size: 12.5px;
+    }
+
+    .btn-exportar,
+    #btnExportarPDF {
+        padding: 8px 14px;
+        font-size: 13px;
+        width: 100%;
+    }
+
+    .botones-exportar {
+        flex-direction: column;
+        width: 100%;
+        gap: 10px;
+        margin-top: 15px;
+    }
+
+    .table-responsive {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        width: 100%;
+    }
+
+    .table {
+        min-width: 600px;
+        /* ancho mínimo para no romper diseño */
     }
 }
 
 @media (max-width: 480px) {
     .main-content {
         padding: 15px 10px;
+    }
+
+    .filter-section {
+        gap: 12px;
+    }
+
+    .table {
+        font-size: 13px;
+    }
+
+    .estado-tag {
+        font-size: 0.75rem;
+        padding: 5px 10px;
+    }
+
+    .table {
+        font-size: 12.5px;
+        min-width: 480px;
+        /* aún más compacto para móviles */
+    }
+
+    .table th,
+    .table td {
+        padding: 8px 10px;
+        white-space: nowrap;
+    }
+
+    .table-responsive::-webkit-scrollbar {
+        height: 6px;
+    }
+
+    .table-responsive::-webkit-scrollbar-thumb {
+        background: #2563eb;
+        border-radius: 4px;
     }
 }

@@ -1,7 +1,9 @@
 <?php
 /**
  * @package dompdf
- * @link    https://github.com/dompdf/dompdf
+ * @link    http://dompdf.github.com/
+ * @author  Benj Carson <benjcarson@digitaljunkies.ca>
+ * @author  Fabien Ménager <fabien.menager@gmail.com>
  * @license http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License
  */
 namespace Dompdf\Css;
@@ -167,14 +169,14 @@ class AttributeTranslator
         'ol' => [
             'compact' => 'margin: 0.5em 0;',
             'start' => 'counter-reset: -dompdf-default-counter %d;',
-            'type' => '_set_list_style_type',
+            'type' => 'list-style-type: %s;',
         ],
         'ul' => [
             'compact' => 'margin: 0.5em 0;',
-            'type' => '_set_list_style_type',
+            'type' => 'list-style-type: %s;',
         ],
         'li' => [
-            'type' => '_set_list_style_type',
+            'type' => 'list-style-type: %s;',
             'value' => 'counter-reset: -dompdf-default-counter %d;',
         ],
         'pre' => [
@@ -349,14 +351,12 @@ class AttributeTranslator
 
     protected static function _set_px_width(\DOMElement $node, string $value): string
     {
-        $v = trim($value);
-
-        if (Helpers::is_percent($v)) {
-            return sprintf("width: %s;", $v);
+        if (Helpers::is_percent($value)) {
+            return sprintf("width: %s;", $value);
         }
 
-        if (is_numeric(mb_substr($v, 0, 1))) {
-            return sprintf("width: %spx;", (float) $v);
+        if (is_numeric($value)) {
+            return sprintf("width: %spx;", $value);
         }
 
         return "";
@@ -364,14 +364,12 @@ class AttributeTranslator
 
     protected static function _set_px_height(\DOMElement $node, string $value): string
     {
-        $v = trim($value);
-
-        if (Helpers::is_percent($v)) {
-            return sprintf("height: %s;", $v);
+        if (Helpers::is_percent($value)) {
+            return sprintf("height: %s;", $value);
         }
 
-        if (is_numeric(mb_substr($v, 0, 1))) {
-            return sprintf("height: %spx;", (float) $v);
+        if (is_numeric($value)) {
+            return sprintf("height: %spx;", $value);
         }
 
         return "";
@@ -648,33 +646,5 @@ class AttributeTranslator
         }
 
         return ltrim($style, "; ");
-    }
-
-    protected static function _set_list_style_type(\DOMElement $node, string $value): string
-    {
-        $v = trim($value);
-
-        switch ($v) {
-            case "1":
-                $type = "decimal";
-                break;
-            case "a":
-                $type = "lower-alpha";
-                break;
-            case "A":
-                $type = "upper-alpha";
-                break;
-            case "i":
-                $type = "lower-roman";
-                break;
-            case "I":
-                $type = "upper-roman";
-                break;
-            default:
-                $type = $v;
-                break;
-        }
-
-        return "list-style-type: $type;";
     }
 }

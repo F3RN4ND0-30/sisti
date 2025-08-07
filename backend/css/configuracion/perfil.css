@@ -1,3 +1,28 @@
+.navbar .btn,
+.navbar button {
+    display: inline-flex;
+    /* Flex para centrar contenido */
+    align-items: center;
+    /* Centrado vertical */
+    justify-content: center;
+    /* Centrado horizontal */
+    width: auto !important;
+    /* No tomar todo el ancho */
+    max-width: 150px;
+    /* Puedes ajustar ancho máximo */
+    padding: 8px 16px;
+    /* Padding cómodo */
+    margin: 0;
+    /* Sin margen que tire hacia arriba */
+    white-space: nowrap;
+    /* No permitir salto de línea */
+}
+
+/* Si tienes otros elementos en navbar, evitar que el botón los empuje */
+.navbar .btn.full-width {
+    width: 100%;
+}
+
 .user-role p {
     color: #fff;
     font-weight: bold;

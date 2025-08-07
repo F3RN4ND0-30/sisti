@@ -43,15 +43,17 @@ try {
 
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mi Perfil | HelpDesk</title>
-    <link rel="stylesheet" href="../../css/vistas/escritorio.css">
     <link rel="stylesheet" href="../../css/navbar/navbar.css">
+    <link rel="stylesheet" href="../../css/vistas/escritorio.css">
     <link rel="stylesheet" href="../../css/configuracion/perfil.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="icon" type="image/png" href="../img/logoPisco.png" />
 </head>
 
 <body>
+
     <?php include '../../../frontend/navbar/navbar.php'; ?>
 
     <div class="main-content">

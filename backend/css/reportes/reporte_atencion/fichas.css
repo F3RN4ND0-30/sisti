@@ -29,26 +29,26 @@ h2 {
     animation: fadeInDown 0.5s ease;
 }
 
+/* Layout de fichas */
 .ficha-layout {
     display: flex;
     justify-content: center;
     align-items: center;
     gap: 50px;
     flex-wrap: wrap;
-    /* para responsividad */
     margin-top: 40px;
 }
 
-/* Contenedor principal */
+/* Contenedor de botones */
 .ficha-container {
     display: flex;
     flex-direction: column;
-    align-items: flex-start; /* alinea botones a la izquierda */
-    gap: 0; /* puedes usar gap o margin-bottom en botones */
+    align-items: flex-start;
     width: 100%;
     max-width: 400px;
 }
 
+/* Imagen de ficha */
 .ficha-imagen img {
     max-width: 400px;
     width: 100%;
@@ -56,10 +56,10 @@ h2 {
     border-radius: 12px;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
     animation: fadeInRight 0.8s ease;
-    margin-left: 80px
+    margin-left: 80px;
 }
 
-/* Animación para la imagen */
+/* Animación imagen */
 @keyframes fadeInRight {
     from {
         opacity: 0;
@@ -86,9 +86,7 @@ h2 {
     transition: all 0.3s ease;
     width: 100%;
     max-width: 400px;
-    margin: 0 auto;
-    display: block;
-    margin-bottom: 50px;
+    margin-bottom: 30px;
     animation: fadeInUp 0.6s ease forwards;
     opacity: 0;
 }
@@ -148,6 +146,7 @@ h2 {
     color: #555;
 }
 
+/* Columns (Bootstrap-like) */
 .col-md-8,
 .col-md-4,
 .col-lg-3,
@@ -216,40 +215,78 @@ h2 {
     }
 }
 
-@keyframes fadeInUp {
-    from {
-        opacity: 0;
-        transform: translateY(30px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-.boton-ficha:nth-child(1) {
-    animation-delay: 0.3s;
-}
-
-.boton-ficha:nth-child(2) {
-    animation-delay: 0.5s;
-}
-
-.boton-ficha:nth-child(3) {
-    animation-delay: 0.7s;
-}
-
 /* Responsive */
+@media (max-width: 768px) {
+    h2 {
+        font-size: 26px;
+        padding: 0 15px;
+    }
+
+    .ficha-layout {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        /* centra horizontalmente los elementos hijos */
+        gap: 30px;
+        text-align: center;
+        /* centra texto dentro de los hijos si aplica */
+    }
+
+    .ficha-imagen {
+        display: flex;
+        justify-content: center;
+        /* centra la imagen */
+        width: 100%;
+    }
+
+    .ficha-imagen img {
+        margin-left: 0;
+        max-width: 90%;
+        height: auto;
+        display: block;
+    }
+
+    .boton-ficha {
+        max-width: 90%;
+        font-size: 15px;
+        padding: 16px 24px;
+        margin: 0 auto;
+        /* centra el botón */
+        display: block;
+        /* para que el margin auto funcione */
+        text-align: center;
+    }
+
+    .activity-card h4 {
+        font-size: 20px;
+    }
+
+    .welcome-card {
+        padding: 20px;
+    }
+}
+
 @media (max-width: 480px) {
     h2 {
-        font-size: 24px;
-        padding: 0 10px;
+        font-size: 22px;
+        margin-top: 30px;
     }
 
     .boton-ficha {
         font-size: 14px;
-        padding: 12px 24px;
-        max-width: 90%;
+        padding: 14px 20px;
+        margin-bottom: 20px;
+    }
+
+    .ficha-imagen img {
+        max-width: 100%;
+    }
+
+    .activity-card {
+        padding: 20px;
+    }
+
+    .activity-card h4 {
+        font-size: 18px;
     }
 }

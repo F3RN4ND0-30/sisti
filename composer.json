@@ -20,8 +20,8 @@
   ],
   "require": {
     "php": ">=7.4",
-    "phpoffice/phpspreadsheet": "^4.5",
-    "dompdf/dompdf": "^3.1"
+    "phpoffice/phpspreadsheet": "1.23.0",
+    "dompdf/dompdf": "v1.2.0"
   },
   "config": {
     "optimize-autoloader": true

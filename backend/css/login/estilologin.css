@@ -21,6 +21,15 @@ body {
     /* Login izquierda, animación derecha */
 }
 
+.tarjeta-login {
+    width: 50vw;
+    /* Ocupa la mitad del ancho de la pantalla */
+    max-width: 700px;
+    /* Opcional, para limitar tamaño máximo */
+    margin: 0 auto;
+    /* Centrar horizontalmente */
+}
+
 .columna-formulario {
     flex: 1;
     background: white;
@@ -365,28 +374,63 @@ body {
     transform: translateY(-1px);
 }
 
-/* Responsivo */
+/* Responsivo: pantallas hasta 768px */
 @media (max-width: 768px) {
+
     .contenedor-login {
+        position: relative;
+        height: 100vh;
+        overflow: hidden;
+    }
+
+    .tarjeta-login {
+        position: relative;
+        z-index: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+        padding: 0px;
+        width: 80%;
+    }
+
+    .login-card {
+        display: flex;
         flex-direction: column;
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        max-width: 480px;
+        width: 100%;
+        z-index: 1;
     }
 
     .columna-formulario {
-        order: 2;
-        /* Login abajo en móvil */
-        flex: 1;
-        padding: 20px;
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        padding: 25px;
+        width: 100%;
+        max-width: 420px;
+    }
+
+    .columna-imagen {
+        position: absolute;
+        inset: 0;
+        z-index: 0;
     }
 
     .columna-imagen {
         order: 1;
-        /* Animación arriba en móvil */
-        flex: 0 0 35%;
-        padding: 20px;
+    }
+
+    .columna-formulario {
+        order: 2;
     }
 
     .titulo h2 {
-        font-size: 32px;
+        font-size: 28px;
     }
 
     .titulo p {
@@ -394,47 +438,63 @@ body {
     }
 
     .control-formulario {
-        height: 55px;
-        font-size: 15px;
+        height: 50px;
+        font-size: 14px;
     }
 
     .boton-enviar {
-        height: 55px;
-        font-size: 16px;
+        height: 50px;
+        font-size: 15px;
     }
 }
 
+/* Responsivo: pantallas muy pequeñas, hasta 480px */
 @media (max-width: 480px) {
     .columna-formulario {
-        padding: 15px;
+        padding: 20px;
+    }
+
+    .columna-imagen {
+        flex: 0 0 30%;
+        padding: 16px;
     }
 
     .titulo {
-        margin-bottom: 30px;
+        margin-bottom: 25px;
     }
 
     .logo-imagen {
-        width: 60px;
-        height: 60px;
+        width: 65px;
+        height: 65px;
+        padding: 12px;
     }
 
     .titulo h2 {
-        font-size: 28px;
+        font-size: 26px;
+    }
+
+    .titulo p {
+        font-size: 14px;
     }
 
     .control-formulario {
-        height: 50px;
-        font-size: 14px;
+        height: 52px;
+        font-size: 15px;
         padding: 0 15px 0 45px;
     }
 
     .icono-control-formulario {
-        left: 15px;
+        left: 14px;
         font-size: 18px;
     }
 
     .boton-enviar {
-        height: 50px;
-        font-size: 15px;
+        height: 52px;
+        font-size: 16px;
+    }
+
+    .informacion-acceso {
+        font-size: 13px;
+        padding: 12px;
     }
 }

@@ -196,3 +196,69 @@
 .is-invalid {
   border-color: #dc3545 !important;
 }
+
+/* ======== Ajustes Responsivos ======== */
+
+@media (max-width: 768px) {
+
+  /* Tabla usuarios: hacer que se pueda hacer scroll horizontal */
+  #tablaUsuarios {
+    overflow-x: auto;
+    display: block;
+    width: 100%;
+  }
+
+  /* Reducir padding de las celdas para pantallas pequeñas */
+  #tablaUsuarios thead th,
+  #tablaUsuarios tbody td {
+    padding: 0.6rem 0.5rem;
+    font-size: 0.8rem;
+  }
+
+  /* Ajustar botones de acción para que no se apilen y permitan scroll horizontal */
+  .usuarios-btn-group {
+    flex-wrap: nowrap;
+    /* No apilar */
+    gap: 8px;
+    overflow-x: auto;
+    /* Scroll horizontal si no caben */
+    justify-content: flex-start;
+    -webkit-overflow-scrolling: touch;
+    /* Scroll suave en iOS */
+  }
+
+  .usuarios-btn-accion {
+    width: 30px;
+    height: 30px;
+    font-size: 0.85rem;
+  }
+}
+
+
+@media (max-width: 480px) {
+
+  /* Alertas más compactas */
+  .usuarios-alert {
+    font-size: 0.9rem;
+    padding: 10px 15px;
+  }
+
+  /* Badges más pequeños */
+  .usuarios-badge-activo,
+  .usuarios-badge-inactivo {
+    font-size: 0.65rem;
+    padding: 3px 8px;
+  }
+
+  /* Botones de acción un poco más pequeños */
+  .usuarios-btn-accion {
+    width: 28px;
+    height: 28px;
+  }
+
+  /* Tabla usuarios: que la fuente sea un poco más pequeña */
+  #tablaUsuarios thead th,
+  #tablaUsuarios tbody td {
+    font-size: 0.75rem;
+  }
+}
