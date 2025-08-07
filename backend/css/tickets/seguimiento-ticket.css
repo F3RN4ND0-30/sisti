@@ -12,7 +12,9 @@ body {
     height: 100%;
     font-family: 'Inter', sans-serif;
     background: #f3f4f6;
-    overflow: hidden;
+    overflow-y: auto;
+    overflow-x: hidden;
+    /* para evitar scroll horizontal */
 }
 
 body {
@@ -290,6 +292,7 @@ form button:hover::before {
 }
 
 @media (max-width: 768px) {
+
     /* Contenedor principal: margenes y padding móviles */
     .seguimiento-container {
         margin: 20px 10px;

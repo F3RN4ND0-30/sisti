@@ -29,6 +29,7 @@ class GeneradorPDF
             'descripcion' => 'col-descripcion',
             'estado_texto' => 'col-estado',
             'fecha_creacion' => 'col-fecha',
+            'fecha_resuelto' => 'col-fecha',
         ];
 
         // Estilos CSS
@@ -44,10 +45,10 @@ class GeneradorPDF
             .col-dni { width: 10%; text-align: center; }
             .col-nombre { width: 17%; }
             .col-apellido { width: 17%; }
-            .col-area { width: 14%; } /* aumentada para áreas grandes */
+            .col-area { width: 14%; }
             .col-descripcion { width: 16%; }
             .col-estado { width: 8%; text-align: center; }
-            .col-fecha { width: 8%; text-align: center; } /* reducido para fecha */
+            .col-fecha { width: 8%; text-align: center; }
         </style>';
 
         $this->html .= "<h2>$titulo</h2>";
@@ -57,7 +58,8 @@ class GeneradorPDF
 
         foreach ($encabezados as $key) {
             $nombreMostrar = $key;
-            if ($key === 'fecha_creacion') $nombreMostrar = 'Fecha';
+            if ($key === 'fecha_creacion') $nombreMostrar = 'Fecha Creación';
+            if ($key === 'fecha_resuelto') $nombreMostrar = 'Fecha Resuelto';
 
             $claseTH = $mapaClases[$key] ?? '';
             $this->html .= "<th class=\"$claseTH\">" . ucfirst($nombreMostrar) . "</th>";
@@ -70,17 +72,17 @@ class GeneradorPDF
             $this->html .= '<td class="center col-numero">' . ($index + 1) . '</td>';
 
             foreach ($fila as $clave => $valor) {
-                // Formatear fecha
-                if ($clave === 'fecha_creacion') {
+                // Formatear fechas
+                if (in_array($clave, ['fecha_creacion', 'fecha_resuelto']) && !empty($valor)) {
                     try {
                         $valor = (new DateTime($valor))->format('d/m/Y H:i:s');
                     } catch (Exception $e) {
-                        // Dejar valor original si falla
+                        // Mantener el valor original si hay error
                     }
                 }
 
                 // Definir clases para celdas
-                $clase = in_array($clave, ['numero_ticket', 'dni', 'fecha_creacion', 'estado_texto']) ? 'center' : '';
+                $clase = in_array($clave, ['numero_ticket', 'dni', 'fecha_creacion', 'fecha_resuelto', 'estado_texto']) ? 'center' : '';
                 $columnaClass = $mapaClases[$clave] ?? '';
                 $clasesTD = trim($clase . ' ' . $columnaClass);
 

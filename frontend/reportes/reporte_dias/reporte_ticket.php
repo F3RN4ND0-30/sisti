@@ -101,6 +101,7 @@ if (!isset($_SESSION['hd_activo']) || $_SESSION['hd_activo'] !== true) {
                         <th>Descripción</th>
                         <th>Estado</th>
                         <th>Fecha Atención</th>
+                        <th>Fecha Resolución</th>
                     </tr>
                 </thead>
                 <tbody>

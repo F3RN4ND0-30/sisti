@@ -24,47 +24,63 @@ try {
 
     // Traer información del incidente
     $sql = "
-        SELECT 
-            i.Id_Incidentes,
-            t.Codigo_Ticket AS numero_ticket,
-            u.Dni,
-            u.Nombre,
-            u.Apellido_Paterno,
-            u.Apellido_Materno,
-            a.Nombre AS area,
-            i.Descripcion,
-            i.Id_Estados_Incidente
-        FROM tb_Incidentes i
-        INNER JOIN tb_Tickets t ON i.Id_Tickets = t.Id_Tickets
-        INNER JOIN tb_UsuariosExternos u ON i.Id_UsuariosExternos = u.Id_UsuariosExternos
-        INNER JOIN tb_Areas a ON i.Id_Areas = a.Id_Areas
-        WHERE i.Id_Tickets = :idTicket
+    SELECT 
+        ti.Id_Incidentes,
+        ti.Descripcion,
+        ti.Fecha_Creacion,
+        ti.Fecha_Resuelto,
+        ti.Id_Estados_Incidente,
+        te.Nombre AS estado,
+        tue.Nombre AS nombre,
+        tue.Apellido_Paterno,
+        tue.Apellido_Materno,
+        tue.DNI,
+        ta.Nombre AS area,
+        tt.Codigo_Ticket
+    FROM tb_incidentes ti
+    INNER JOIN tb_tickets tt ON ti.Id_Tickets = tt.Id_Tickets
+    LEFT JOIN tb_usuariosExternos tue ON ti.Id_UsuariosExternos = tue.Id_UsuariosExternos
+    LEFT JOIN tb_areas ta ON ti.Id_Areas = ta.Id_Areas
+    LEFT JOIN tb_estados_incidente te ON ti.Id_Estados_Incidente = te.Id_Estados_Incidente
+    WHERE tt.Id_Tickets = :idTicket
     ";
 
     $stmt = $conexion->prepare($sql);
     $stmt->execute([':idTicket' => $ticketId]);
-    $info = $stmt->fetch(PDO::FETCH_ASSOC);
+    $incidentes = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    if (!$info) {
+    if (!$incidentes) {
         echo json_encode(['success' => false, 'error' => 'Información del ticket no encontrada']);
         exit;
     }
 
     // Preparar estructura esperada por el frontend
     $ticketData = [
-        'numero_ticket' => $info['numero_ticket'],
-        'dni' => $info['Dni'],
-        'nombre' => $info['Nombre'],
-        'apellido' => $info['Apellido_Paterno'] . ' ' . $info['Apellido_Materno'],
-        'area' => $info['area'],
-        'descripcion' => $info['Descripcion'],
-        'estado' => (int)$info['Id_Estados_Incidente']
+        'numero_ticket' => $incidentes[0]['Codigo_Ticket'] ?? null,
+        // Aquí podrías añadir más datos generales del ticket si los tienes
     ];
+
+    $incidentesData = [];
+
+    foreach ($incidentes as $info) {
+        $incidentesData[] = [
+            'id_incidente' => $info['Id_Incidentes'],
+            'descripcion' => $info['Descripcion'],
+            'fecha_creacion' => $info['Fecha_Creacion'],
+            'fecha_resuelto' => $info['Fecha_Resuelto'],
+            'estado' => $info['estado'],
+            'dni' => $info['DNI'],
+            'nombre' => $info['nombre'],
+            'apellido' => trim($info['Apellido_Paterno'] . ' ' . $info['Apellido_Materno']),
+            'area' => $info['area'],
+            'id_estado_incidente' => (int)$info['Id_Estados_Incidente']
+        ];
+    }
 
     echo json_encode([
         'success' => true,
         'ticket' => $ticketData,
-        'seguimiento' => []  // Por ahora vacío, puedes agregar historial más adelante
+        'incidentes' => $incidentesData,
     ]);
 } catch (PDOException $e) {
     echo json_encode(['success' => false, 'error' => 'Error en la consulta: ' . $e->getMessage()]);

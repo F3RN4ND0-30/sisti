@@ -22,7 +22,8 @@ try {
                 a.Nombre AS nombre_area,
                 i.Descripcion,
                 ei.Nombre AS estado_texto,
-                i.Fecha_Creacion
+                FORMAT(i.Fecha_Creacion, 'yyyy-MM-dd HH:mm:ss') AS Fecha_Creacion,
+                FORMAT(i.Fecha_Resuelto, 'yyyy-MM-dd HH:mm:ss') AS Fecha_Resuelto
             FROM tb_Incidentes i
             INNER JOIN tb_Tickets t ON t.Id_Tickets = i.Id_Tickets
             INNER JOIN tb_UsuariosExternos u ON i.Id_UsuariosExternos = u.Id_UsuariosExternos
@@ -45,7 +46,8 @@ try {
                 'area' => $i['nombre_area'],
                 'descripcion' => $i['Descripcion'],
                 'estado_texto' => $i['estado_texto'],
-                'fecha_creacion' => $i['Fecha_Creacion']
+                'fecha_creacion' => $i['Fecha_Creacion'],
+                'fecha_resuelto' => $i['Fecha_Resuelto']
             ];
         }
 
@@ -98,7 +100,8 @@ try {
                 a.Nombre AS nombre_area,
                 i.Descripcion,
                 ei.Nombre AS estado_texto,
-                i.Fecha_Creacion
+                FORMAT(i.Fecha_Creacion, 'yyyy-MM-dd HH:mm:ss') AS Fecha_Creacion,
+                FORMAT(i.Fecha_Resuelto, 'yyyy-MM-dd HH:mm:ss') AS Fecha_Resuelto
             FROM tb_Incidentes i
             INNER JOIN tb_Tickets t ON t.Id_Tickets = i.Id_Tickets
             INNER JOIN tb_UsuariosExternos u ON i.Id_UsuariosExternos = u.Id_UsuariosExternos
@@ -139,7 +142,8 @@ try {
                     'area' => $i['nombre_area'],
                     'descripcion' => $i['Descripcion'],
                     'estado_texto' => $i['estado_texto'],
-                    'fecha_creacion' => $i['Fecha_Creacion']
+                    'fecha_creacion' => $i['Fecha_Creacion'],
+                    'fecha_resuelto' => $i['Fecha_Resuelto']
                 ];
             }
         }
@@ -177,7 +181,8 @@ try {
                 a.Nombre AS nombre_area,
                 i.Descripcion,
                 ei.Nombre AS estado_texto,
-                i.Fecha_Creacion
+                FORMAT(i.Fecha_Creacion, 'yyyy-MM-dd HH:mm:ss') AS Fecha_Creacion,
+                FORMAT(i.Fecha_Resuelto, 'yyyy-MM-dd HH:mm:ss') AS Fecha_Resuelto
             FROM tb_Incidentes i
             INNER JOIN tb_Tickets t ON t.Id_Tickets = i.Id_Tickets
             INNER JOIN tb_UsuariosExternos u ON i.Id_UsuariosExternos = u.Id_UsuariosExternos
@@ -200,7 +205,8 @@ try {
                 'area' => $i['nombre_area'],
                 'descripcion' => $i['Descripcion'],
                 'estado_texto' => $i['estado_texto'],
-                'fecha_creacion' => $i['Fecha_Creacion']
+                'fecha_creacion' => $i['Fecha_Creacion'],
+                'fecha_resuelto' => $i['Fecha_Resuelto']
             ];
         }
 

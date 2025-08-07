@@ -84,7 +84,8 @@ $(document).ready(function () {
                         ticket.area,
                         ticket.descripcion,
                         getEstadoHTML(ticket.estado_texto),
-                        ticket.fecha_creacion
+                        ticket.fecha_creacion,
+                        ticket.fecha_resuelto || '—'
                     ]);
                 };
 
@@ -116,7 +117,8 @@ $(document).ready(function () {
                                 ticket.area,
                                 ticket.descripcion,
                                 getEstadoHTML(ticket.estado_texto),
-                                ticket.fecha_creacion
+                                ticket.fecha_creacion,
+                                ticket.fecha_resuelto ?? ''
                             ]);
                         };
 

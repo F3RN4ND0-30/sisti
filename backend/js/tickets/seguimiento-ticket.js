@@ -23,24 +23,28 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
 
-            const t = data.ticket || data.data;
+            // Usamos el primer incidente del arreglo
+            const incidente = data.incidentes[0];
 
-            console.log(t);  // <-- Aquí ves las propiedades reales del objeto
+            if (!incidente) {
+                resultadoDiv.innerHTML = `<p class="no-found">No hay incidentes para este ticket.</p>`;
+                return;
+            }
 
-            // Extrae el estado numérico correcto
-            const estado = parseInt(t.Id_Estados_Incidente || t.estado) || 1; // default a 1 si no viene
-
+            const estado = parseInt(incidente.id_estado_incidente) || 1; // default 1
             const pasos = ['En espera', 'En atención', 'Concluido'];
 
             let html = `
-    <div class="ticket-info">
-        <div><label>Ticket:</label> <span>${t.numero_ticket}</span></div>
-        <div><label>Solicitante:</label> <span>${t.nombre} ${t.apellido}</span></div>
-        <div><label>DNI:</label> <span>${t.dni}</span></div>
-        <div><label>Área:</label> <span>${t.area}</span></div>
-        <div style="grid-column: span 2;"><label>Descripción:</label> <span>${t.descripcion}</span></div>
-    </div>
-    <div class="estado-container">
+<div class="ticket-info">
+    <div><label>Ticket:</label> <span>${data.ticket.numero_ticket}</span></div>
+    <div><label>Solicitante:</label> <span>${incidente.nombre} ${incidente.apellido}</span></div>
+    <div><label>DNI:</label> <span>${incidente.dni}</span></div>
+    <div><label>Área:</label> <span>${incidente.area}</span></div>
+    <div style="grid-column: span 2;"><label>Descripción:</label> <span>${incidente.descripcion}</span></div>
+    <div><label>Fecha de creación:</label> <span>${formatearFecha(incidente.fecha_creacion)}</span></div>
+    <div><label>Fecha de resolución:</label> <span>${incidente.fecha_resuelto ? formatearFecha(incidente.fecha_resuelto) : 'Aún no resuelto'}</span></div>
+</div>
+<div class="estado-container">
 `;
 
             for (let i = 1; i <= 3; i++) {
@@ -61,6 +65,18 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error(error);
         }
     });
+
+    function formatearFecha(fechaString) {
+        if (!fechaString) return '';
+        const fecha = new Date(fechaString);
+        return fecha.toLocaleString('es-PE', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
+        });
+    }
 
     function agregarRedireccion(idBoton, urlDestino) {
         const btn = document.getElementById(idBoton);
