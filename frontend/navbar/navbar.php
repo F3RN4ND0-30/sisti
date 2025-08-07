@@ -6,11 +6,29 @@ if (isset($_SESSION['hd_rol'])) {
     $rol = null;
 }
 
-// Función para detectar página activa
-function is_active_hd($path_fragment)
+// Función para detectar página activa (traducida al español)
+function esPaginaActiva($fragmento_ruta)
 {
-    $current_path = $_SERVER['REQUEST_URI'];
-    return strpos($current_path, $path_fragment) !== false;
+    $ruta_actual = $_SERVER['REQUEST_URI'];
+    return strpos($ruta_actual, $fragmento_ruta) !== false;
+}
+
+// Función para detectar si un dropdown debe estar abierto (traducida al español)
+function debeDropdownEstarAbierto($fragmentos_ruta)
+{
+    $ruta_actual = $_SERVER['REQUEST_URI'];
+    foreach ($fragmentos_ruta as $fragmento) {
+        if (strpos($ruta_actual, $fragmento) !== false) {
+            return true;
+        }
+    }
+    return false;
+}
+
+// Función para obtener el primer nombre del usuario
+function obtenerPrimerNombre($nombre_completo)
+{
+    return explode(' ', $nombre_completo)[0];
 }
 ?>
 
@@ -18,7 +36,7 @@ function is_active_hd($path_fragment)
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 <!-- Material Icons -->
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-<!-- Rutas absolutas -->
+<!-- CSS Responsive Mejorado -->
 <link rel="stylesheet" href="/sisti/backend/css/navbar/navbar.css">
 <link rel="icon" type="image/png" href="/sisti/backend/img/logoPisco.png" />
 
@@ -29,14 +47,14 @@ function is_active_hd($path_fragment)
     <nav id="sidebar">
         <div class="sidebar-header">
             <h3>
-                <img src="/sisti/backend/img/logoPisco.png" class="img-fluid" />
+                <img src="/sisti/backend/img/logoPisco.png" class="img-fluid" alt="Logo Pisco" />
                 <span class="sidebar-text">HELPDESK</span>
             </h3>
         </div>
 
         <ul class="list-unstyled components">
             <!-- Dashboard -->
-            <li <?php echo is_active_hd('/sisvis/escritorio.php') ? 'class="active"' : ''; ?>>
+            <li <?php echo esPaginaActiva('/sisvis/escritorio.php') ? 'class="active"' : ''; ?>>
                 <a href="/sisti/frontend/sisvis/escritorio.php" class="dashboard">
                     <i class="material-icons">dashboard</i>
                     <span>Inicio</span>
@@ -44,102 +62,99 @@ function is_active_hd($path_fragment)
             </li>
 
             <!-- Gestión de Tickets -->
-            <li class="dropdown <?php echo is_active_hd('/tickets/gestickets/') ? 'active' : ''; ?>">
-                <a href="#ticketsSubmenu" class="dropdown-toggle" aria-expanded="false">
+            <?php
+            $rutas_tickets = ['/tickets/gestickets/'];
+            $tickets_abierto = debeDropdownEstarAbierto($rutas_tickets);
+            ?>
+            <li class="dropdown <?php echo esPaginaActiva('/tickets/gestickets/') ? 'active' : ''; ?>">
+                <a href="#ticketsSubmenu" class="dropdown-toggle" aria-expanded="<?php echo $tickets_abierto ? 'true' : 'false'; ?>">
                     <i class="material-icons">confirmation_number</i>
                     <span>Gestión de Tickets</span>
                 </a>
-                <ul class="collapse list-unstyled menu" id="ticketsSubmenu">
-                    <li <?php echo is_active_hd('/tickets/gestickets/crear-ticket.php') ? 'class="active"' : ''; ?>>
+                <ul class="collapse list-unstyled menu <?php echo $tickets_abierto ? 'show' : ''; ?>" id="ticketsSubmenu">
+                    <li <?php echo esPaginaActiva('/tickets/gestickets/crear-ticket.php') ? 'class="active"' : ''; ?>>
                         <a href="/sisti/frontend/tickets/gestickets/crear-ticket.php">Crear Ticket</a>
                     </li>
-                    <li <?php echo is_active_hd('/tickets/gestickets/mis-tickets.php') ? 'class="active"' : ''; ?>>
+                    <li <?php echo esPaginaActiva('/tickets/gestickets/mis-tickets.php') ? 'class="active"' : ''; ?>>
                         <a href="/sisti/frontend/tickets/gestickets/mis-tickets.php">Mis Tickets</a>
                     </li>
-                    <li <?php echo is_active_hd('/tickets/gestickets/todos-tickets.php') ? 'class="active"' : ''; ?>>
+                    <li <?php echo esPaginaActiva('/tickets/gestickets/todos-tickets.php') ? 'class="active"' : ''; ?>>
                         <a href="/sisti/frontend/tickets/gestickets/todos-tickets.php">Todos los Tickets</a>
                     </li>
-                    <li <?php echo is_active_hd('/tickets/gestickets/seguimiento-tickets.php') ? 'class="active"' : ''; ?>>
+                    <li <?php echo esPaginaActiva('/tickets/gestickets/seguimiento-tickets.php') ? 'class="active"' : ''; ?>>
                         <a href="/sisti/frontend/tickets/gestickets/seguimiento-tickets.php">Seguimiento</a>
                     </li>
                 </ul>
             </li>
 
             <!-- Reportes -->
-            <li class="dropdown <?php echo is_active_hd('/reportes/') ? 'active' : ''; ?>">
-                <a href="#reportesSubmenu" class="dropdown-toggle" aria-expanded="false">
+            <?php
+            $rutas_reportes = ['/reportes/'];
+            $reportes_abierto = debeDropdownEstarAbierto($rutas_reportes);
+            ?>
+            <li class="dropdown <?php echo esPaginaActiva('/reportes/') ? 'active' : ''; ?>">
+                <a href="#reportesSubmenu" class="dropdown-toggle" aria-expanded="<?php echo $reportes_abierto ? 'true' : 'false'; ?>">
                     <i class="material-icons">assessment</i>
                     <span>Reportes</span>
                 </a>
-                <ul class="collapse list-unstyled menu" id="reportesSubmenu">
-                    <li <?php echo is_active_hd('/reportes/general.php') ? 'class="active"' : ''; ?>>
+                <ul class="collapse list-unstyled menu <?php echo $reportes_abierto ? 'show' : ''; ?>" id="reportesSubmenu">
+                    <li <?php echo esPaginaActiva('/reportes/general.php') ? 'class="active"' : ''; ?>>
                         <a href="/sisti/frontend/reportes/reporte_dias/reporte_ticket.php">Reporte General</a>
                     </li>
-                    <li <?php echo is_active_hd('/reportes/atencion.php') ? 'class="active"' : ''; ?>>
+                    <li <?php echo esPaginaActiva('/reportes/atencion.php') ? 'class="active"' : ''; ?>>
                         <a href="/sisti/frontend/reportes/reporte_atencion/fichas.php">Reporte de Atención</a>
                     </li>
-                    <li <?php echo is_active_hd('/reportes/estadisticas.php') ? 'class="active"' : ''; ?>>
+                    <li <?php echo esPaginaActiva('/reportes/estadisticas.php') ? 'class="active"' : ''; ?>>
                         <a href="/sisti/frontend/reportes/estadisticas/estadisticas.php">Estadísticas</a>
                     </li>
                 </ul>
             </li>
 
-            <?php if ($rol === 'administrador'): ?>
+            <?php if ($rol === 'admin'): ?>
                 <!-- Administración (solo administradores) -->
-                <li class="dropdown <?php echo is_active_hd('/admin/') ? 'active' : ''; ?>">
-                    <a href="#adminSubmenu" class="dropdown-toggle" aria-expanded="false">
+                <?php
+                $rutas_admin = ['/admin/'];
+                $admin_abierto = debeDropdownEstarAbierto($rutas_admin);
+                ?>
+                <li class="dropdown <?php echo esPaginaActiva('/admin/') ? 'active' : ''; ?>">
+                    <a href="#adminSubmenu" class="dropdown-toggle" aria-expanded="<?php echo $admin_abierto ? 'true' : 'false'; ?>">
                         <i class="material-icons">admin_panel_settings</i>
                         <span>Administración</span>
                     </a>
-                    <ul class="collapse list-unstyled menu" id="adminSubmenu">
-                        <li <?php echo is_active_hd('/admin/usuarios.php') ? 'class="active"' : ''; ?>>
+                    <ul class="collapse list-unstyled menu <?php echo $admin_abierto ? 'show' : ''; ?>" id="adminSubmenu">
+                        <li <?php echo esPaginaActiva('/admin/usuarios.php') ? 'class="active"' : ''; ?>>
                             <a href="/sisti/frontend/admin/usuarios.php">Gestión de Usuarios</a>
                         </li>
-                        <!--
-                        <li <?php echo is_active_hd('/admin/equipos.php') ? 'class="active"' : ''; ?>>
-                            <a href="/sisti/frontend/admin/equipos.php">Registro de Equipos</a>
-                        </li>
-                        <li <?php echo is_active_hd('/admin/categorias.php') ? 'class="active"' : ''; ?>>
-                            <a href="/sisti/frontend/admin/categorias.php">Categorías</a>
-                        </li>
-                        -->
                     </ul>
                 </li>
             <?php endif; ?>
 
             <!-- Configuración -->
-            <li class="dropdown <?php echo is_active_hd('/configuracion/') ? 'active' : ''; ?>">
-                <a href="#configSubmenu" class="dropdown-toggle" aria-expanded="false">
+            <?php
+            $rutas_config = ['/configuracion/', '/backend/php/configuracion/'];
+            $config_abierto = debeDropdownEstarAbierto($rutas_config);
+            ?>
+            <li class="dropdown <?php echo esPaginaActiva('/configuracion/') || esPaginaActiva('/backend/php/configuracion/') ? 'active' : ''; ?>">
+                <a href="#configSubmenu" class="dropdown-toggle" aria-expanded="<?php echo $config_abierto ? 'true' : 'false'; ?>">
                     <i class="material-icons">settings</i>
                     <span>Configuración</span>
                 </a>
-                <ul class="collapse list-unstyled menu" id="configSubmenu">
-                    <li <?php echo is_active_hd('/configuracion/perfil.php') ? 'class="active"' : ''; ?>>
+                <ul class="collapse list-unstyled menu <?php echo $config_abierto ? 'show' : ''; ?>" id="configSubmenu">
+                    <li <?php echo esPaginaActiva('/configuracion/perfil.php') || esPaginaActiva('/backend/php/configuracion/perfil.php') ? 'class="active"' : ''; ?>>
                         <a href="/sisti/backend/php/configuracion/perfil.php">Mi Perfil</a>
                     </li>
-                    <!--
-                    <?php if ($rol === 'administrador'): ?>
-                        <li <?php echo is_active_hd('/configuracion/sistema.php') ? 'class="active"' : ''; ?>>
-                            <a href="/sisti/frontend/configuracion/sistema.php">Configuración del Sistema</a>
-                        </li>
-                    <?php endif; ?>
-                    -->
                 </ul>
             </li>
-
-            <!-- Cerrar Sesión (móvil) -->
-            <div class="small-screen navbar-display">
-                <li class="dropdown d-lg-none d-md-block d-xl-none d-sm-block">
-                    <a href="#logoutSubmenu" data-bs-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
-                        <i class="material-icons">power_settings_new</i>Cerrar Sesión</a>
-                    <ul class="collapse list-unstyled menu" id="logoutSubmenu">
-                        <li>
-                            <a href="/sisti/logout.php" style="color: #e74c3c;">Cerrar Sesión</a>
-                        </li>
-                    </ul>
-                </li>
-            </div>
         </ul>
+
+        <!-- Cerrar Sesión para móvil (dentro del sidebar) -->
+        <div class="mobile-logout d-lg-none">
+            <hr class="sidebar-divider">
+            <a href="/sisti/frontend/logout.php" class="logout-mobile">
+                <i class="material-icons">power_settings_new</i>
+                <span>Cerrar Sesión</span>
+            </a>
+        </div>
     </nav>
 
     <!-- Page Content -->
@@ -148,62 +163,98 @@ function is_active_hd($path_fragment)
             <nav class="navbar navbar-expand-lg">
                 <div class="container-fluid">
                     <!-- Botón para colapsar sidebar -->
-                    <button type="button" id="sidebarCollapse" class="btn btn-primary d-md-block">
+                    <button type="button" id="sidebarCollapse" class="btn btn-primary">
                         <i class="material-icons">menu</i>
+                        <span class="btn-text d-none d-md-inline">Menú</span>
                     </button>
 
+                    <!-- BRAND RESPONSIVO -->
                     <a class="navbar-brand" href="/sisti/frontend/sisvis/escritorio.php">
-                        <i class="material-icons">support_agent</i>
-                        HelpDesk - Panel Principal
+                        <i class="material-icons brand-icon">support_agent</i>
+                        <!-- Texto completo para desktop -->
+                        <span class="brand-text-full d-none d-lg-inline">HelpDesk - Panel Principal</span>
+                        <!-- Texto medio para tablet -->
+                        <span class="brand-text-medium d-none d-md-inline d-lg-none">HelpDesk</span>
+                        <!-- Texto corto para móvil -->
+                        <span class="brand-text-short d-inline d-md-none">HD</span>
                     </a>
 
-                    <button class="navbar-toggler d-lg-none" type="button"
-                        data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent">
-                        <i class="material-icons">more_vert</i>
-                    </button>
+                    <!-- Usuario info y dropdown (siempre visible en desktop) -->
+                    <div class="navbar-nav ms-auto d-none d-lg-flex">
+                        <div class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle user-dropdown" href="#" role="button"
+                                data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="material-icons user-icon">person</i>
+                                <span class="user-info">
+                                    <span class="user-name"><?php echo $_SESSION['hd_nombre']; ?></span>
+                                    <small class="user-role"><?php echo ucfirst($_SESSION['hd_rol']); ?></small>
+                                </span>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li class="dropdown-header">
+                                    <div class="user-details">
+                                        <strong><?php echo $_SESSION['hd_nombre']; ?></strong>
+                                        <br>
+                                        <small class="text-muted"><?php echo $_SESSION['hd_usuario']; ?></small>
+                                        <br>
+                                        <span class="badge bg-primary"><?php echo ucfirst($_SESSION['hd_rol']); ?></span>
+                                    </div>
+                                </li>
+                                <li>
+                                    <hr class="dropdown-divider">
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="/sisti/backend/php/configuracion/perfil.php">
+                                        <i class="material-icons">account_circle</i>
+                                        Mi Perfil
+                                    </a>
+                                </li>
+                                <li>
+                                    <hr class="dropdown-divider">
+                                </li>
+                                <li>
+                                    <a class="dropdown-item text-danger" href="/sisti/frontend/logout.php">
+                                        <i class="material-icons">power_settings_new</i>
+                                        Cerrar Sesión
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
 
-                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                        <ul class="navbar-nav ms-auto">
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" role="button"
-                                    data-bs-toggle="dropdown" aria-expanded="false">
-                                    <i class="material-icons">person</i>
-                                    <span class="user-info">
-                                        <span class="user-name"><?php echo $_SESSION['hd_nombre']; ?></span>
-                                        <small class="user-role"><?php echo ucfirst($_SESSION['hd_rol']); ?></small>
-                                    </span>
-                                </a>
-                                <ul class="dropdown-menu dropdown-menu-end">
-                                    <li class="dropdown-header">
-                                        <div class="user-details">
-                                            <strong><?php echo $_SESSION['hd_nombre']; ?></strong>
-                                            <br>
-                                            <small class="text-muted"><?php echo $_SESSION['hd_usuario']; ?></small>
-                                            <br>
-                                            <span class="badge bg-primary"><?php echo ucfirst($_SESSION['hd_rol']); ?></span>
-                                        </div>
-                                    </li>
-                                    <li>
-                                        <hr class="dropdown-divider">
-                                    </li>
-                                    <li>
-                                        <a class="dropdown-item" href="/sisti/backend/php/configuracion/perfil.php">
-                                            <i class="material-icons">account_circle</i>
-                                            Mi Perfil
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <hr class="dropdown-divider">
-                                    </li>
-                                    <li>
-                                        <a class="dropdown-item text-danger" href="/sisti/frontend/logout.php">
-                                            <i class="material-icons">power_settings_new</i>
-                                            Cerrar Sesión
-                                        </a>
-                                    </li>
-                                </ul>
-                            </li>
-                        </ul>
+                    <!-- Botón de usuario simple para móvil/tablet -->
+                    <div class="d-lg-none">
+                        <div class="dropdown">
+                            <button class="btn btn-outline-secondary mobile-user-btn" type="button"
+                                data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="material-icons">person</i>
+                                <span class="d-none d-sm-inline"><?php echo obtenerPrimerNombre($_SESSION['hd_nombre']); ?></span>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li class="dropdown-header">
+                                    <div class="user-details">
+                                        <strong><?php echo $_SESSION['hd_nombre']; ?></strong>
+                                        <br>
+                                        <span class="badge bg-primary"><?php echo ucfirst($_SESSION['hd_rol']); ?></span>
+                                    </div>
+                                </li>
+                                <li>
+                                    <hr class="dropdown-divider">
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="/sisti/backend/php/configuracion/perfil.php">
+                                        <i class="material-icons">account_circle</i>
+                                        Mi Perfil
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item text-danger" href="/sisti/frontend/logout.php">
+                                        <i class="material-icons">power_settings_new</i>
+                                        Cerrar Sesión
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </nav>
@@ -214,97 +265,128 @@ function is_active_hd($path_fragment)
         <!-- Bootstrap JS -->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
-        <!-- Script para sidebar toggle -->
+        <!-- JAVASCRIPT MEJORADO -->
         <script>
             document.addEventListener('DOMContentLoaded', function() {
-                const sidebar = document.getElementById('sidebar');
-                const content = document.getElementById('content');
-                const sidebarCollapse = document.getElementById('sidebarCollapse');
-                const bodyOverlay = document.querySelector('.body-overlay');
+                const barraLateral = document.getElementById('sidebar');
+                const contenido = document.getElementById('content');
+                const colapsarBarraLateral = document.getElementById('sidebarCollapse');
+                const superposicionCuerpo = document.querySelector('.body-overlay');
 
-                // Toggle sidebar
-                sidebarCollapse.addEventListener('click', function() {
-                    sidebar.classList.toggle('active');
-                    content.classList.toggle('active');
+                // Alternar barra lateral
+                colapsarBarraLateral.addEventListener('click', function() {
+                    barraLateral.classList.toggle('active');
+                    contenido.classList.toggle('active');
 
-                    // Solo activar overlay en móvil
+                    // Activar overlay solo en móvil
                     if (window.innerWidth <= 768) {
-                        bodyOverlay.classList.toggle('active');
+                        superposicionCuerpo.classList.toggle('active');
+                        document.body.style.overflow = barraLateral.classList.contains('active') ? 'hidden' : 'auto';
                     }
 
-                    // Cerrar todos los dropdowns cuando se colapsa
-                    if (sidebar.classList.contains('active')) {
-                        const openDropdowns = document.querySelectorAll('#sidebar .collapse.show');
-                        openDropdowns.forEach(dropdown => {
-                            dropdown.classList.remove('show');
+                    // Cerrar dropdowns cuando se colapsa en desktop
+                    if (barraLateral.classList.contains('active') && window.innerWidth > 768) {
+                        const desplegablesAbiertos = document.querySelectorAll('#sidebar .collapse.show');
+                        desplegablesAbiertos.forEach(desplegable => {
+                            desplegable.classList.remove('show');
                         });
-                        const openToggles = document.querySelectorAll('#sidebar .dropdown-toggle[aria-expanded="true"]');
-                        openToggles.forEach(toggle => {
-                            toggle.setAttribute('aria-expanded', 'false');
+                        const alternadoresAbiertos = document.querySelectorAll('#sidebar .dropdown-toggle[aria-expanded="true"]');
+                        alternadoresAbiertos.forEach(alternador => {
+                            alternador.setAttribute('aria-expanded', 'false');
                         });
                     }
                 });
 
-                // Close sidebar on overlay click (mobile)
-                bodyOverlay.addEventListener('click', function() {
-                    sidebar.classList.remove('active');
-                    content.classList.remove('active');
-                    bodyOverlay.classList.remove('active');
+                // Cerrar barra lateral al hacer clic en overlay (móvil)
+                superposicionCuerpo.addEventListener('click', function() {
+                    barraLateral.classList.remove('active');
+                    contenido.classList.remove('active');
+                    superposicionCuerpo.classList.remove('active');
+                    document.body.style.overflow = 'auto';
                 });
 
-                // Auto-close sidebar on mobile when clicking nav links
-                const navLinks = document.querySelectorAll('#sidebar .components a:not(.dropdown-toggle)');
-                navLinks.forEach(link => {
-                    link.addEventListener('click', function() {
+                // Auto-cerrar barra lateral en móvil al hacer clic en enlaces
+                const enlacesNavegacion = document.querySelectorAll('#sidebar .components a:not(.dropdown-toggle)');
+                enlacesNavegacion.forEach(enlace => {
+                    enlace.addEventListener('click', function() {
                         if (window.innerWidth <= 768) {
-                            sidebar.classList.remove('active');
-                            content.classList.remove('active');
-                            bodyOverlay.classList.remove('active');
+                            barraLateral.classList.remove('active');
+                            contenido.classList.remove('active');
+                            superposicionCuerpo.classList.remove('active');
+                            document.body.style.overflow = 'auto';
                         }
                     });
                 });
 
-                // Handle dropdown toggles manually for collapsed sidebar
-                const dropdownToggles = document.querySelectorAll('#sidebar .dropdown-toggle');
-                dropdownToggles.forEach(toggle => {
-                    toggle.addEventListener('click', function(e) {
+                // Manejo de dropdowns mejorado
+                const alternadoresDesplegables = document.querySelectorAll('#sidebar .dropdown-toggle');
+                alternadoresDesplegables.forEach(alternador => {
+                    alternador.addEventListener('click', function(e) {
                         e.preventDefault();
 
-                        // Si el sidebar está collapsed en desktop, no permitir dropdown
-                        if (sidebar.classList.contains('active') && window.innerWidth > 768) {
+                        // Si barra lateral colapsada en desktop, no permitir dropdown
+                        if (barraLateral.classList.contains('active') && window.innerWidth > 768) {
                             return false;
                         }
 
-                        // Comportamiento normal para sidebar expandido
-                        const targetId = this.getAttribute('href').substring(1);
-                        const targetCollapse = document.getElementById(targetId);
+                        const idObjetivo = this.getAttribute('href').substring(1);
+                        const colapsarObjetivo = document.getElementById(idObjetivo);
 
-                        if (targetCollapse) {
-                            // Toggle collapse
-                            const isOpen = targetCollapse.classList.contains('show');
+                        if (colapsarObjetivo) {
+                            const estaAbierto = colapsarObjetivo.classList.contains('show');
 
-                            // Cerrar otros dropdowns primero
-                            dropdownToggles.forEach(otherToggle => {
-                                if (otherToggle !== this) {
-                                    const otherId = otherToggle.getAttribute('href').substring(1);
-                                    const otherCollapse = document.getElementById(otherId);
-                                    if (otherCollapse) {
-                                        otherCollapse.classList.remove('show');
-                                        otherToggle.setAttribute('aria-expanded', 'false');
+                            // Cerrar otros dropdowns
+                            alternadoresDesplegables.forEach(otroAlternador => {
+                                if (otroAlternador !== this) {
+                                    const otroId = otroAlternador.getAttribute('href').substring(1);
+                                    const otroColapsar = document.getElementById(otroId);
+                                    if (otroColapsar) {
+                                        otroColapsar.classList.remove('show');
+                                        otroAlternador.setAttribute('aria-expanded', 'false');
                                     }
                                 }
                             });
 
-                            // Toggle el actual
-                            if (isOpen) {
-                                targetCollapse.classList.remove('show');
+                            // Alternar actual
+                            if (estaAbierto) {
+                                colapsarObjetivo.classList.remove('show');
                                 this.setAttribute('aria-expanded', 'false');
                             } else {
-                                targetCollapse.classList.add('show');
+                                colapsarObjetivo.classList.add('show');
                                 this.setAttribute('aria-expanded', 'true');
                             }
                         }
                     });
                 });
+
+                // Ajustar barra lateral en redimensión
+                window.addEventListener('resize', function() {
+                    if (window.innerWidth > 768) {
+                        superposicionCuerpo.classList.remove('active');
+                        document.body.style.overflow = 'auto';
+                    } else {
+                        // En móvil, asegurar que barra lateral esté oculta por defecto
+                        if (!barraLateral.classList.contains('active')) {
+                            barraLateral.classList.remove('active');
+                            contenido.classList.remove('active');
+                        }
+                    }
+                });
+
+                // Función para manejar estados activos
+                function manejarEstadosActivos() {
+                    const rutaActual = window.location.pathname;
+                    const enlacesNavegacion = document.querySelectorAll('#sidebar .components a');
+
+                    enlacesNavegacion.forEach(enlace => {
+                        const href = enlace.getAttribute('href');
+                        if (href && rutaActual.includes(href)) {
+                            enlace.parentElement.classList.add('active');
+                        }
+                    });
+                }
+
+                // Inicializar estados activos
+                manejarEstadosActivos();
             });
         </script>

@@ -1,288 +1,346 @@
 /* Reset y box-sizing global */
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 /* Body y fuente */
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #f5f7fa;
-    color: #2c3e50;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: stretch;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f5f7fa;
+  color: #2c3e50;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
 }
 
 /* Contenedor principal */
 .main-content {
-    padding: 30px 20px;
-    max-width: 100%;
-    width: 100%;
-    overflow-x: hidden;
-    flex-grow: 1;
+  padding: 30px 20px;
+  max-width: 100%;
+  width: 100%;
+  overflow-x: hidden;
+  flex-grow: 1;
 }
 
 /* Título del reporte */
 .titulo-reporte,
-.main-content>h2 {
-    font-size: 32px;
-    font-weight: 700;
-    color: #1d3557;
-    text-align: center;
-    margin-bottom: 30px;
-    border-bottom: 3px solid #2563eb;
-    padding-bottom: 12px;
-    animation: fadeInDown 0.5s ease;
+.main-content > h2 {
+  font-size: 32px;
+  font-weight: 700;
+  color: #1d3557;
+  text-align: center;
+  margin-bottom: 30px;
+  border-bottom: 3px solid #2563eb;
+  padding-bottom: 12px;
+  animation: fadeInDown 0.5s ease;
 }
 
 /* Sección de filtros */
 .filter-section,
 .filtros-reporte {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: center;
-    gap: 25px;
-    margin-bottom: 30px;
-    animation: fadeInDown 0.5s ease;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 25px;
+  margin-bottom: 30px;
+  animation: fadeInDown 0.5s ease;
 }
 
 .filter-section label {
-    font-weight: 600;
-    font-size: 16px;
-    color: #34495e;
+  font-weight: 600;
+  font-size: 16px;
+  color: #34495e;
 }
 
 .filter-section select,
 .filter-section input[type="month"] {
-    padding: 10px 15px;
-    border: 1.8px solid #ccc;
-    border-radius: 10px;
-    font-size: 15px;
-    background-color: #fff;
-    box-shadow: 0 2px 6px rgb(0 0 0 / 0.05);
-    transition: border-color 0.3s ease, box-shadow 0.3s ease;
-    cursor: pointer;
-    min-width: 140px;
+  padding: 10px 15px;
+  border: 1.8px solid #ccc;
+  border-radius: 10px;
+  font-size: 15px;
+  background-color: #fff;
+  box-shadow: 0 2px 6px rgb(0 0 0 / 0.05);
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+  min-width: 140px;
 }
 
 .filter-section select:hover,
 .filter-section input[type="month"]:hover {
-    border-color: #3b82f6;
-    box-shadow: 0 0 8px #3b82f6aa;
+  border-color: #3b82f6;
+  box-shadow: 0 0 8px #3b82f6aa;
 }
 
 .filter-section select:focus,
 .filter-section input[type="month"]:focus {
-    outline: none;
-    border-color: #2563eb;
-    box-shadow: 0 0 12px #2563ebbb;
+  outline: none;
+  border-color: #2563eb;
+  box-shadow: 0 0 12px #2563ebbb;
 }
 
 .indicador-tickets {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 25px;
-    font-size: 20px;
-    font-weight: 600;
-    color: #1d3557;
-    animation: fadeInUp 0.5s ease;
-    padding: 0 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+  font-size: 20px;
+  font-weight: 600;
+  color: #1d3557;
+  animation: fadeInUp 0.5s ease;
+  padding: 0 20px;
 }
 
 /* Tabla */
 .table-responsive {
-    width: 100%;
-    overflow-x: auto;
+  width: 100%;
+  overflow-x: auto;
 }
 
 .table {
-    width: 100%;
-    border-collapse: separate;
-    border-spacing: 0;
-    background: white;
-    box-shadow: 0 8px 22px rgb(0 0 0 / 0.12);
-    border-radius: 14px;
-    overflow: hidden;
-    animation: fadeInUp 0.5s ease;
-    font-size: 14.5px;
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  background: white;
+  box-shadow: 0 8px 22px rgb(0 0 0 / 0.12);
+  border-radius: 14px;
+  overflow: hidden;
+  animation: fadeInUp 0.5s ease;
+  font-size: 14.5px;
 }
 
 .table thead {
-    background-color: #2563eb !important;
-    color: #ffffff !important;
+  background-color: #2563eb !important;
+  color: #ffffff !important;
 }
 
 .table thead th {
-    font-weight: 700;
-    font-size: 15px;
-    color: #ffffff !important;
-    background-color: #2563eb !important;
-    border-bottom: 2px solid #1d4ed8;
+  font-weight: 700;
+  font-size: 15px;
+  color: #ffffff !important;
+  background-color: #2563eb !important;
+  border-bottom: 2px solid #1d4ed8;
 }
 
 .botones-exportar {
-    display: flex;
-    gap: 5px;
+  display: flex;
+  gap: 5px;
 }
 
 .botones-exportar button:first-child {
-    border-top-right-radius: 0;
-    border-bottom-right-radius: 0;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
 }
 
 .botones-exportar button:last-child {
-    border-top-left-radius: 0;
-    border-bottom-left-radius: 0;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
 }
 
 .btn-exportar {
-    background-color: #28a745;
-    color: white;
-    padding: 10px 20px;
-    font-size: 14px;
-    border: none;
-    border-radius: 8px !important;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
+  background-color: #28a745;
+  color: white;
+  padding: 10px 20px;
+  font-size: 14px;
+  border: none;
+  border-radius: 8px !important;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
 }
 
 .btn-exportar:hover {
-    background-color: #218838;
+  background-color: #218838;
 }
 
 #btnExportarPDF {
-    background-color: #E50914;
-    color: white;
-    padding: 10px 20px;
-    font-size: 14px;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
+  background-color: #e50914;
+  color: white;
+  padding: 10px 20px;
+  font-size: 14px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
 }
 
 #btnExportarPDF:hover {
-    background-color: #b2070f;
+  background-color: #b2070f;
 }
 
 .table th,
 .table td {
-    padding: 16px 20px;
-    text-align: left;
-    border-bottom: 1px solid #e2e8f0;
-    vertical-align: middle;
-    user-select: none;
-    white-space: nowrap;
+  padding: 16px 20px;
+  text-align: left;
+  border-bottom: 1px solid #e2e8f0;
+  vertical-align: middle;
+  user-select: none;
+  white-space: nowrap;
 }
 
 .table tbody tr:hover {
-    background-color: #e8f0fe;
-    cursor: default;
-    transition: background-color 0.3s ease;
+  background-color: #e8f0fe;
+  cursor: default;
+  transition: background-color 0.3s ease;
 }
 
 /* Colorear filas por estado (si se aplica clase a <tr>) */
 .table tbody tr.estado-pendiente {
-    background-color: #fff6f6;
+  background-color: #fff6f6;
 }
 
 .table tbody tr.estado-proceso {
-    background-color: #fffaeb;
+  background-color: #fffaeb;
 }
 
 .table tbody tr.estado-resuelto {
-    background-color: #f1fcf5;
+  background-color: #f1fcf5;
 }
 
 /* Etiquetas visuales de estado */
 .estado-tag {
-    display: inline-block;
-    padding: 6px 14px;
-    border-radius: 20px;
-    font-size: 0.85rem;
-    font-weight: 600;
-    text-align: center;
-    white-space: nowrap;
+  display: inline-block;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-align: center;
+  white-space: nowrap;
 }
 
 .estado-pendiente {
-    background-color: #ffecec;
-    color: #e74c3c;
-    border: 1px solid #e74c3c;
+  background-color: #ffecec;
+  color: #e74c3c;
+  border: 1px solid #e74c3c;
 }
 
 .estado-proceso {
-    background-color: #fff7dc;
-    color: #f39c12;
-    border: 1px solid #f39c12;
+  background-color: #fff7dc;
+  color: #f39c12;
+  border: 1px solid #f39c12;
 }
 
 .estado-resuelto {
-    background-color: #e6ffed;
-    color: #27ae60;
-    border: 1px solid #27ae60;
+  background-color: #e6ffed;
+  color: #27ae60;
+  border: 1px solid #27ae60;
 }
 
 /* Animaciones */
 @keyframes fadeInDown {
-    from {
-        opacity: 0;
-        transform: translateY(-25px);
-    }
+  from {
+    opacity: 0;
+    transform: translateY(-25px);
+  }
 
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @keyframes fadeInUp {
-    from {
-        opacity: 0;
-        transform: translateY(25px);
-    }
+  from {
+    opacity: 0;
+    transform: translateY(25px);
+  }
 
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* Responsive */
 @media (max-width: 768px) {
-    .filter-section {
-        flex-direction: column;
-        align-items: stretch;
-    }
+  .filter-section {
+    flex-direction: column;
+    align-items: stretch;
+  }
 
-    .filter-section select,
-    .filter-section input[type="month"] {
-        min-width: 100%;
-    }
+  .filter-section select,
+  .filter-section input[type="month"] {
+    min-width: 100%;
+  }
 
-    .table th,
-    .table td {
-        padding: 10px 12px;
-        font-size: 13px;
-    }
+  .table th,
+  .table td {
+    padding: 10px 12px;
+    font-size: 13px;
+  }
 
-    .titulo-reporte,
-    .main-content>h2 {
-        font-size: 26px;
-    }
+  .titulo-reporte,
+  .main-content > h2 {
+    font-size: 26px;
+  }
 
-    .indicador-tickets {
-        font-size: 18px;
-    }
+  .indicador-tickets {
+    font-size: 18px;
+  }
 }
 
 @media (max-width: 480px) {
-    .main-content {
-        padding: 15px 10px;
-    }
+  .main-content {
+    padding: 15px 10px;
+  }
+}
+
+/* 🔥 RESPONSIVE FIXES PARA TRABAJAR CON NAVBAR */
+@media (max-width: 768px) {
+  .main-content {
+    padding: 15px 10px !important;
+  }
+
+  .filter-section {
+    padding: 15px;
+    gap: 15px;
+  }
+
+  .filter-section select,
+  .filter-section input[type="month"] {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+
+  .filtro-opcional {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .indicador-tickets {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+    padding: 0 10px;
+  }
+
+  .botones-exportar {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .btn-exportar {
+    flex: 1;
+    min-width: 120px;
+  }
+}
+
+@media (max-width: 480px) {
+  .titulo-reporte,
+  .main-content > h2 {
+    font-size: 24px;
+    text-align: left;
+    margin-bottom: 20px;
+  }
+
+  .botones-exportar {
+    flex-direction: column;
+  }
+
+  .btn-exportar {
+    width: 100%;
+    margin-bottom: 5px;
+  }
 }

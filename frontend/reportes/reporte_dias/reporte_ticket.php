@@ -11,11 +11,15 @@ if (!isset($_SESSION['hd_activo']) || $_SESSION['hd_activo'] !== true) {
 <html lang="es">
 
 <head>
-    <!-- ... cabecera original ... -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Reporte General | HelpDesk</title>
 
-    <!-- CSS -->
-    <link rel="stylesheet" href="../../../backend/css/reportes/reporte_dias/reporte_tickets.css" />
+    <!-- 🔥 IMPORTANTE: Navbar CSS primero -->
     <link rel="stylesheet" href="../../../backend/css/navbar/navbar.css" />
+
+    <!-- CSS del módulo DESPUÉS del navbar -->
+    <link rel="stylesheet" href="../../../backend/css/reportes/reporte_dias/reporte_tickets.css" />
 
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
     <link rel="icon" type="image/png" href="../../../backend/img/logoPisco.png" />
@@ -33,9 +37,10 @@ if (!isset($_SESSION['hd_activo']) || $_SESSION['hd_activo'] !== true) {
 </head>
 
 <body>
-
+    <!-- 🔥 INCLUIR NAVBAR (que ya tiene el wrapper) -->
     <?php include '../../navbar/navbar.php'; ?>
 
+    <!-- 🔥 CONTENIDO DENTRO DEL LAYOUT DEL NAVBAR -->
     <div class="main-content">
         <h2>Reporte de Tickets</h2>
 

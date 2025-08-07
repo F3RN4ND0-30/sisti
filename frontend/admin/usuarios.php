@@ -19,6 +19,8 @@ if (!isset($_SESSION['hd_activo']) || $_SESSION['hd_activo'] !== true) {
     <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css">
     <!-- CSS propio -->
     <link rel="stylesheet" href="/sisti/backend/css/admin/usuarios.css">
+    <link rel="icon" type="image/png" href="../../backend/img/logoPisco.png" />
+
 </head>
 
 <body>

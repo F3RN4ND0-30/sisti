@@ -11,16 +11,20 @@ if (!isset($_SESSION['hd_activo']) || $_SESSION['hd_activo'] !== true) {
 <html lang="es">
 
 <head>
-    <!-- ... cabecera original ... -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Estadísticas | HelpDesk</title>
 
-    <!-- CSS -->
+    <!-- 🔥 IMPORTANTE: Navbar CSS primero -->
     <link rel="stylesheet" href="../../../backend/css/navbar/navbar.css" />
+
+    <!-- CSS del módulo DESPUÉS del navbar -->
     <link rel="stylesheet" href="../../../backend/css/reportes/estadisticas/estadisticas.css" />
 
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
     <link rel="icon" type="image/png" href="../../../backend/img/logoPisco.png" />
 
-    <!-- DataTables -->
+    <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <!-- JS -->
@@ -28,38 +32,41 @@ if (!isset($_SESSION['hd_activo']) || $_SESSION['hd_activo'] !== true) {
 </head>
 
 <body>
+    <!-- 🔥 INCLUIR NAVBAR (que ya tiene el wrapper) -->
     <?php include '../../navbar/navbar.php'; ?>
-    <div class="dashboard">
-        <h2 class="titulo-dashboard">Panel de Tickets de este Mes</h2>
 
-        <div class="kpis">
-            <div class="kpi-card">Total: <strong id="totalTickets">0</strong></div>
-            <div class="kpi-card pendiente">Pendientes: <strong id="ticketsPendientes">0</strong></div>
-            <div class="kpi-card proceso">En proceso: <strong id="ticketsProceso">0</strong></div>
-            <div class="kpi-card resuelto">Resueltos: <strong id="ticketsResueltos">0</strong></div>
-        </div>
+    <!-- 🔥 CONTENIDO DENTRO DEL LAYOUT DEL NAVBAR -->
+    <div class="main-content">
+        <div class="dashboard">
+            <h2 class="titulo-dashboard">Panel de Tickets de este Mes</h2>
 
-        <div class="graficos">
-            <div class="grafico-container">
-                <h3>Tickets por Estado</h3>
-                <canvas id="graficoEstados"></canvas>
-            </div>
-            <div class="grafico-container">
-                <h3>Tickets por Área</h3>
-                <canvas id="graficoPorArea"></canvas>
-            </div>
-            <div class="grafico-container">
-                <h3>Tickets por Semana</h3>
-                <canvas id="graficoPorSemana"></canvas>
+            <div class="kpis">
+                <div class="kpi-card">Total: <strong id="totalTickets">0</strong></div>
+                <div class="kpi-card pendiente">Pendientes: <strong id="ticketsPendientes">0</strong></div>
+                <div class="kpi-card proceso">En proceso: <strong id="ticketsProceso">0</strong></div>
+                <div class="kpi-card resuelto">Resueltos: <strong id="ticketsResueltos">0</strong></div>
             </div>
 
-            <div class="grafico-container">
-                <h3>Tickets por Mes</h3>
-                <canvas id="graficoPorMes"></canvas>
+            <div class="graficos">
+                <div class="grafico-container">
+                    <h3>Tickets por Estado</h3>
+                    <canvas id="graficoEstados"></canvas>
+                </div>
+                <div class="grafico-container">
+                    <h3>Tickets por Área</h3>
+                    <canvas id="graficoPorArea"></canvas>
+                </div>
+                <div class="grafico-container">
+                    <h3>Tickets por Semana</h3>
+                    <canvas id="graficoPorSemana"></canvas>
+                </div>
+                <div class="grafico-container">
+                    <h3>Tickets por Mes</h3>
+                    <canvas id="graficoPorMes"></canvas>
+                </div>
             </div>
         </div>
     </div>
-
 </body>
 
 </html>

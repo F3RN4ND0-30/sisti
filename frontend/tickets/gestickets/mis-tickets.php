@@ -14,7 +14,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/sisti/backend/php/desk/obtener_mis_in
 
 <head>
     <meta charset="UTF-8">
-    <title>Mis Tickets Asignados</title>
+    <title>Mis Tickets | HelpDesk</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <!-- CSS principal -->
@@ -23,6 +23,8 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/sisti/backend/php/desk/obtener_mis_in
 
     <!-- Material Icons (Google) -->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <link rel="icon" type="image/png" href="../../../backend/img/logoPisco.png" />
 
     <!-- Favicon opcional -->
     <link rel="icon" type="image/png" href="/sisti/assets/favicon.png">

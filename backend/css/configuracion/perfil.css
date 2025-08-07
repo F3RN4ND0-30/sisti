@@ -1,102 +1,381 @@
+/* ================== PERFIL RESPONSIVE - COMPATIBLE CON NAVBAR ================== */
+
+/* 🔥 Mantener estilos del dashboard-stats del navbar */
 .user-role p {
-    color: #fff;
-    font-weight: bold;
-    font-size: 16px;
-    opacity: 1;
+  color: #fff;
+  font-weight: bold;
+  font-size: 16px;
+  opacity: 1;
 }
 
+/* Contenedor principal del perfil */
 .perfil-container {
-    max-width: 800px;
-    margin: 30px auto;
-    padding: 30px;
-    background: white;
-    border-radius: 15px;
-    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+  max-width: 900px;
+  margin: 30px auto 0;
+  padding: 0;
+  background: transparent;
+  border-radius: 0;
+  box-shadow: none;
+  width: 100%;
 }
 
+/* Header del perfil */
 .perfil-header {
-    text-align: center;
-    margin-bottom: 30px;
+  text-align: center;
+  margin-bottom: 30px;
+  background: white;
+  padding: 30px;
+  border-radius: 15px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+  border: 1px solid #e9ecef;
+  animation: fadeInDown 0.5s ease;
 }
 
 .perfil-avatar {
-    width: 120px;
-    height: 120px;
-    border-radius: 50%;
-    background: #2563eb;
-    color: white;
-    font-size: 50px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 0 auto 15px;
-    box-shadow: 0 5px 15px rgba(37, 99, 235, 0.3);
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+  color: white;
+  font-size: 48px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 20px;
+  box-shadow: 0 8px 25px rgba(37, 99, 235, 0.3);
+  transition: all 0.3s ease;
+}
+
+.perfil-avatar:hover {
+  transform: scale(1.05);
+  box-shadow: 0 12px 35px rgba(37, 99, 235, 0.4);
 }
 
 .perfil-header h2 {
-    margin: 10px 0 5px;
-    font-size: 26px;
-    color: #2c3e50;
+  margin: 10px 0 5px;
+  font-size: 26px;
+  color: #2c3e50;
+  font-weight: 700;
 }
 
 .perfil-header p {
-    color: #6c757d;
-    font-size: 16px;
+  color: #6c757d;
+  font-size: 16px;
+  margin: 0;
+  font-weight: 500;
 }
 
-.perfil-item {
-    margin-bottom: 20px;
-}
-
-.perfil-item label {
-    font-weight: 600;
-    color: #333;
-    display: block;
-    margin-bottom: 6px;
-}
-
-.form-control {
-    width: 100%;
-    padding: 10px 15px;
-    border: 2px solid #e5e7eb;
-    border-radius: 10px;
-    background: #f9fafb;
-    font-size: 15px;
-    color: #555;
-}
-
-.btn {
-    padding: 12px 20px;
-    border-radius: 8px;
-    font-weight: bold;
-    cursor: pointer;
-    border: none;
-    transition: 0.3s;
-    display: block;
-    margin: 25px auto 0;
-}
-
-.btn-primary {
-    background: linear-gradient(135deg, #3498db, #2980b9);
-    color: white;
-}
-
-.btn-primary:hover {
-    background: linear-gradient(135deg, #2980b9, #2471a3);
-}
-
+/* Datos del perfil */
 .perfil-datos {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
+  background: white;
+  padding: 30px;
+  border-radius: 15px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+  border: 1px solid #e9ecef;
+  animation: fadeInUp 0.5s ease;
 }
 
 .perfil-row {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+  margin-bottom: 20px;
 }
 
-.perfil-row .perfil-item {
-    flex: 1 1 48%;
+.perfil-row:last-child {
+  margin-bottom: 0;
+}
+
+.perfil-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.perfil-item label {
+  font-weight: 600;
+  color: #495057;
+  font-size: 14px;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  display: block;
+}
+
+.form-control {
+  width: 100%;
+  padding: 12px 16px;
+  border: 2px solid #e9ecef;
+  border-radius: 10px;
+  background: #f8f9fa;
+  font-size: 15px;
+  color: #495057;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  cursor: not-allowed;
+}
+
+.form-control:focus {
+  outline: none;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+  background: #ffffff;
+}
+
+/* Botones */
+.btn {
+  padding: 12px 24px;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 15px;
+  cursor: pointer;
+  border: none;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  text-decoration: none;
+  margin: 25px auto 0;
+  min-width: 150px;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+  color: white;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+}
+
+.btn-primary:hover {
+  background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(37, 99, 235, 0.4);
+}
+
+.btn-primary:active {
+  transform: translateY(0);
+}
+
+/* Animaciones */
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ================== RESPONSIVE BREAKPOINTS ================== */
+
+/* Tablets grandes (992px - 1199px) */
+@media (max-width: 1199.98px) {
+  .perfil-container {
+    max-width: 100%;
+    margin-top: 25px;
+  }
+
+  .perfil-row {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 18px;
+  }
+}
+
+/* Tablets (768px - 991px) */
+@media (max-width: 991.98px) {
+  .perfil-container {
+    margin-top: 20px;
+  }
+
+  .perfil-header {
+    padding: 25px 20px;
+  }
+
+  .perfil-avatar {
+    width: 100px;
+    height: 100px;
+    font-size: 40px;
+    margin-bottom: 15px;
+  }
+
+  .perfil-header h2 {
+    font-size: 22px;
+  }
+
+  .perfil-header p {
+    font-size: 14px;
+  }
+
+  .perfil-datos {
+    padding: 25px 20px;
+  }
+
+  .perfil-row {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+}
+
+/* Móviles grandes (576px - 767px) */
+@media (max-width: 767.98px) {
+  .perfil-container {
+    margin-top: 15px;
+  }
+
+  .perfil-header {
+    padding: 20px 15px;
+    margin-bottom: 20px;
+  }
+
+  .perfil-avatar {
+    width: 90px;
+    height: 90px;
+    font-size: 36px;
+    margin-bottom: 12px;
+  }
+
+  .perfil-header h2 {
+    font-size: 20px;
+    line-height: 1.3;
+  }
+
+  .perfil-datos {
+    padding: 20px 15px;
+  }
+
+  .perfil-item label {
+    font-size: 13px;
+    margin-bottom: 6px;
+  }
+
+  .form-control {
+    padding: 10px 14px;
+    font-size: 14px;
+  }
+
+  .btn {
+    padding: 10px 20px;
+    font-size: 14px;
+    margin-top: 20px;
+    width: 100%;
+  }
+}
+
+/* Móviles pequeños (hasta 575px) */
+@media (max-width: 575.98px) {
+  .perfil-header {
+    padding: 18px 12px;
+    border-radius: 12px;
+  }
+
+  .perfil-avatar {
+    width: 80px;
+    height: 80px;
+    font-size: 32px;
+    margin-bottom: 10px;
+  }
+
+  .perfil-header h2 {
+    font-size: 18px;
+    margin: 8px 0 4px;
+  }
+
+  .perfil-header p {
+    font-size: 13px;
+  }
+
+  .perfil-datos {
+    padding: 18px 12px;
+    border-radius: 12px;
+  }
+
+  .perfil-row {
+    gap: 12px;
+    margin-bottom: 15px;
+  }
+
+  .perfil-item label {
+    font-size: 12px;
+    margin-bottom: 5px;
+  }
+
+  .form-control {
+    padding: 9px 12px;
+    font-size: 13px;
+    border-radius: 8px;
+  }
+
+  .btn {
+    padding: 9px 18px;
+    font-size: 13px;
+    border-radius: 8px;
+    margin-top: 15px;
+  }
+}
+
+/* Móviles muy pequeños (hasta 375px) */
+@media (max-width: 375px) {
+  .perfil-header {
+    padding: 15px 10px;
+  }
+
+  .perfil-avatar {
+    width: 70px;
+    height: 70px;
+    font-size: 28px;
+  }
+
+  .perfil-header h2 {
+    font-size: 16px;
+    line-height: 1.2;
+  }
+
+  .perfil-datos {
+    padding: 15px 10px;
+  }
+
+  .form-control {
+    padding: 8px 10px;
+    font-size: 12px;
+  }
+}
+
+/* ================== ESTADOS ESPECIALES ================== */
+.perfil-item.loading .form-control {
+  background: linear-gradient(90deg, #f8f9fa, #e9ecef, #f8f9fa);
+  background-size: 200% 100%;
+  animation: loading 1.5s infinite;
+  color: transparent;
+}
+
+@keyframes loading {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+.perfil-item.error .form-control {
+  border-color: #e74c3c;
+  background: #fff5f5;
+}
+
+.perfil-item.success .form-control {
+  border-color: #27ae60;
+  background: #f1fcf5;
 }

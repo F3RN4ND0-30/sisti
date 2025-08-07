@@ -1,6 +1,6 @@
 <?php
 // Configuración
-$servidor = 'DESKTOP-V7Q6881\SQLEXPRESS';
+$servidor = 'DESKTOP-B340BGP\SQLEXPRESS';
 $basedatos = 'DB_HELPDESK';
 $usar_windows = true; // true = Windows Auth | false = SQL Auth
 $usuario_sql = 'saF';

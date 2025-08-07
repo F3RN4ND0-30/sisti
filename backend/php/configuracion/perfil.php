@@ -43,17 +43,25 @@ try {
 
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>Mi Perfil | HelpDesk</title>
-    <link rel="stylesheet" href="../../css/vistas/escritorio.css">
+
+    <!-- 🔥 IMPORTANTE: Navbar CSS primero -->
     <link rel="stylesheet" href="../../css/navbar/navbar.css">
+
+    <!-- CSS del módulo DESPUÉS del navbar -->
+    <link rel="stylesheet" href="../../css/vistas/escritorio.css">
     <link rel="stylesheet" href="../../css/configuracion/perfil.css">
+
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link rel="icon" type="image/png" href="../img/logoPisco.png" />
+    <link rel="icon" type="image/png" href="../../../backend/img/logoPisco.png" />
 </head>
 
 <body>
+    <!-- 🔥 INCLUIR NAVBAR (que ya tiene el wrapper) -->
     <?php include '../../../frontend/navbar/navbar.php'; ?>
 
+    <!-- 🔥 CONTENIDO DENTRO DEL LAYOUT DEL NAVBAR -->
     <div class="main-content">
         <div class="dashboard-stats">
             <div class="row">
