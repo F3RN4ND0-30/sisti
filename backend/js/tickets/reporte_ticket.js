@@ -12,6 +12,7 @@ $(document).ready(function () {
         $('#selectorDia').toggle(tipo === 'dia');
         $('#selectorSemana').toggle(tipo === 'semana');
         $('#selectorMes').toggle(tipo === 'mes');
+        $('#selectorAnio').toggle(tipo === 'anio');
     }
 
     toggleSelector();
@@ -58,6 +59,8 @@ $(document).ready(function () {
             datos.semana = semanaNum;
         } else if (tipo === 'mes') {
             datos.fecha = $('#mesFiltro').val();
+        } else if (tipo === 'anio') {
+            datos.fecha = $('#anioFiltro').val();
         } else {
             datos.fecha = new Date().toISOString().slice(0, 10);
         }
@@ -157,6 +160,9 @@ $(document).ready(function () {
         } else if (tipo === 'mes') {
             const mes = document.getElementById('mesFiltro').value;
             url += '&fecha=' + mes;
+        } else if (tipo === 'anio') {
+            const anio = document.getElementById('anioFiltro').value;
+            url += '&fecha=' + anio;
         }
 
         window.open(url, '_blank');
@@ -183,6 +189,9 @@ $(document).ready(function () {
         } else if (tipo === 'mes') {
             const mes = document.getElementById('mesFiltro').value;
             url += '&fecha=' + mes;
+        } else if (tipo === 'anio') {
+            const anio = document.getElementById('anioFiltro').value;
+            url += '&fecha=' + anio;
         }
 
         window.open(url, '_blank');

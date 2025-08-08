@@ -128,6 +128,36 @@ try {
             ];
             break;
 
+        case 'anio':
+            $anio = $fecha;
+            if (!preg_match('/^\d{4}$/', $anio)) {
+                die("Año inválido.");
+            }
+
+            $titulo = "REPORTE DE ATENCIÓN DE TICKETS DEL AÑO $anio";
+
+            $sql = "
+                SELECT 
+                    t.Codigo_Ticket AS numero_ticket,
+                    u.Dni,
+                    u.Nombre AS nombre_usuario,
+                    u.Apellido_Paterno,
+                    u.Apellido_Materno,
+                    a.Nombre AS nombre_area,
+                    i.Descripcion,
+                    ei.Nombre AS estado_texto,
+                    i.Fecha_Creacion,
+                    i.Fecha_Resuelto
+                FROM tb_Incidentes i
+                INNER JOIN tb_Tickets t ON t.Id_Tickets = i.Id_Tickets
+                INNER JOIN tb_UsuariosExternos u ON i.Id_UsuariosExternos = u.Id_UsuariosExternos
+                INNER JOIN tb_Areas a ON i.Id_Areas = a.Id_Areas
+                INNER JOIN tb_Estados_Incidente ei ON i.Id_Estados_Incidente = ei.Id_Estados_Incidente
+                WHERE YEAR(i.Fecha_Creacion) = :anio
+            ";
+            $params = [':anio' => $anio];
+            break;
+
         default:
             die("Filtro inválido.");
     }

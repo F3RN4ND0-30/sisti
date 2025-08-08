@@ -215,6 +215,53 @@ try {
             'total_tickets' => count($detalle),
             'detalle' => $detalle
         ]);
+    } elseif ($tipo === 'anio') {
+        $anio = $fecha; // "fecha" será el año como string (ej. "2024")
+
+        $sql = "
+        SELECT 
+            t.Codigo_Ticket AS numero_ticket,
+            u.Dni,
+            u.Nombre AS nombre_usuario,
+            u.Apellido_Paterno,
+            u.Apellido_Materno,
+            a.Nombre AS nombre_area,
+            i.Descripcion,
+            ei.Nombre AS estado_texto,
+            FORMAT(i.Fecha_Creacion, 'yyyy-MM-dd HH:mm:ss') AS Fecha_Creacion,
+            FORMAT(i.Fecha_Resuelto, 'yyyy-MM-dd HH:mm:ss') AS Fecha_Resuelto
+        FROM tb_Incidentes i
+        INNER JOIN tb_Tickets t ON t.Id_Tickets = i.Id_Tickets
+        INNER JOIN tb_UsuariosExternos u ON i.Id_UsuariosExternos = u.Id_UsuariosExternos
+        INNER JOIN tb_Areas a ON i.Id_Areas = a.Id_Areas
+        INNER JOIN tb_Estados_Incidente ei ON i.Id_Estados_Incidente = ei.Id_Estados_Incidente
+        WHERE YEAR(i.Fecha_Creacion) = :anio
+    ";
+
+        $stmt = $conexion->prepare($sql);
+        $stmt->execute([':anio' => $anio]);
+        $incidentes = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        $detalle = [];
+        foreach ($incidentes as $i) {
+            $detalle[] = [
+                'numero_ticket' => $i['numero_ticket'],
+                'dni' => $i['Dni'],
+                'nombre' => $i['nombre_usuario'],
+                'apellido' => $i['Apellido_Paterno'] . ' ' . $i['Apellido_Materno'],
+                'area' => $i['nombre_area'],
+                'descripcion' => $i['Descripcion'],
+                'estado_texto' => $i['estado_texto'],
+                'fecha_creacion' => $i['Fecha_Creacion'],
+                'fecha_resuelto' => $i['Fecha_Resuelto']
+            ];
+        }
+
+        echo json_encode([
+            'success' => true,
+            'total_tickets' => count($detalle),
+            'detalle' => $detalle
+        ]);
     } else {
         echo json_encode(['success' => false, 'error' => 'Filtro no válido']);
     }
