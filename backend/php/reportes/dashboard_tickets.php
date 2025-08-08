@@ -34,51 +34,6 @@ try {
         ORDER BY YEAR(Fecha_Creacion), MONTH(Fecha_Creacion)
     ")->fetchAll(PDO::FETCH_ASSOC);
 
-    // Tickets por semana del mes actual
-    $fechaActual = new DateTime();
-    $inicioMesCalc = $fechaActual->modify('first day of this month')->format('Y-m-d');
-    $finMesCalc = (new DateTime())->modify('last day of this month')->format('Y-m-d');
-
-    $semanas = [
-        'Semana 1' => ['inicio' => null, 'fin' => null, 'cantidad' => 0],
-        'Semana 2' => ['inicio' => null, 'fin' => null, 'cantidad' => 0],
-        'Semana 3' => ['inicio' => null, 'fin' => null, 'cantidad' => 0],
-        'Semana 4' => ['inicio' => null, 'fin' => null, 'cantidad' => 0],
-        'Semana 5' => ['inicio' => null, 'fin' => null, 'cantidad' => 0],
-    ];
-
-    $inicio = new DateTime($inicioMesCalc);
-    for ($i = 0; $i < 5; $i++) {
-        $inicioSemana = clone $inicio;
-        $inicioSemana->modify("+{$i} weeks");
-        $finSemana = clone $inicioSemana;
-        $finSemana->modify('+6 days');
-
-        // Límite del mes
-        if ($finSemana->format('Y-m-d') > $finMesCalc) {
-            $finSemana = new DateTime($finMesCalc);
-        }
-
-        $nombreSemana = 'Semana ' . ($i + 1);
-        $semanas[$nombreSemana]['inicio'] = $inicioSemana->format('Y-m-d');
-        $semanas[$nombreSemana]['fin'] = $finSemana->format('Y-m-d');
-
-        $stmt = $conexion->prepare("
-            SELECT COUNT(*) FROM tb_Incidentes
-            WHERE CONVERT(date, Fecha_Creacion) BETWEEN ? AND ?
-        ");
-        $stmt->execute([
-            $semanas[$nombreSemana]['inicio'],
-            $semanas[$nombreSemana]['fin']
-        ]);
-
-        $semanas[$nombreSemana]['cantidad'] = (int)$stmt->fetchColumn();
-    }
-
-    // Formatear arrays para JS
-    $labelsSemana = array_keys($semanas);
-    $valoresSemana = array_column($semanas, 'cantidad');
-
     // Tickets por área (abreviatura y conteo solo del mes actual)
     $stmt = $conexion->prepare("
         SELECT a.Abreviatura AS abreviatura, COUNT(*) AS cantidad
@@ -91,6 +46,20 @@ try {
     $stmt->execute([$inicioMes, $finMes]);
     $areas = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
+    // ✅ Tickets por usuario asignado
+    $stmt = $conexion->prepare("
+        SELECT 
+            u.Nombre + ' ' + u.Apellido_Paterno + ' ' + u.Apellido_Materno AS nombre_usuario,
+            COUNT(*) AS cantidad
+        FROM tb_Incidentes i
+        INNER JOIN tb_Usuarios u ON i.Id_Usuarios = u.Id_Usuarios
+        WHERE CONVERT(date, i.Fecha_Creacion) BETWEEN ? AND ?
+        GROUP BY u.Nombre, u.Apellido_Paterno, u.Apellido_Materno
+        ORDER BY cantidad DESC
+    ");
+    $stmt->execute([$inicioMes, $finMes]);
+    $usuarios = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
     // Respuesta JSON
     header('Content-Type: application/json');
     echo json_encode([
@@ -99,9 +68,8 @@ try {
         'proceso' => (int)$procesoCount,
         'resueltos' => (int)$resueltosCount,
         'meses' => $meses,
-        'semanas' => $labelsSemana,
-        'totales' => $valoresSemana,
-        'areas' => $areas // ✅ Sin acento
+        'areas' => $areas,
+        'usuarios' => $usuarios, // ✅ nuevo campo para gráfico por usuario
     ]);
 } catch (Exception $e) {
     header('Content-Type: application/json');
@@ -112,8 +80,7 @@ try {
         'proceso' => 0,
         'resueltos' => 0,
         'meses' => [],
-        'semanas' => [],
-        'totales' => [],
-        'areas' => []
+        'areas' => [],
+        'usuarios' => []
     ]);
 }

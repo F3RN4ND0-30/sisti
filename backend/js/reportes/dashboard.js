@@ -23,8 +23,8 @@ async function cargarDashboard() {
     },
   });
 
-  // Gráfico por semana (nuevo)
-  renderGraficoPorSemana(data);
+  // 📊 Gráfico por usuario asignado
+  renderGraficoPorUsuario(data.usuarios);
 
   // Gráfico por mes
   new Chart(document.getElementById("graficoPorMes"), {
@@ -47,41 +47,52 @@ async function cargarDashboard() {
   renderGraficoPorArea(data.areas);
 }
 
-// Nueva función para gráfico de semanas
-function renderGraficoPorSemana(data) {
+// 🔁 Reemplazada: ahora muestra tickets por usuario
+function renderGraficoPorUsuario(usuarios) {
   const ctx = document.getElementById("graficoPorSemana").getContext("2d");
 
   new Chart(ctx, {
     type: "bar",
     data: {
-      labels: data.semanas, // ej: ['Semana 1', 'Semana 2', ...]
+      labels: usuarios.map((u) => u.nombre_usuario),
       datasets: [
         {
-          label: "Tickets por semana",
-          data: data.totales,
+          label: "Tickets por usuario",
+          data: usuarios.map((u) => u.cantidad),
           backgroundColor: "#3b82f6",
         },
       ],
     },
     options: {
       responsive: true,
+      indexAxis: "y", // puedes cambiar a 'x' si prefieres vertical
       scales: {
-        y: {
+        x: {
           beginAtZero: true,
+        },
+      },
+      plugins: {
+        tooltip: {
+          callbacks: {
+            label: function (context) {
+              const usuario = usuarios[context.dataIndex];
+              return `${usuario.nombre_usuario}: ${usuario.cantidad} tickets`;
+            },
+          },
         },
       },
     },
   });
 }
 
-// Nueva función para gráfico de área
+// Gráfico por área (sin cambios)
 function renderGraficoPorArea(areas) {
   const ctx = document.getElementById("graficoPorArea").getContext("2d");
 
   new Chart(ctx, {
-    type: "pie", // Cambio a pie para no repetir barras
+    type: "pie",
     data: {
-      labels: areas.map((a) => a.abreviatura), // etiquetas cortas
+      labels: areas.map((a) => a.abreviatura),
       datasets: [
         {
           label: "Tickets por área",

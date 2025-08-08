@@ -20,11 +20,11 @@ if (!isset($_SESSION['hd_activo']) || $_SESSION['hd_activo'] !== true) {
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
     <link rel="icon" type="image/png" href="../../../backend/img/logoPisco.png" />
 
-    <!-- DataTables -->
+    <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <!-- JS -->
-    <script src="../../../backend/js/reportes/dashboard.js"></script>
+    <script src="../../../backend/js/reportes/dashboard.js" defer></script>
 </head>
 
 <body>
@@ -49,10 +49,9 @@ if (!isset($_SESSION['hd_activo']) || $_SESSION['hd_activo'] !== true) {
                 <canvas id="graficoPorArea"></canvas>
             </div>
             <div class="grafico-container">
-                <h3>Tickets por Semana</h3>
-                <canvas id="graficoPorSemana"></canvas>
+                <h3>Tickets por Usuario</h3> <!-- ✅ CAMBIADO: de "Semana" a "Usuario" -->
+                <canvas id="graficoPorSemana"></canvas> <!-- id no cambia para que siga funcionando -->
             </div>
-
             <div class="grafico-container">
                 <h3>Tickets por Mes</h3>
                 <canvas id="graficoPorMes"></canvas>
