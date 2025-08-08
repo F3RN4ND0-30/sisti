@@ -15,11 +15,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['iniciarSesion'])) {
     } else {
         try {
             $stmt = $conexion->prepare("
-    SELECT u.*, r.Nombre AS NombreRol
-    FROM tb_Usuarios u
-    JOIN tb_Roles r ON u.Id_Roles = r.Id_Roles
-    WHERE u.Usuario = :usuario AND u.Activo = 1
-");
+                SELECT u.*, r.Nombre AS NombreRol
+                FROM tb_Usuarios u
+                JOIN tb_Roles r ON u.Id_Roles = r.Id_Roles
+                WHERE u.Usuario = :usuario AND u.Activo = 1
+            ");
             $stmt->execute([':usuario' => $usuarioInput]);
             $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -28,6 +28,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['iniciarSesion'])) {
                 $_SESSION['hd_id'] = $user['Id_Usuarios'];
                 $_SESSION['hd_usuario'] = $user['Usuario'];
                 $_SESSION['hd_nombre'] = $user['Nombre'] . ' ' . $user['Apellido_Paterno'];
+                $_SESSION['hd_ficha'] =
+                    ($user['Nombre'] ?? '') . ' ' .
+                    ($user['Apellido_Paterno'] ?? '') . ' ' .
+                    ($user['Apellido_Materno'] ?? '');
                 $_SESSION['hd_rol'] = strtolower($user['NombreRol']);
 
                 header('Location:/sisti/frontend/sisvis/escritorio.php');

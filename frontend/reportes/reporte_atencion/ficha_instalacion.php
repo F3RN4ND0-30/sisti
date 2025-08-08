@@ -6,6 +6,8 @@ if (!isset($_SESSION['hd_activo']) || $_SESSION['hd_activo'] !== true) {
     header('location: ../login.php');
     exit();
 }
+$nombreTecnico = $_SESSION['hd_ficha'] ?? '';
+$fechaHoy = date('d-m-Y');
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -38,7 +40,7 @@ if (!isset($_SESSION['hd_activo']) || $_SESSION['hd_activo'] !== true) {
                 </tr>
                 <tr>
                     <td>Fecha</td>
-                    <td><input type="text" name="fecha" required></td>
+                    <td><input type="text" name="fecha" required readonly value="<?php echo $fechaHoy; ?>"></td>
                 </tr>
                 <tr>
                     <td>Encargado o responsable</td>
@@ -58,7 +60,7 @@ if (!isset($_SESSION['hd_activo']) || $_SESSION['hd_activo'] !== true) {
                 </tr>
                 <tr>
                     <td>Nombre del Técnico</td>
-                    <td><input type="text" name="nombre_tecnico" required></td>
+                    <td><input type="text" name="nombre_tecnico" required readonly value="<?php echo htmlspecialchars($nombreTecnico); ?>"></td>
                 </tr>
                 <tr>
                     <td>Tipo</td>
@@ -90,7 +92,10 @@ if (!isset($_SESSION['hd_activo']) || $_SESSION['hd_activo'] !== true) {
                 </tr>
             </table>
 
-            <button type="submit">Generar Ficha Excel</button>
+            <div class="botones-container">
+                <a href="/sisti/frontend/reportes/reporte_atencion/fichas.php" class="btn-volver">Volver</a>
+                <button type="submit">Generar Ficha</button>
+            </div>
         </form>
     </div>
 

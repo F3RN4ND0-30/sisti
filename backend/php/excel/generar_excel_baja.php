@@ -1,4 +1,6 @@
 <?php
+session_name('HELPDESK_SISTEMA');
+session_start();
 require_once $_SERVER['DOCUMENT_ROOT'] . '/sisti/vendor/autoload.php';
 
 use PhpOffice\PhpSpreadsheet\IOFactory;
@@ -7,16 +9,16 @@ use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 // Recoge los datos del formulario
 $tipoFicha = $_POST['tipo'] ?? 'mantenimiento';
 $unidadOrganica = $_POST['unidad_organica'] ?? '';
-$fecha = $_POST['fecha'] ?? '';
 $trabajador = $_POST['trabajador_municipal'] ?? '';
 $cargo = $_POST['cargo'] ?? '';
 $dni = $_POST['dni_trabajador'] ?? '';
 $requerimiento = $_POST['doc_requerimiento'] ?? '';
-$tecnico = $_POST['nombre_tecnico'] ?? '';
 $tipo = $_POST['tipo'] ?? '';
 $subtipo = $_POST['subtipo'] ?? '';
 $descripcion = $_POST['descripcion'] ?? '';
 $observacion = $_POST['observacion'] ?? '';
+$tecnico = $_SESSION['hd_ficha'] ?? 'Técnico no identificado';
+$fechaHoy = date('d-m-Y');
 
 $ubicaciones = [
   'hardware' => [
@@ -65,7 +67,7 @@ $sheet = $spreadsheet->getActiveSheet();
 
 // Rellenar las celdas (ajusta las coordenadas según tu diseño)
 $sheet->setCellValue('C8', $unidadOrganica);
-$sheet->setCellValue('J8', $fecha);
+$sheet->setCellValue('J8', $fechaHoy);
 $sheet->setCellValue('C11', $trabajador);
 $sheet->setCellValue('C14', $cargo);
 $sheet->setCellValue('J14', $dni);
@@ -102,6 +104,14 @@ foreach ($lines as $i => $linea) {
   $sheet->getStyle("$celdaInicio:$celdaFin")->getAlignment()->setWrapText(true);
   $sheet->getRowDimension($fila)->setRowHeight(-1); // Autoajuste de alto
 }
+
+// Proteger la hoja completa (sin contraseña)
+$sheet->getProtection()->setSheet(true);
+$sheet->getProtection()->setSort(true);         // permite ordenar
+$sheet->getProtection()->setInsertRows(true);   // permite insertar filas
+$sheet->getProtection()->setFormatCells(false); // impide editar celdas
+
+$sheet->getProtection()->setPassword('CuandoPagan');
 
 // Descargar el archivo
 $filename = "ficha_Baja" . date('Ymd_His') . ".xlsx";
