@@ -47,7 +47,7 @@ $ubicaciones = [
     'RUBEM' => ['check' => 'H38', 'descripcion' => 'I38'],
     'RUB PVL 20' => ['check' => 'H39', 'descripcion' => 'I39'],
     'SISPLA' => ['check' => 'H40', 'descripcion' => 'I40'],
-    'Sistema Via Web' => ['check' => 'H41', 'descripcion' => 'I41'],
+    'Sistema Vía Web' => ['check' => 'H41', 'descripcion' => 'I41'],
     'Otros' => ['check' => 'H42', 'descripcion' => 'I42'],
   ],
   'software' => [
