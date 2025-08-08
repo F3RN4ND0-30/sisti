@@ -114,6 +114,7 @@ require_once '../../../backend/bd/conexion.php';
             <p style="margin-top: 10px; font-style: italic; color: #555;">
                 Guarda el ticket para hacerle seguimiento a tu solicitud.
             </p>
+            <button id="copiarTicket" class="boton boton-copiar" style="margin-bottom: 10px;">Copiar Ticket</button>
             <button id="aceptar" class="boton boton-enviar">Aceptar</button>
         </div>
     </div>

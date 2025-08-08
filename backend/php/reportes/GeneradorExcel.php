@@ -25,11 +25,11 @@ class GeneradorExcel
         return $titulo;
     }
 
-    public function escribirFilaEncabezado($tituloHoja, $datos)
+    public function escribirFilaEncabezado($tituloHoja, $encabezados)
     {
         $hoja = $this->hojas[$tituloHoja];
         $filaInicial = 4;
-        $columnaInicial = 2; // C = índice 2, los encabezados empiezan en C
+        $columnaInicial = 2; // Empezamos en columna C (ASCII C=67, 65+A=columna0)
 
         // Columna B = N°
         $hoja->setCellValue('B' . $filaInicial, 'N°');
@@ -40,9 +40,9 @@ class GeneradorExcel
         $hoja->getStyle('B' . $filaInicial)->getFont()->getColor()->setARGB('FFFFFFFF');
         $hoja->getStyle('B' . $filaInicial)->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
 
-        // Ahora escribir los demás encabezados desde la columna C
-        foreach ($datos as $col => $valor) {
-            $colLetra = chr(65 + $columnaInicial + $col); // empezamos en C
+        // Escribir encabezados a partir de C4
+        foreach ($encabezados as $col => $valor) {
+            $colLetra = chr(65 + $columnaInicial + $col); // C=67 ASCII
             $celda = $colLetra . $filaInicial;
             $hoja->setCellValue($celda, $valor);
             $hoja->getStyle($celda)->getFont()->setBold(true);
@@ -50,23 +50,19 @@ class GeneradorExcel
             $hoja->getStyle($celda)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)
                 ->getStartColor()->setARGB('FF2563EB');
             $hoja->getStyle($celda)->getFont()->getColor()->setARGB('FFFFFFFF');
+            $hoja->getStyle($celda)->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
         }
-
-        // Centrar toda la fila 4 (encabezados) desde B4 hasta la última columna con datos
-        $ultimaColLetra = chr(65 + $columnaInicial + count($datos) - 1);
-        $rango = "B{$filaInicial}:{$ultimaColLetra}{$filaInicial}";
-        $hoja->getStyle($rango)->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
     }
 
     public function escribirFilaDatos($tituloHoja, $datos)
     {
         $hoja = $this->hojas[$tituloHoja];
-        $columnaInicial = 2; // Datos empiezan en C
+        $columnaInicial = 2; // Datos empiezan en columna C
         $filaInicio = $hoja->getHighestRow() + 1;
         if ($filaInicio < 5) $filaInicio = 5;
 
-        // Número de fila para la numeración
-        $numeroFila = $filaInicio - 4; // fila 5 es el primer dato
+        // Número fila para N°
+        $numeroFila = $filaInicio - 4; // Porque encabezado está en fila 4
 
         // Escribir número en columna B
         $hoja->setCellValue('B' . $filaInicio, $numeroFila);
@@ -78,26 +74,40 @@ class GeneradorExcel
             $colLetra = chr(65 + $colIndex);
             $celda = $colLetra . $filaInicio;
 
-            // Formatear fecha (columna I, que ahora estará en la posición 9 porque desplazamos todo 1 columna)
-            // Antes I era índice 8; ahora sería 9 (A=0, B=1, C=2 ... I=9)
-            if ($colLetra === 'J') { // porque A=0, B=1, C=2 ... J=9 (la 9na columna después de desplazar)
+            // Solo formatear fechas en columnas específicas:
+            // Col C=2: numero_ticket (NO fecha)
+            // Col D=3: dni (NO fecha)
+            // Col I=8: estado_texto (NO fecha)
+            // Col J=9: fecha_creacion (SÍ fecha)
+            // Col K=10: fecha_resuelto (SÍ fecha o guion)
+
+            if (in_array($colIndex, [9, 10]) && $this->esFecha($valor)) {
                 try {
                     $fechaObj = new DateTime($valor);
                     $valor = $fechaObj->format('d/m/Y H:i:s');
                 } catch (Exception $e) {
-                    // dejar valor original si falla
+                    // Si falla, dejar valor original
                 }
             }
 
             $hoja->setCellValue($celda, $valor);
 
-            if (in_array($colIndex, [2, 3, 8, 9])) {
+            // Centrar columnas específicas: ticket (C=2), dni (D=3), estado (I=8), fecha creación (J=9), fecha resuelto (K=10)
+            if (in_array($colIndex, [2, 3, 8, 9, 10])) {
                 $hoja->getStyle($celda)->getAlignment()
                     ->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
             }
         }
     }
 
+    private function esFecha($valor)
+    {
+        // Detectar si valor parece una fecha
+        if (!$valor) return false;
+        if (preg_match('/^\d{4}-\d{2}-\d{2}/', $valor)) return true; // YYYY-MM-DD ...
+        if (strtotime($valor) !== false) return true;
+        return false;
+    }
 
     public function generar($nombreArchivo)
     {
@@ -113,7 +123,6 @@ class GeneradorExcel
         exit;
     }
 
-    // 🔹 Nuevo: permite obtener el objeto Spreadsheet para manipular desde fuera (ej. para título)
     public function getSpreadsheet()
     {
         return $this->spreadsheet;

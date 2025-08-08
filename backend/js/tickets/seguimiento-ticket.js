@@ -2,6 +2,26 @@ document.addEventListener('DOMContentLoaded', () => {
     const form = document.getElementById('formBuscarTicket');
     const input = document.getElementById('ticketInput');
     const resultadoDiv = document.getElementById('resultado');
+    const hoy = new Date();
+    const yyyy = hoy.getFullYear();
+    const mm = String(hoy.getMonth() + 1).padStart(2, '0'); // Meses van de 0 a 11
+    const dd = String(hoy.getDate()).padStart(2, '0');
+    const prefijoTicket = `TCK-${yyyy}${mm}${dd}-`;
+    
+    if (input && !input.value) {
+        input.value = prefijoTicket;
+        input.focus();
+        input.setSelectionRange(input.value.length, input.value.length);
+    }
+
+    input.addEventListener('input', () => {
+        const valor = input.value.trim();
+        const regex = new RegExp(`^${prefijoTicket}\\d{4}$`); // TCK-YYYYMMDD-1234
+
+        if (regex.test(valor)) {
+            form.requestSubmit(); // Enviar formulario automáticamente
+        }
+    });
 
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
@@ -23,24 +43,28 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
 
-            const t = data.ticket || data.data;
+            // Usamos el primer incidente del arreglo
+            const incidente = data.incidentes[0];
 
-            console.log(t);  // <-- Aquí ves las propiedades reales del objeto
+            if (!incidente) {
+                resultadoDiv.innerHTML = `<p class="no-found">No hay incidentes para este ticket.</p>`;
+                return;
+            }
 
-            // Extrae el estado numérico correcto
-            const estado = parseInt(t.Id_Estados_Incidente || t.estado) || 1; // default a 1 si no viene
-
+            const estado = parseInt(incidente.id_estado_incidente) || 1; // default 1
             const pasos = ['En espera', 'En atención', 'Concluido'];
 
             let html = `
-    <div class="ticket-info">
-        <div><label>Ticket:</label> <span>${t.numero_ticket}</span></div>
-        <div><label>Solicitante:</label> <span>${t.nombre} ${t.apellido}</span></div>
-        <div><label>DNI:</label> <span>${t.dni}</span></div>
-        <div><label>Área:</label> <span>${t.area}</span></div>
-        <div style="grid-column: span 2;"><label>Descripción:</label> <span>${t.descripcion}</span></div>
-    </div>
-    <div class="estado-container">
+<div class="ticket-info">
+    <div><label>Ticket:</label> <span>${data.ticket.numero_ticket}</span></div>
+    <div><label>Solicitante:</label> <span>${incidente.nombre} ${incidente.apellido}</span></div>
+    <div><label>DNI:</label> <span>${incidente.dni}</span></div>
+    <div><label>Área:</label> <span>${incidente.area}</span></div>
+    <div style="grid-column: span 2;"><label>Descripción:</label> <span>${incidente.descripcion}</span></div>
+    <div><label>Fecha de creación:</label> <span>${formatearFecha(incidente.fecha_creacion)}</span></div>
+    <div><label>Fecha de resolución:</label> <span>${incidente.fecha_resuelto ? formatearFecha(incidente.fecha_resuelto) : 'Aún no resuelto'}</span></div>
+</div>
+<div class="estado-container">
 `;
 
             for (let i = 1; i <= 3; i++) {
@@ -62,6 +86,18 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    function formatearFecha(fechaString) {
+        if (!fechaString) return '';
+        const fecha = new Date(fechaString);
+        return fecha.toLocaleString('es-PE', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
+        });
+    }
+
     function agregarRedireccion(idBoton, urlDestino) {
         const btn = document.getElementById(idBoton);
         if (btn) {
@@ -70,6 +106,28 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
     }
+
+    // Botón Pegar
+    const btnPegar = document.getElementById('btnPegar');
+    if (btnPegar) {
+        btnPegar.addEventListener('click', async () => {
+            try {
+                const texto = await navigator.clipboard.readText();
+                if (!texto) {
+                    alert('No hay texto en el portapapeles');
+                    return;
+                }
+                input.value = texto.trim();
+
+                // Opcional: dispara la búsqueda automáticamente
+                form.dispatchEvent(new Event('submit'));
+            } catch (err) {
+                alert('Error al leer el portapapeles');
+                console.error(err);
+            }
+        });
+    }
+
 
     agregarRedireccion('btnRegresar', '/sisti/');
     agregarRedireccion('btnRegresarFrontend', '/sisti/frontend/sisvis/escritorio.php');

@@ -46,7 +46,8 @@ try {
                     a.Nombre AS nombre_area,
                     i.Descripcion,
                     ei.Nombre AS estado_texto,
-                    i.Fecha_Creacion
+                    i.Fecha_Creacion,
+                    i.Fecha_Resuelto
                 FROM tb_Incidentes i
                 INNER JOIN tb_Tickets t ON t.Id_Tickets = i.Id_Tickets
                 INNER JOIN tb_UsuariosExternos u ON i.Id_UsuariosExternos = u.Id_UsuariosExternos
@@ -71,7 +72,8 @@ try {
                     a.Nombre AS nombre_area,
                     i.Descripcion,
                     ei.Nombre AS estado_texto,
-                    i.Fecha_Creacion
+                    i.Fecha_Creacion,
+                    i.Fecha_Resuelto
                 FROM tb_Incidentes i
                 INNER JOIN tb_Tickets t ON t.Id_Tickets = i.Id_Tickets
                 INNER JOIN tb_UsuariosExternos u ON i.Id_UsuariosExternos = u.Id_UsuariosExternos
@@ -111,7 +113,8 @@ try {
                     a.Nombre AS nombre_area,
                     i.Descripcion,
                     ei.Nombre AS estado_texto,
-                    i.Fecha_Creacion
+                    i.Fecha_Creacion,
+                    i.Fecha_Resuelto
                 FROM tb_Incidentes i
                 INNER JOIN tb_Tickets t ON t.Id_Tickets = i.Id_Tickets
                 INNER JOIN tb_UsuariosExternos u ON i.Id_UsuariosExternos = u.Id_UsuariosExternos
@@ -123,6 +126,36 @@ try {
                 ':inicio' => $fechaInicio,
                 ':fin' => $fechaFin
             ];
+            break;
+
+        case 'anio':
+            $anio = $fecha;
+            if (!preg_match('/^\d{4}$/', $anio)) {
+                die("Año inválido.");
+            }
+
+            $titulo = "REPORTE DE ATENCIÓN DE TICKETS DEL AÑO $anio";
+
+            $sql = "
+                SELECT 
+                    t.Codigo_Ticket AS numero_ticket,
+                    u.Dni,
+                    u.Nombre AS nombre_usuario,
+                    u.Apellido_Paterno,
+                    u.Apellido_Materno,
+                    a.Nombre AS nombre_area,
+                    i.Descripcion,
+                    ei.Nombre AS estado_texto,
+                    i.Fecha_Creacion,
+                    i.Fecha_Resuelto
+                FROM tb_Incidentes i
+                INNER JOIN tb_Tickets t ON t.Id_Tickets = i.Id_Tickets
+                INNER JOIN tb_UsuariosExternos u ON i.Id_UsuariosExternos = u.Id_UsuariosExternos
+                INNER JOIN tb_Areas a ON i.Id_Areas = a.Id_Areas
+                INNER JOIN tb_Estados_Incidente ei ON i.Id_Estados_Incidente = ei.Id_Estados_Incidente
+                WHERE YEAR(i.Fecha_Creacion) = :anio
+            ";
+            $params = [':anio' => $anio];
             break;
 
         default:
@@ -148,7 +181,8 @@ try {
             'area' => $i['nombre_area'],
             'descripcion' => $i['Descripcion'],
             'estado_texto' => $i['estado_texto'],
-            'fecha_creacion' => $i['Fecha_Creacion']
+            'fecha_creacion' => $i['Fecha_Creacion'],
+            'fecha_resuelto' => $i['Fecha_Resuelto'] ? $i['Fecha_Resuelto'] : '-'  // Si no hay fecha resuelto, guion
         ];
     }
 
@@ -156,24 +190,45 @@ try {
     $excel = new GeneradorExcel();
     $hoja = $excel->agregarHoja('Tickets');
 
-    // 🔹 Escribir título centrado (B2 hasta H2)
+    // 🔹 Escribir título centrado (B2 hasta K2)
     $spreadsheet = $excel->getSpreadsheet();
     $sheet = $spreadsheet->getActiveSheet();
-    $sheet->mergeCells('B2:J2');
+    $sheet->mergeCells('B2:K2');
     $sheet->setCellValue('B2', $titulo);
     $sheet->getStyle('B2')->getFont()->setBold(true)->setSize(14);
     $sheet->getStyle('B2')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
 
-    // 🔹 Escribir encabezado
-    $encabezados = ['N° Ticket', 'DNI', 'Nombre', 'Apellidos', 'Área', 'Descripción', 'Estado', 'Fecha de creación'];
+    // 🔹 Escribir encabezado (con Fecha resuelto)
+    $encabezados = [
+        'N° Ticket',
+        'DNI',
+        'Nombre',
+        'Apellidos',
+        'Área',
+        'Descripción',
+        'Estado',
+        'Fecha de creación',
+        'Fecha resuelto'
+    ];
     $excel->escribirFilaEncabezado($hoja, $encabezados);
 
     // 🔹 Escribir datos
     foreach ($detalle as $fila) {
-        $excel->escribirFilaDatos($hoja, array_values($fila));
+        $datosOrdenados = [
+            $fila['numero_ticket'],
+            $fila['dni'],
+            $fila['nombre'],
+            $fila['apellido'],
+            $fila['area'],
+            $fila['descripcion'],
+            $fila['estado_texto'],
+            $fila['fecha_creacion'],
+            $fila['fecha_resuelto']
+        ];
+        $excel->escribirFilaDatos($hoja, $datosOrdenados);
     }
 
-    // 🔹 Generar
+    // 🔹 Generar archivo
     $excel->generar("reporte_tickets_" . date('Ymd_His'));
 } catch (PDOException $e) {
     echo "Error en la base de datos: " . $e->getMessage();

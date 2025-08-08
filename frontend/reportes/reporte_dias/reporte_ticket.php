@@ -45,6 +45,7 @@ if (!isset($_SESSION['hd_activo']) || $_SESSION['hd_activo'] !== true) {
                 <option value="dia">Día</option>
                 <option value="semana">Semana</option>
                 <option value="mes" selected>Mes</option>
+                <option value="anio">Año</option>
             </select>
 
             <!-- Día -->
@@ -80,6 +81,12 @@ if (!isset($_SESSION['hd_activo']) || $_SESSION['hd_activo'] !== true) {
                 <label for="mesFiltro">Selecciona mes:</label>
                 <input type="month" id="mesFiltro" value="<?php echo date('Y-m'); ?>" />
             </div>
+
+            <!-- Año -->
+            <div id="selectorAnio" class="filtro-opcional" style="display: none;">
+                <label for="anioFiltro">Selecciona año:</label>
+                <input type="number" id="anioFiltro" min="2000" max="<?php echo date('Y'); ?>" value="<?php echo date('Y'); ?>" />
+            </div>
         </div>
 
         <div class="indicador-tickets">
@@ -101,6 +108,7 @@ if (!isset($_SESSION['hd_activo']) || $_SESSION['hd_activo'] !== true) {
                         <th>Descripción</th>
                         <th>Estado</th>
                         <th>Fecha Atención</th>
+                        <th>Fecha Resolución</th>
                     </tr>
                 </thead>
                 <tbody>

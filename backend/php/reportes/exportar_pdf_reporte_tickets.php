@@ -15,7 +15,7 @@ $fecha = $_GET['fecha'] ?? '';
 $tipo = $_GET['tipo'] ?? '';
 $semana = $_GET['semana'] ?? null;
 
-// Array de meses en español
+// Meses en español
 $meses = [
     '01' => 'Enero',
     '02' => 'Febrero',
@@ -32,7 +32,7 @@ $meses = [
 ];
 
 try {
-    // Consulta
+    // Consulta SQL según tipo
     switch ($tipo) {
         case 'dia':
             $titulo = "Reporte de atención de tickets del día " . date('d/m/Y', strtotime($fecha));
@@ -46,7 +46,8 @@ try {
                     a.Nombre AS nombre_area,
                     i.Descripcion,
                     ei.Nombre AS estado_texto,
-                    i.Fecha_Creacion
+                    i.Fecha_Creacion,
+                    i.Fecha_Resuelto
                 FROM tb_Incidentes i
                 INNER JOIN tb_Tickets t ON t.Id_Tickets = i.Id_Tickets
                 INNER JOIN tb_UsuariosExternos u ON i.Id_UsuariosExternos = u.Id_UsuariosExternos
@@ -64,8 +65,7 @@ try {
 
             $inicioMes = new DateTime($fecha);
             $inicioSemana = clone $inicioMes;
-            $inicioSemana->modify('first day of this month');
-            $inicioSemana->modify('+' . ($semana - 1) . ' weeks');
+            $inicioSemana->modify('first day of this month')->modify('+' . ($semana - 1) . ' weeks');
             $finSemana = clone $inicioSemana;
             $finSemana->modify('+6 days');
 
@@ -82,7 +82,8 @@ try {
                     a.Nombre AS nombre_area,
                     i.Descripcion,
                     ei.Nombre AS estado_texto,
-                    i.Fecha_Creacion
+                    i.Fecha_Creacion,
+                    i.Fecha_Resuelto
                 FROM tb_Incidentes i
                 INNER JOIN tb_Tickets t ON t.Id_Tickets = i.Id_Tickets
                 INNER JOIN tb_UsuariosExternos u ON i.Id_UsuariosExternos = u.Id_UsuariosExternos
@@ -106,7 +107,8 @@ try {
                     a.Nombre AS nombre_area,
                     i.Descripcion,
                     ei.Nombre AS estado_texto,
-                    i.Fecha_Creacion
+                    i.Fecha_Creacion,
+                    i.Fecha_Resuelto
                 FROM tb_Incidentes i
                 INNER JOIN tb_Tickets t ON t.Id_Tickets = i.Id_Tickets
                 INNER JOIN tb_UsuariosExternos u ON i.Id_UsuariosExternos = u.Id_UsuariosExternos
@@ -117,6 +119,36 @@ try {
             $params = [':mes' => $fecha];
             break;
 
+        case 'anio':
+            $anio = $fecha;
+            if (!preg_match('/^\d{4}$/', $anio)) {
+                die("Año inválido.");
+            }
+
+            $titulo = "Reporte de atención de tickets del año $anio";
+
+            $sql = "
+                SELECT 
+                    t.Codigo_Ticket AS numero_ticket,
+                    u.Dni,
+                    u.Nombre AS nombre_usuario,
+                    u.Apellido_Paterno,
+                    u.Apellido_Materno,
+                    a.Nombre AS nombre_area,
+                    i.Descripcion,
+                    ei.Nombre AS estado_texto,
+                    i.Fecha_Creacion,
+                    i.Fecha_Resuelto
+                FROM tb_Incidentes i
+                INNER JOIN tb_Tickets t ON t.Id_Tickets = i.Id_Tickets
+                INNER JOIN tb_UsuariosExternos u ON i.Id_UsuariosExternos = u.Id_UsuariosExternos
+                INNER JOIN tb_Areas a ON i.Id_Areas = a.Id_Areas
+                INNER JOIN tb_Estados_Incidente ei ON i.Id_Estados_Incidente = ei.Id_Estados_Incidente
+                WHERE YEAR(i.Fecha_Creacion) = :anio
+            ";
+            $params = [':anio' => $anio];
+            break;
+
         default:
             die("Tipo inválido.");
     }
@@ -125,9 +157,7 @@ try {
     $stmt->execute($params);
     $registros = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    if (!$registros) {
-        die("No hay datos para mostrar.");
-    }
+    if (!$registros) die("No hay datos para mostrar.");
 
     ob_start();
 ?>
@@ -168,7 +198,7 @@ try {
             }
 
             .ticket {
-                width: 13%;
+                width: 12%;
             }
 
             .dni {
@@ -180,19 +210,19 @@ try {
             }
 
             .area {
-                width: 21%;
+                width: 17%;
             }
 
             .descripcion {
-                width: 22%;
+                width: 20%;
             }
 
             .estado {
-                width: 9%;
+                width: 8%;
             }
 
             .fecha {
-                width: 13%;
+                width: 10%;
             }
         </style>
     </head>
@@ -209,14 +239,16 @@ try {
                     <th class="area">Área</th>
                     <th class="descripcion">Descripción</th>
                     <th class="estado">Estado</th>
-                    <th class="fecha">Fecha</th>
+                    <th class="fecha">Fecha Creación</th>
+                    <th class="fecha">Fecha Resuelto</th>
                 </tr>
             </thead>
             <tbody>
                 <?php
                 $contador = 1;
                 foreach ($registros as $r):
-                    $fecha = (new DateTime($r['Fecha_Creacion']))->format('d/m/Y H:i:s');
+                    $fechaCreacion = (new DateTime($r['Fecha_Creacion']))->format('d/m/Y H:i:s');
+                    $fechaResuelto = $r['Fecha_Resuelto'] ? (new DateTime($r['Fecha_Resuelto']))->format('d/m/Y H:i:s') : '-';
                 ?>
                     <tr>
                         <td class="center"><?php echo $contador++; ?></td>
@@ -226,7 +258,8 @@ try {
                         <td><?php echo $r['nombre_area']; ?></td>
                         <td><?php echo $r['Descripcion']; ?></td>
                         <td class="center"><?php echo $r['estado_texto']; ?></td>
-                        <td class="center"><?php echo $fecha; ?></td>
+                        <td class="center"><?php echo $fechaCreacion; ?></td>
+                        <td class="center"><?php echo $fechaResuelto; ?></td>
                     </tr>
                 <?php endforeach; ?>
             </tbody>
@@ -235,12 +268,10 @@ try {
 
     </html>
 <?php
-
     $html = ob_get_clean();
     $dompdf->loadHtml($html);
     $dompdf->setPaper('A4', 'landscape');
     $dompdf->render();
-
     $dompdf->stream("reporte_tickets_" . date('Ymd_His') . ".pdf", ["Attachment" => true]);
 } catch (PDOException $e) {
     echo "Error en la base de datos: " . $e->getMessage();
