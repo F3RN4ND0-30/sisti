@@ -49,8 +49,8 @@ if (!isset($_SESSION['hd_activo']) || $_SESSION['hd_activo'] !== true) {
                 <canvas id="graficoPorArea"></canvas>
             </div>
             <div class="grafico-container">
-                <h3>Tickets por Usuario</h3> <!-- ✅ CAMBIADO: de "Semana" a "Usuario" -->
-                <canvas id="graficoPorSemana"></canvas> <!-- id no cambia para que siga funcionando -->
+                <h3>Tickets por Técnico</h3>
+                <canvas id="graficoPorUsuario"></canvas>
             </div>
             <div class="grafico-container">
                 <h3>Tickets por Mes</h3>

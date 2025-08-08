@@ -1,12 +1,15 @@
 <?php
 require_once $_SERVER['DOCUMENT_ROOT'] . '/sisti/backend/bd/conexion.php';
 
-// Obtener primer y último día del mes actual
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 $inicioMes = (new DateTime('first day of this month'))->format('Y-m-d');
 $finMes = (new DateTime('last day of this month'))->format('Y-m-d');
 
 try {
-    // Totales por estado (solo mes actual)
+    // Totales por estado
     $stmt = $conexion->prepare("SELECT COUNT(*) FROM tb_Incidentes WHERE CONVERT(date, Fecha_Creacion) BETWEEN ? AND ?");
     $stmt->execute([$inicioMes, $finMes]);
     $total = $stmt->fetchColumn();
@@ -23,7 +26,7 @@ try {
     $resueltos->execute([$inicioMes, $finMes]);
     $resueltosCount = $resueltos->fetchColumn();
 
-    // Tickets por mes (últimos 6 meses)
+    // Tickets por mes
     $meses = $conexion->query("
         SELECT 
             FORMAT(Fecha_Creacion, 'MM/yyyy') AS nombre, 
@@ -34,7 +37,7 @@ try {
         ORDER BY YEAR(Fecha_Creacion), MONTH(Fecha_Creacion)
     ")->fetchAll(PDO::FETCH_ASSOC);
 
-    // Tickets por área (abreviatura y conteo solo del mes actual)
+    // Tickets por área
     $stmt = $conexion->prepare("
         SELECT a.Abreviatura AS abreviatura, COUNT(*) AS cantidad
         FROM tb_Incidentes i
@@ -46,17 +49,18 @@ try {
     $stmt->execute([$inicioMes, $finMes]);
     $areas = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    // ✅ Tickets por usuario asignado
     $stmt = $conexion->prepare("
-        SELECT 
-            u.Nombre + ' ' + u.Apellido_Paterno + ' ' + u.Apellido_Materno AS nombre_usuario,
-            COUNT(*) AS cantidad
-        FROM tb_Incidentes i
-        INNER JOIN tb_Usuarios u ON i.Id_Usuarios = u.Id_Usuarios
-        WHERE CONVERT(date, i.Fecha_Creacion) BETWEEN ? AND ?
-        GROUP BY u.Nombre, u.Apellido_Paterno, u.Apellido_Materno
-        ORDER BY cantidad DESC
-    ");
+    SELECT 
+        CONCAT(u.Nombre, ' ', u.Apellido_Paterno) AS nombre_completo, 
+        COUNT(*) AS cantidad
+    FROM tb_Incidentes i
+    INNER JOIN tb_Usuarios u ON u.Id_Usuarios = i.Id_Usuarios
+    INNER JOIN tb_Roles r ON r.Id_Roles = u.Id_Roles
+    WHERE r.Nombre = 'tecnico'
+      AND CONVERT(date, i.Fecha_Creacion) BETWEEN ? AND ?
+    GROUP BY u.Nombre, u.Apellido_Paterno, u.Apellido_Materno
+    ORDER BY cantidad DESC
+");
     $stmt->execute([$inicioMes, $finMes]);
     $usuarios = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
@@ -69,7 +73,7 @@ try {
         'resueltos' => (int)$resueltosCount,
         'meses' => $meses,
         'areas' => $areas,
-        'usuarios' => $usuarios, // ✅ nuevo campo para gráfico por usuario
+        'usuarios' => $usuarios
     ]);
 } catch (Exception $e) {
     header('Content-Type: application/json');

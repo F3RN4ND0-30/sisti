@@ -23,7 +23,7 @@ async function cargarDashboard() {
     },
   });
 
-  // 📊 Gráfico por usuario asignado
+  // Gráfico por técnico
   renderGraficoPorUsuario(data.usuarios);
 
   // Gráfico por mes
@@ -47,17 +47,17 @@ async function cargarDashboard() {
   renderGraficoPorArea(data.areas);
 }
 
-// 🔁 Reemplazada: ahora muestra tickets por usuario
+// Nuevo: Gráfico de tickets por técnico (usuarios con rol 'técnico')
 function renderGraficoPorUsuario(usuarios) {
-  const ctx = document.getElementById("graficoPorSemana").getContext("2d");
+  const ctx = document.getElementById("graficoPorUsuario").getContext("2d");
 
   new Chart(ctx, {
     type: "bar",
     data: {
-      labels: usuarios.map((u) => u.nombre_usuario),
+      labels: usuarios.map((u) => u.nombre_completo),
       datasets: [
         {
-          label: "Tickets por usuario",
+          label: "Tickets por técnico",
           data: usuarios.map((u) => u.cantidad),
           backgroundColor: "#3b82f6",
         },
@@ -65,19 +65,25 @@ function renderGraficoPorUsuario(usuarios) {
     },
     options: {
       responsive: true,
-      indexAxis: "y", // puedes cambiar a 'x' si prefieres vertical
-      scales: {
-        x: {
-          beginAtZero: true,
-        },
-      },
       plugins: {
         tooltip: {
           callbacks: {
             label: function (context) {
-              const usuario = usuarios[context.dataIndex];
-              return `${usuario.nombre_usuario}: ${usuario.cantidad} tickets`;
+              const user = usuarios[context.dataIndex];
+              return `${user.nombre_completo}: ${user.cantidad} tickets`;
             },
+          },
+        },
+      },
+      scales: {
+        y: {
+          beginAtZero: true,
+        },
+        x: {
+          ticks: {
+            autoSkip: false,
+            maxRotation: 45,
+            minRotation: 0,
           },
         },
       },
@@ -85,7 +91,6 @@ function renderGraficoPorUsuario(usuarios) {
   });
 }
 
-// Gráfico por área (sin cambios)
 function renderGraficoPorArea(areas) {
   const ctx = document.getElementById("graficoPorArea").getContext("2d");
 
