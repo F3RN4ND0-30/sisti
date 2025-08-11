@@ -13,7 +13,7 @@ $dni = $input['numdni'];
 
 // Configuración
 $url = 'https://api.consultasperu.com/api/v1/query';
-$token = 'e00f2de5c7b2b35b356181eed5147c8c13ecc7a61f7c6f797cbd7e654aec54f3';
+$token = '3a107bbac572e9f71bdce73bd69909c72d4fdff8e6e9beacebf5aaaea3706e17';
 
 // Body de la petición
 $fields = [

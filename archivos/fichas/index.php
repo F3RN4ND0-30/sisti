@@ -3,6 +3,16 @@ date_default_timezone_set('America/Lima'); // Zona horaria de Lima, Perú
 
 $directorio = __DIR__;
 $archivos = array_diff(scandir($directorio), array('.', '..', 'index.php'));
+
+// Filtrar solo archivos (omitir carpetas)
+$archivos = array_filter($archivos, function ($archivo) use ($directorio) {
+    return is_file($directorio . DIRECTORY_SEPARATOR . $archivo);
+});
+
+// Ordenar por fecha de modificación DESC
+usort($archivos, function ($a, $b) use ($directorio) {
+    return filemtime($directorio . DIRECTORY_SEPARATOR . $b) - filemtime($directorio . DIRECTORY_SEPARATOR . $a);
+});
 ?>
 
 <!DOCTYPE html>
@@ -30,13 +40,11 @@ $archivos = array_diff(scandir($directorio), array('.', '..', 'index.php'));
             </thead>
             <tbody>
                 <?php foreach ($archivos as $archivo): ?>
-                    <?php if (is_file($archivo)): ?>
-                        <tr>
-                            <td><a href="<?= htmlspecialchars($archivo) ?>" download><?= htmlspecialchars($archivo) ?></a></td>
-                            <td><?= date("Y-m-d H:i:s", filemtime($archivo)) ?></td>
-                            <td><?= round(filesize($archivo) / 1024) ?> KB</td>
-                        </tr>
-                    <?php endif; ?>
+                    <tr>
+                        <td><a href="<?= htmlspecialchars($archivo) ?>" download><?= htmlspecialchars($archivo) ?></a></td>
+                        <td><?= date("Y-m-d H:i:s", filemtime($archivo)) ?></td>
+                        <td><?= round(filesize($archivo) / 1024) ?> KB</td>
+                    </tr>
                 <?php endforeach; ?>
             </tbody>
         </table>

@@ -9,7 +9,8 @@ try {
         a.Nombre AS Area,
         i.Descripcion,
         e.Nombre AS Estado,
-        FORMAT(i.Fecha_Creacion, 'dd/MM/yyyy HH:mm') AS Fecha_Creacion
+        FORMAT(i.Fecha_Creacion, 'dd/MM/yyyy HH:mm') AS Fecha_Creacion,
+        FORMAT(i.Fecha_Resuelto, 'dd/MM/yyyy HH:mm') AS Fecha_Resuelto
     FROM tb_incidentes i
     INNER JOIN tb_tickets t ON i.Id_Tickets = t.Id_Tickets
     INNER JOIN tb_areas a ON i.Id_Areas = a.Id_Areas
@@ -25,7 +26,7 @@ try {
 ?>
 
 <!-- Tabla de Incidentes -->
-<div class="activity-card">
+<div class="activity-card" id="tabla-incidentes">
     <h4><i class="material-icons">list</i> Lista de Incidentes</h4>
     <div style="overflow-x:auto;">
         <table class="table">
@@ -37,6 +38,7 @@ try {
                     <th>Descripción</th>
                     <th>Estado</th>
                     <th>Fecha de Creación</th>
+                    <th>Fecha de Resolución</th>
                 </tr>
             </thead>
             <tbody>
@@ -56,6 +58,7 @@ try {
                             </select>
                         </td>
                         <td><?= $row['Fecha_Creacion'] ?></td>
+                        <td><?= $row['Fecha_Resuelto'] ?></td>
                     </tr>
                 <?php endforeach; ?>
             </tbody>

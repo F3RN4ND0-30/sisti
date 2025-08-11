@@ -73,11 +73,14 @@ $numeroFormateado = str_pad($numeroNuevo, 6, '0', STR_PAD_LEFT);
                 </tr>
                 <tr>
                     <td>DNI</td>
-                    <td><input type="text" name="dni_trabajador"></td>
+                    <td>
+                        <input type="number" name="dni_trabajador" min="0" step="1"
+                            oninput="this.value = this.value.slice(0, 8);">
+                    </td>
                 </tr>
                 <tr>
                     <td>Doc. Requerimiento</td>
-                    <td><input type="text" name="doc_requerimiento"></td>
+                    <td><input type="number" name="doc_requerimiento" min="0" step="1"></td>
                 </tr>
                 <tr>
                     <td>Nombre del Técnico</td>
@@ -164,16 +167,28 @@ $numeroFormateado = str_pad($numeroNuevo, 6, '0', STR_PAD_LEFT);
             boton.textContent = 'Generando...';
             document.body.style.cursor = 'wait';
 
-            // Después de 1 segundo: limpia formulario y desactiva subtipo
+            // Resetear el formulario después de 1 segundo
             setTimeout(() => {
                 form.reset();
+
+                // Desactivar subtipo
                 const subtipo = document.getElementById('subtipo');
                 if (subtipo) {
                     subtipo.disabled = true;
                 }
+
+                // Actualizar N° de ficha vía AJAX
+                fetch('/sisti/backend/ajax/obtener_numero_ficha.php')
+                    .then(response => response.text())
+                    .then(data => {
+                        const inputFicha = form.querySelector('input[name="numero_ficha"]');
+                        if (inputFicha) {
+                            inputFicha.value = data;
+                        }
+                    });
             }, 1000);
 
-            // Después de 7 segundos: habilita botón y cambia texto, cursor normal
+            // Restaurar botón y cursor después de 7 segundos
             setTimeout(() => {
                 boton.disabled = false;
                 boton.textContent = 'Generar Ficha';

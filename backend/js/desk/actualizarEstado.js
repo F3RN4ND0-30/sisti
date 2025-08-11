@@ -12,10 +12,10 @@ function actualizarEstado(selectElement, idIncidente) {
     .then((response) => response.json())
     .then((data) => {
       if (data.exito) {
-        // 🔁 Actualiza estadísticas
         actualizarEstadisticas();
+        actualizarTabla(); // 👈 Recarga la tabla completa
 
-        // 🎨 Actualiza clase del <select>
+        // Actualiza estilos del select
         selectElement.classList.remove("pendiente", "proceso", "resuelto");
         selectElement.classList.add(nuevoEstado);
       } else {
@@ -41,6 +41,23 @@ function actualizarEstadisticas() {
     });
 }
 
+function actualizarTabla() {
+  fetch("/sisti/backend/php/desk/tabla_incidentes.php") // 👈 Ajusta si tu ruta es diferente
+    .then((response) => response.text())
+    .then((html) => {
+      const tablaContenedor = document.getElementById("tabla-incidentes");
+      if (tablaContenedor) {
+        tablaContenedor.innerHTML = html;
+      } else {
+        console.warn("No se encontró el contenedor de la tabla con id 'tabla-incidentes'");
+      }
+    })
+    .catch((error) => {
+      console.error("Error al actualizar la tabla:", error);
+    });
+}
+
 document.addEventListener("DOMContentLoaded", function () {
-  actualizarEstadisticas(); // Llama al cargar la página
+  actualizarEstadisticas(); // Al cargar la página
+  actualizarTabla();        // 👈 También puedes recargar la tabla al inicio si quieres
 });

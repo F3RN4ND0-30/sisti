@@ -39,7 +39,10 @@ require_once '../../backend/bd/conexion.php';
 
                     <form id="formTicket">
                         <div class="grupo-formulario tiene-retroalimentacion">
-                            <input type="text" id="dni" name="dni" class="control-formulario" placeholder="DNI" maxlength="8" required autocomplete="off">
+                            <input type="text" id="dni" name="dni" class="control-formulario"
+                                placeholder="DNI" maxlength="8" required autocomplete="off"
+                                pattern="\d{8}" title="El DNI debe contener exactamente 8 números"
+                                oninput="this.value = this.value.replace(/\D/g, '')">
                             <span class="material-icons icono-control-formulario">badge</span>
                             <div id="dni-loader" style="display: none; position: absolute; right: 15px; top: 50%; transform: translateY(-50%);">
                                 <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCA0MDAgNDAwIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxjaXJjbGUgY3g9IjIwMCIgY3k9IjIwMCIgcj0iMTgwIiBzdHJva2U9IiMyNTYzZWIiIHN0cm9rZS13aWR0aD0iNDAiIGZpbGw9Im5vbmUiIHN0cm9rZS1kYXNoYXJyYXk9IjMwMCw1MDAiPjxhbmltYXRlVHJhbnNmb3JtIGF0dHJpYnV0ZU5hbWU9InRyYW5zZm9ybSIgZHVyPSIxcyIgcmVwZWF0Q291bnQ9ImluZGVmaW5pdGUiIHR5cGU9InJvdGF0ZSIgZnJvbT0iMCAyMDAgMjAwIiB0bz0iMzYwIDIwMCAyMDAiLz48L2NpcmNsZT48L3N2Zz4=" alt="Cargando" width="22">
