@@ -1,0 +1,93 @@
+/* Estilo específico para el módulo de fichas */
+#tabla-fichas {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: 'Segoe UI', sans-serif;
+    font-size: 15px;
+    margin-top: 20px;
+}
+
+#tabla-fichas thead {
+    background-color: #2563eb;
+    color: white;
+}
+
+#tabla-fichas th,
+#tabla-fichas td {
+    padding: 12px 15px;
+    text-align: center;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+#tabla-fichas tbody tr:hover {
+    background-color: #f1f5f9;
+}
+
+/* ⚠️ Responsividad total para móviles */
+@media (max-width: 768px) {
+    .table-responsive {
+        overflow-x: hidden;
+        /* Oculta scroll horizontal innecesario */
+        max-width: 100vw;
+        /* Máximo ancho igual al viewport */
+        padding-right: 0;
+        /* Evita padding que genere scroll */
+    }
+
+    #tabla-fichas {
+        border: 0;
+        width: 100% !important;
+        /* Que no se expanda más que el contenedor */
+        max-width: 100%;
+        /* Limitar ancho */
+        margin: 0 auto;
+        /* Centrar */
+        box-sizing: border-box;
+        /* Para que padding y border no sumen ancho extra */
+    }
+
+    #tabla-fichas thead {
+        display: none;
+    }
+
+    #tabla-fichas tbody,
+    #tabla-fichas tr,
+    #tabla-fichas td {
+        display: block;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    #tabla-fichas tr {
+        margin-bottom: 15px;
+        background: #fff;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        padding: 10px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    }
+
+    #tabla-fichas td {
+        text-align: left;
+        padding: 8px 10px;
+        position: relative;
+        font-size: 14px;
+        border: none;
+        border-bottom: 1px solid #eee;
+        white-space: normal;
+        /* Asegura que el texto pueda hacer wrap */
+    }
+
+    #tabla-fichas td::before {
+        content: attr(data-label);
+        display: block;
+        font-weight: bold;
+        color: #2563eb;
+        margin-bottom: 3px;
+        font-size: 13px;
+    }
+
+    #tabla-fichas td:last-child {
+        border-bottom: none;
+    }
+}

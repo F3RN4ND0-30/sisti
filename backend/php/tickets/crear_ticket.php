@@ -2,6 +2,9 @@
 header('Content-Type: application/json');
 require_once '../../bd/conexion.php';
 
+date_default_timezone_set('America/Lima'); // Zona horaria Lima
+$fechaCreacion = date('Y-m-d H:i:s');
+
 $dni = $_POST['dni'] ?? '';
 $nombre = $_POST['nombre'] ?? '';
 $apPaterno = $_POST['apPaterno'] ?? '';
@@ -60,20 +63,21 @@ try {
 
     $ip_pc = obtenerIPCliente();
 
-    // Insertar en tb_Incidentes con IP
+    // Insertar en tb_Incidentes con fecha de creación desde PHP (hora Lima)
     $stmtIncidente = $conexion->prepare("
         INSERT INTO tb_Incidentes (
             Id_Tickets, Id_Usuarios, Id_UsuariosExternos, Id_Areas, Descripcion, Id_Estados_Incidente, Fecha_Creacion, Ip_PC
         ) VALUES (
-            :idTicket, NULL, :idUsuarioExterno, :idArea, :descripcion, :estado, GETDATE(), :ip_pc
+            :idTicket, NULL, :idUsuarioExterno, :idArea, :descripcion, :estado, :fechaCreacion, :ip_pc
         )
-        ");
+    ");
     $stmtIncidente->execute([
         ':idTicket' => $ticketId,
         ':idUsuarioExterno' => $usuarioId,
         ':idArea' => $area,
         ':descripcion' => $descripcion,
         ':estado' => 1,
+        ':fechaCreacion' => $fechaCreacion,
         ':ip_pc' => $ip_pc
     ]);
 

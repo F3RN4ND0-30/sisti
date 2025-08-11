@@ -3,9 +3,11 @@ session_name('HELPDESK_SISTEMA');
 session_start();
 
 require_once $_SERVER['DOCUMENT_ROOT'] . '/sisti/vendor/autoload.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/sisti/backend/bd/conexion.php';
 
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use PhpOffice\PhpSpreadsheet\Style\Alignment;
 
 // Recoge los datos del formulario
 $tipoFicha = $_POST['tipo'] ?? 'mantenimiento';
@@ -19,7 +21,13 @@ $subtipo = $_POST['subtipo'] ?? '';
 $descripcion = $_POST['descripcion'] ?? '';
 $observacion = $_POST['observacion'] ?? '';
 $tecnico = $_SESSION['hd_ficha'] ?? 'Técnico no identificado';
+$idUsuario = $_SESSION['hd_id'] ?? null;
 $fechaHoy = date('d-m-Y');
+
+// Validación mínima
+if (!$idUsuario) {
+  die("Usuario no identificado.");
+}
 
 $ubicaciones = [
   'hardware' => [
@@ -47,7 +55,7 @@ $ubicaciones = [
     'RUBEM' => ['check' => 'H38', 'descripcion' => 'I38'],
     'RUB PVL 20' => ['check' => 'H39', 'descripcion' => 'I39'],
     'SISPLA' => ['check' => 'H40', 'descripcion' => 'I40'],
-    'Sistema Via Web' => ['check' => 'H41', 'descripcion' => 'I41'],
+    'Sistema Vía Web' => ['check' => 'H41', 'descripcion' => 'I41'],
     'Otros' => ['check' => 'H42', 'descripcion' => 'I42'],
   ],
   'software' => [
@@ -61,12 +69,22 @@ $ubicaciones = [
   ]
 ];
 
+// Obtener nuevo número de ficha
+$stmt = $conexion->query("SELECT MAX(Numero) AS ultimo FROM ficha_control");
+$ultimoNumero = $stmt->fetchColumn();
+$nuevoNumero = $ultimoNumero ? $ultimoNumero + 1 : 1;
+$numeroFormateado = str_pad($nuevoNumero, 6, '0', STR_PAD_LEFT); // Ej: 000001
+
 // Ruta a la plantilla
 $plantillaPath = $_SERVER['DOCUMENT_ROOT'] . '/sisti/backend/php/excel/plantillas/ficha_mantenimiento.xlsx';
 $spreadsheet = IOFactory::load($plantillaPath);
 $sheet = $spreadsheet->getActiveSheet();
 
-// Rellenar las celdas (ajusta las coordenadas según tu diseño)
+// Agregar número de ficha en celda J3 y centrar
+$sheet->setCellValue('J3', 'N° ' . $numeroFormateado);
+$sheet->getStyle('J3')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+
+// Rellenar los datos
 $sheet->setCellValue('C8', $unidadOrganica);
 $sheet->setCellValue('J8', $fechaHoy);
 $sheet->setCellValue('C11', $trabajador);
@@ -85,7 +103,7 @@ if (isset($ubicaciones[$tipo][$subtipo])) {
 }
 
 // Observación
-$maxCharsPerRow = 108; // Ajustado según tu texto de muestra
+$maxCharsPerRow = 108;
 $startRow = 55;
 $columnStart = 'C';
 $columnEnd = 'L';
@@ -97,30 +115,47 @@ foreach ($lines as $i => $linea) {
   $celdaInicio = $columnStart . $fila;
   $celdaFin = $columnEnd . $fila;
 
-  // Fusionar celdas y asignar valor
   $sheet->mergeCells("$celdaInicio:$celdaFin");
   $sheet->setCellValue($celdaInicio, $linea);
-
-  // Ajustar alineación y permitir salto de línea
   $sheet->getStyle("$celdaInicio:$celdaFin")->getAlignment()->setWrapText(true);
-  $sheet->getRowDimension($fila)->setRowHeight(-1); // Autoajuste de alto
+  $sheet->getRowDimension($fila)->setRowHeight(-1);
 }
 
-// Proteger la hoja completa (sin contraseña)
+// Proteger la hoja
 $sheet->getProtection()->setSheet(true);
-$sheet->getProtection()->setSort(true);         // permite ordenar
-$sheet->getProtection()->setInsertRows(true);   // permite insertar filas
-$sheet->getProtection()->setFormatCells(false); // impide editar celdas
-
+$sheet->getProtection()->setSort(true);
+$sheet->getProtection()->setInsertRows(true);
+$sheet->getProtection()->setFormatCells(false);
 $sheet->getProtection()->setPassword('CuandoPagan');
 
-// Descargar el archivo
-$filename = "ficha_Mantenimiento" . date('Ymd_His') . ".xlsx";
+// Guardar archivo en carpeta uploads (crea la carpeta si no existe)
+$uploadDir = $_SERVER['DOCUMENT_ROOT'] . '/sisti/uploads/fichas/';
+if (!is_dir($uploadDir)) {
+  mkdir($uploadDir, 0777, true);
+}
 
+$filename = "ficha_Mantenimiento_" . $numeroFormateado . ".xlsx";
+$filePath = $uploadDir . $filename;
+
+$writer = new Xlsx($spreadsheet);
+$writer->save($filePath);
+
+// Guardar ruta en la base de datos (solo la ruta relativa)
+$rutaRelativa = "/sisti/uploads/fichas/" . $filename;
+
+$sqlInsert = "INSERT INTO ficha_control (Numero, Id_Usuarios, ArchivoExcel)
+              VALUES (:numero, :id_usuario, :rutaArchivo)";
+$stmt = $conexion->prepare($sqlInsert);
+$stmt->bindParam(':numero', $nuevoNumero, PDO::PARAM_INT);
+$stmt->bindParam(':id_usuario', $idUsuario, PDO::PARAM_INT);
+$stmt->bindParam(':rutaArchivo', $rutaRelativa, PDO::PARAM_STR);
+$stmt->execute();
+
+// Descargar el archivo directamente al navegador
 header("Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
 header("Content-Disposition: attachment; filename=\"$filename\"");
 header("Cache-Control: max-age=0");
 
-$writer = new Xlsx($spreadsheet);
-$writer->save('php://output');
+// Leer archivo y enviarlo
+readfile($filePath);
 exit;

@@ -8,6 +8,13 @@ if (!isset($_SESSION['hd_activo']) || $_SESSION['hd_activo'] !== true) {
 }
 $nombreTecnico = $_SESSION['hd_ficha'] ?? '';
 $fechaHoy = date('d-m-Y');
+
+require_once $_SERVER['DOCUMENT_ROOT'] . '/sisti/backend/bd/conexion.php';
+
+// Obtener el siguiente número de ficha
+$stmtNum = $conexion->query("SELECT ISNULL(MAX(Numero), 0) + 1 AS nuevo_num FROM ficha_control");
+$numeroNuevo = (int)$stmtNum->fetchColumn();
+$numeroFormateado = str_pad($numeroNuevo, 6, '0', STR_PAD_LEFT);
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -34,6 +41,17 @@ $fechaHoy = date('d-m-Y');
             <input type="hidden" name="tipo" value="<?php echo htmlspecialchars($tipoFicha); ?>">
 
             <table>
+                <tr>
+                    <td>N° de Ficha</td>
+                    <td>
+                        <input
+                            type="text"
+                            name="numero_ficha"
+                            required
+                            readonly
+                            value="<?php echo 'N° ' . $numeroFormateado; ?>" />
+                    </td>
+                </tr>
                 <tr>
                     <td>Unidad Orgánica</td>
                     <td><input type="text" name="unidad_organica" required></td>

@@ -1,13 +1,16 @@
 <?php
 session_name('HELPDESK_SISTEMA');
 session_start();
+
 require_once $_SERVER['DOCUMENT_ROOT'] . '/sisti/vendor/autoload.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/sisti/backend/bd/conexion.php'; // Asegúrate de incluir tu conexión a BD
 
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use PhpOffice\PhpSpreadsheet\Style\Alignment;
 
 // Recoge los datos del formulario
-$tipoFicha = $_POST['tipo'] ?? 'mantenimiento';
+$tipoFicha = $_POST['tipo'] ?? 'baja';
 $unidadOrganica = $_POST['unidad_organica'] ?? '';
 $trabajador = $_POST['trabajador_municipal'] ?? '';
 $cargo = $_POST['cargo'] ?? '';
@@ -18,7 +21,12 @@ $subtipo = $_POST['subtipo'] ?? '';
 $descripcion = $_POST['descripcion'] ?? '';
 $observacion = $_POST['observacion'] ?? '';
 $tecnico = $_SESSION['hd_ficha'] ?? 'Técnico no identificado';
+$idUsuario = $_SESSION['hd_id'] ?? null;
 $fechaHoy = date('d-m-Y');
+
+if (!$idUsuario) {
+  die("Usuario no identificado.");
+}
 
 $ubicaciones = [
   'hardware' => [
@@ -46,7 +54,7 @@ $ubicaciones = [
     'RUBEM' => ['check' => 'H38', 'descripcion' => 'I38'],
     'RUB PVL 20' => ['check' => 'H39', 'descripcion' => 'I39'],
     'SISPLA' => ['check' => 'H40', 'descripcion' => 'I40'],
-    'Sistema Via Web' => ['check' => 'H41', 'descripcion' => 'I41'],
+    'Sistema Vía Web' => ['check' => 'H41', 'descripcion' => 'I41'],
     'Otros' => ['check' => 'H42', 'descripcion' => 'I42'],
   ],
   'software' => [
@@ -60,12 +68,21 @@ $ubicaciones = [
   ]
 ];
 
+// Obtener nuevo número para ficha_control
+$stmtNum = $conexion->query("SELECT ISNULL(MAX(Numero),0) + 1 AS nuevo_num FROM ficha_control");
+$numeroNuevo = (int)$stmtNum->fetchColumn();
+$numeroFormateado = str_pad($numeroNuevo, 6, '0', STR_PAD_LEFT);
+
 // Ruta a la plantilla
 $plantillaPath = $_SERVER['DOCUMENT_ROOT'] . '/sisti/backend/php/excel/plantillas/ficha_baja.xlsx';
 $spreadsheet = IOFactory::load($plantillaPath);
 $sheet = $spreadsheet->getActiveSheet();
 
-// Rellenar las celdas (ajusta las coordenadas según tu diseño)
+// Colocar número de ficha en J3 y centrar horizontalmente
+$sheet->setCellValue('J3', 'N° ' . $numeroFormateado);
+$sheet->getStyle('J3')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+
+// Rellenar las celdas
 $sheet->setCellValue('C8', $unidadOrganica);
 $sheet->setCellValue('J8', $fechaHoy);
 $sheet->setCellValue('C11', $trabajador);
@@ -74,52 +91,63 @@ $sheet->setCellValue('J14', $dni);
 $sheet->setCellValue('C22', $requerimiento);
 $sheet->setCellValue('C24', $tecnico);
 
-// Coloca "X" y la descripción según tipo y subtipo
+// Colocar "X" y descripción si existe tipo y subtipo
 if (isset($ubicaciones[$tipo][$subtipo])) {
   $celdaCheck = $ubicaciones[$tipo][$subtipo]['check'];
   $celdaDescripcion = $ubicaciones[$tipo][$subtipo]['descripcion'];
-
   $sheet->setCellValue($celdaCheck, 'X');
   $sheet->setCellValue($celdaDescripcion, $descripcion);
 }
 
 // Observación
-$maxCharsPerRow = 108; // Ajustado según tu texto de muestra
+$maxCharsPerRow = 108;
 $startRow = 55;
 $columnStart = 'C';
 $columnEnd = 'L';
 
 $lines = str_split($observacion, $maxCharsPerRow);
-
 foreach ($lines as $i => $linea) {
   $fila = $startRow + $i;
   $celdaInicio = $columnStart . $fila;
   $celdaFin = $columnEnd . $fila;
-
-  // Fusionar celdas y asignar valor
   $sheet->mergeCells("$celdaInicio:$celdaFin");
   $sheet->setCellValue($celdaInicio, $linea);
-
-  // Ajustar alineación y permitir salto de línea
   $sheet->getStyle("$celdaInicio:$celdaFin")->getAlignment()->setWrapText(true);
-  $sheet->getRowDimension($fila)->setRowHeight(-1); // Autoajuste de alto
+  $sheet->getRowDimension($fila)->setRowHeight(-1);
 }
 
-// Proteger la hoja completa (sin contraseña)
+// Proteger hoja
 $sheet->getProtection()->setSheet(true);
-$sheet->getProtection()->setSort(true);         // permite ordenar
-$sheet->getProtection()->setInsertRows(true);   // permite insertar filas
-$sheet->getProtection()->setFormatCells(false); // impide editar celdas
-
+$sheet->getProtection()->setSort(true);
+$sheet->getProtection()->setInsertRows(true);
+$sheet->getProtection()->setFormatCells(false);
 $sheet->getProtection()->setPassword('CuandoPagan');
 
-// Descargar el archivo
-$filename = "ficha_Baja" . date('Ymd_His') . ".xlsx";
+// Preparar nombre y ruta para guardar archivo
+$filename = "ficha_Baja_" . $numeroFormateado . ".xlsx";
+$carpetaGuardar = $_SERVER['DOCUMENT_ROOT'] . "/sisti/archivos/fichas/";
+if (!is_dir($carpetaGuardar)) {
+  mkdir($carpetaGuardar, 0777, true);
+}
+$rutaCompleta = $carpetaGuardar . $filename;
+$rutaRelativa = "/sisti/archivos/fichas/" . $filename;
 
+// Guardar archivo en disco
+$writer = new Xlsx($spreadsheet);
+$writer->save($rutaCompleta);
+
+// Guardar registro en BD
+$sqlInsert = "INSERT INTO ficha_control (Numero, Id_Usuarios, ArchivoExcel) VALUES (:numero, :id_usuario, :archivo)";
+$stmt = $conexion->prepare($sqlInsert);
+$stmt->bindParam(':numero', $numeroNuevo, PDO::PARAM_INT);
+$stmt->bindParam(':id_usuario', $idUsuario, PDO::PARAM_INT);
+$stmt->bindParam(':archivo', $rutaRelativa, PDO::PARAM_STR);
+$stmt->execute();
+
+// Descargar archivo
 header("Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
 header("Content-Disposition: attachment; filename=\"$filename\"");
 header("Cache-Control: max-age=0");
 
-$writer = new Xlsx($spreadsheet);
-$writer->save('php://output');
+readfile($rutaCompleta);
 exit;

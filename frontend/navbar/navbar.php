@@ -107,6 +107,11 @@ function obtenerPrimerNombre($nombre_completo)
                     <li <?php echo esPaginaActiva('/reportes/estadisticas.php') ? 'class="active"' : ''; ?>>
                         <a href="/sisti/frontend/reportes/estadisticas/estadisticas.php">Estadísticas</a>
                     </li>
+                    <?php if ($rol === 'administrador'): ?>
+                        <li <?php echo esPaginaActiva('/reportes/fichas.php') ? 'class="active"' : ''; ?>>
+                            <a href="/sisti/frontend/reportes/lista_fichas/listado_fichas.php">Lista de Fichas</a>
+                        </li>
+                    <?php endif; ?>
                 </ul>
             </li>
 

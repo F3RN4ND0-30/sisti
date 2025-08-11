@@ -2,12 +2,16 @@ document.addEventListener('DOMContentLoaded', () => {
     const form = document.getElementById('formBuscarTicket');
     const input = document.getElementById('ticketInput');
     const resultadoDiv = document.getElementById('resultado');
-    const hoy = new Date();
-    const yyyy = hoy.getFullYear();
-    const mm = String(hoy.getMonth() + 1).padStart(2, '0'); // Meses van de 0 a 11
-    const dd = String(hoy.getDate()).padStart(2, '0');
+
+    // Obtener fecha en zona horaria Lima
+    const ahoraLima = new Date().toLocaleString('en-US', { timeZone: 'America/Lima' });
+    const fechaLima = new Date(ahoraLima);
+
+    const yyyy = fechaLima.getFullYear();
+    const mm = String(fechaLima.getMonth() + 1).padStart(2, '0');
+    const dd = String(fechaLima.getDate()).padStart(2, '0');
     const prefijoTicket = `TCK-${yyyy}${mm}${dd}-`;
-    
+
     if (input && !input.value) {
         input.value = prefijoTicket;
         input.focus();
@@ -127,7 +131,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
-
 
     agregarRedireccion('btnRegresar', '/sisti/');
     agregarRedireccion('btnRegresarFrontend', '/sisti/frontend/sisvis/escritorio.php');

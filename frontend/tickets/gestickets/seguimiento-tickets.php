@@ -30,6 +30,7 @@ require_once '../../../backend/bd/conexion.php';
 
         <form id="formBuscarTicket">
             <input type="text" name="ticket" id="ticketInput" placeholder="Ingrese N° de Ticket (ej. TCK-...)" required />
+            <button type="button" id="btnPegar">Pegar</button>
             <button type="submit">Buscar</button>
         </form>
 
