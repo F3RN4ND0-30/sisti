@@ -1,4 +1,6 @@
 <?php
+date_default_timezone_set('America/Lima'); // Zona horaria de Lima, Perú
+
 $directorio = __DIR__;
 $archivos = array_diff(scandir($directorio), array('.', '..', 'index.php'));
 ?>
@@ -31,7 +33,7 @@ $archivos = array_diff(scandir($directorio), array('.', '..', 'index.php'));
                     <?php if (is_file($archivo)): ?>
                         <tr>
                             <td><a href="<?= htmlspecialchars($archivo) ?>" download><?= htmlspecialchars($archivo) ?></a></td>
-                            <td><?= date("Y-m-d H:i", filemtime($archivo)) ?></td>
+                            <td><?= date("Y-m-d H:i:s", filemtime($archivo)) ?></td>
                             <td><?= round(filesize($archivo) / 1024) ?> KB</td>
                         </tr>
                     <?php endif; ?>

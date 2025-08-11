@@ -85,6 +85,10 @@ $sheet->getStyle('J3')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENT
 // Rellenar las celdas
 $sheet->setCellValue('C8', $unidadOrganica);
 $sheet->setCellValue('J8', $fechaHoy);
+
+date_default_timezone_set('America/Lima'); // Asegura la zona horaria correcta
+$sheet->setCellValue('J10', date('H:i:s'));
+
 $sheet->setCellValue('C11', $trabajador);
 $sheet->setCellValue('C14', $cargo);
 $sheet->setCellValue('J14', $dni);
