@@ -129,7 +129,7 @@ $sheet->getProtection()->setFormatCells(false);
 $sheet->getProtection()->setPassword('CuandoPagan');
 
 // Guardar archivo en carpeta uploads (crea la carpeta si no existe)
-$uploadDir = $_SERVER['DOCUMENT_ROOT'] . '/sisti/uploads/fichas/';
+$uploadDir = $_SERVER['DOCUMENT_ROOT'] . '/sisti/archivos/fichas/';
 if (!is_dir($uploadDir)) {
   mkdir($uploadDir, 0777, true);
 }
@@ -141,7 +141,7 @@ $writer = new Xlsx($spreadsheet);
 $writer->save($filePath);
 
 // Guardar ruta en la base de datos (solo la ruta relativa)
-$rutaRelativa = "/sisti/uploads/fichas/" . $filename;
+$rutaRelativa = "/sisti/archivos/fichas/" . $filename;
 
 $sqlInsert = "INSERT INTO ficha_control (Numero, Id_Usuarios, ArchivoExcel)
               VALUES (:numero, :id_usuario, :rutaArchivo)";

@@ -53,7 +53,10 @@ if (!isset($_SESSION['hd_activo']) || $_SESSION['hd_activo'] !== true) {
         </div>
 
         <div class="activity-card">
-            <h4><i class="material-icons">assignment</i> Fichas Técnicas</h4>
+            <div class="titulo-fichas">
+                <h4 class="titulo"><i class="material-icons">assignment</i> Fichas Técnicas</h4>
+                <a href="/sisti/archivos/fichas" class="btn-descargar">Descargar Fichas</a>
+            </div>
             <div class="table-responsive">
                 <table class="table" id="tabla-fichas">
                     <thead>

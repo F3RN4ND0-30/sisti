@@ -37,7 +37,8 @@ $numeroFormateado = str_pad($numeroNuevo, 6, '0', STR_PAD_LEFT);
 
     <div class="form-container">
         <h2>Ficha de Instalación</h2>
-        <form method="POST" action="/sisti/backend/php/excel/generar_excel_instalacion.php">
+        <form method="POST" action="/sisti/backend/php/excel/generar_excel_instalacion.php" target="iframeInvisible"
+            onsubmit="manejarEnvioFormulario(this)">
             <input type="hidden" name="tipo" value="<?php echo htmlspecialchars($tipoFicha); ?>">
 
             <table>
@@ -112,10 +113,12 @@ $numeroFormateado = str_pad($numeroNuevo, 6, '0', STR_PAD_LEFT);
 
             <div class="botones-container">
                 <a href="/sisti/frontend/reportes/reporte_atencion/fichas.php" class="btn-volver">Volver</a>
-                <button type="submit">Generar Ficha</button>
+                <button type="submit" id="btnGenerarFicha">Generar Ficha</button>
             </div>
         </form>
     </div>
+
+    <iframe name="iframeInvisible" style="display: none;"></iframe>
 
     <script>
         const subtiposPorTipo = {
@@ -150,6 +153,31 @@ $numeroFormateado = str_pad($numeroNuevo, 6, '0', STR_PAD_LEFT);
                 subtipoSelect.disabled = false;
             }
         });
+    </script>
+
+    <script>
+        function manejarEnvioFormulario(form) {
+            const boton = document.getElementById('btnGenerarFicha');
+            boton.disabled = true;
+            boton.textContent = 'Generando...';
+            document.body.style.cursor = 'wait';
+
+            // Después de 1 segundo: limpia formulario y desactiva subtipo
+            setTimeout(() => {
+                form.reset();
+                const subtipo = document.getElementById('subtipo');
+                if (subtipo) {
+                    subtipo.disabled = true;
+                }
+            }, 1000);
+
+            // Después de 7 segundos: habilita botón y cambia texto, cursor normal
+            setTimeout(() => {
+                boton.disabled = false;
+                boton.textContent = 'Generar Ficha';
+                document.body.style.cursor = 'default';
+            }, 7000);
+        }
     </script>
 
 </body>
