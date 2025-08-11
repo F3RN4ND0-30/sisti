@@ -15,7 +15,7 @@ require_once '../../../backend/bd/conexion.php';
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Todos los Tickets | HelpDesk MPP</title>
+    <title>Todos los Tickets | HelpDesk </title>
 
     <!-- CSS -->
     <link rel="stylesheet" href="/sisti/backend/css/vistas/gestickets/todos-tickets.css">

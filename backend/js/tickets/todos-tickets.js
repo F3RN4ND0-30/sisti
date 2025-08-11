@@ -216,15 +216,12 @@ function aplicarFiltroEstado(estadoId) {
                       data-id='${ticket.Id_Incidentes}' 
                       onchange='cambiarEstadoDirecto(this)'
                       data-original='${ticket.EstadoNombre}'>
-                 <option value='Pendiente'${
-                   ticket.EstadoNombre === "Pendiente" ? " selected" : ""
-                 }>Pendiente</option>
-                 <option value='En proceso'${
-                   ticket.EstadoNombre === "En proceso" ? " selected" : ""
-                 }>En proceso</option>
-                 <option value='Resuelto'${
-                   ticket.EstadoNombre === "Resuelto" ? " selected" : ""
-                 }>Resuelto</option>
+                 <option value='Pendiente'${ticket.EstadoNombre === "Pendiente" ? " selected" : ""
+              }>Pendiente</option>
+                 <option value='En proceso'${ticket.EstadoNombre === "En proceso" ? " selected" : ""
+              }>En proceso</option>
+                 <option value='Resuelto'${ticket.EstadoNombre === "Resuelto" ? " selected" : ""
+              }>Resuelto</option>
                </select>`,
               `<span class='date-cell'>${fechaFormateada}</span>`,
             ];
@@ -251,7 +248,7 @@ function aplicarFiltroEstado(estadoId) {
       } else {
         mostrarNotificacion(
           "Error al aplicar filtro: " +
-            (response.message || "Error desconocido"),
+          (response.message || "Error desconocido"),
           "error"
         );
       }
@@ -468,26 +465,48 @@ function cambiarEstadoDirecto(select) {
   select.disabled = true;
   row.style.backgroundColor = "rgba(52,152,219,.1)";
 
-  const nuevaClase = getBadgeClass(nuevoEstado);
-  select.className = "estado-select " + nuevaClase;
+  // Actualización AJAX
+  $.ajax({
+    url: "/sisti/backend/ajax/estadisticas_generales.php", // Cambia esta ruta a tu endpoint real
+    method: "POST",
+    data: {
+      id: id,
+      estado: nuevoEstado
+    },
+    dataType: "json",
+    success: function (response) {
+      hideLoading();
 
-  setTimeout(() => {
-    hideLoading();
+      if (response.success) {
+        // Actualizar visualmente solo si el servidor confirma el cambio
+        const nuevaClase = getBadgeClass(nuevoEstado);
+        select.className = "estado-select " + nuevaClase;
 
-    select.dataset.original = nuevoEstado;
-    row.dataset.estadoId = obtenerIdEstado(nuevoEstado);
+        select.dataset.original = nuevoEstado;
+        row.dataset.estadoId = obtenerIdEstado(nuevoEstado);
 
-    row.style.backgroundColor = "rgba(39,174,96,.1)";
-    setTimeout(() => (row.style.backgroundColor = ""), 2000);
+        row.style.backgroundColor = "rgba(39,174,96,.1)";
+        setTimeout(() => (row.style.backgroundColor = ""), 2000);
 
-    select.style.opacity = "1";
-    select.disabled = false;
+        select.style.opacity = "1";
+        select.disabled = false;
 
-    actualizarEstadisticasGenerales();
-    mostrarNotificacion(`Estado cambiado a: ${nuevoEstado}`, "success");
+        actualizarEstadisticasGenerales();
+        mostrarNotificacion(`Estado cambiado a: ${nuevoEstado}`, "success");
 
-    console.log("✅ Estado actualizado exitosamente");
-  }, 800);
+        console.log("✅ Estado actualizado exitosamente");
+        location.reload();
+      } else {
+        // Revertir el cambio si hubo error en el backend
+        revertirCambio(select, estadoOriginal, response.message || "Error al actualizar estado en BD");
+      }
+    },
+    error: function (xhr, status, error) {
+      hideLoading();
+      revertirCambio(select, estadoOriginal, "Error de conexión al actualizar estado");
+      console.error("Error AJAX:", error);
+    }
+  });
 }
 
 function revertirCambio(select, estadoOriginal, mensaje) {
@@ -505,7 +524,7 @@ function revertirCambio(select, estadoOriginal, mensaje) {
 // ================== ESTADÍSTICAS ==================
 function actualizarEstadisticasGenerales() {
   const xhr = new XMLHttpRequest();
-  xhr.open("POST", window.location.href, true);
+  xhr.open("POST", "/sisti/frontend/tickets/gestickets/todos-tickets.php", true); // <- Ruta directa al PHP
   xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 
   xhr.onreadystatechange = function () {
