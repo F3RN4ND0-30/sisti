@@ -14,15 +14,16 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             data.forEach(ficha => {
-                let fechaSinMs = ficha.Fecha.split('.')[0];
+                let fechaSinMs = ficha.Fecha ? ficha.Fecha.split('.')[0] : 'Sin fecha';
+
                 const fila = document.createElement('tr');
 
                 fila.innerHTML = `
-                    <td data-label="ID Ficha">${ficha.Id_Ficha}</td>
-                    <td data-label="Número">${ficha.Numero.toString().padStart(6, '0')}</td>
-                    <td data-label="Nombre del Usuario">${ficha.Nombre} ${ficha.Apellido_Paterno} ${ficha.Apellido_Materno}</td>
-                    <td data-label="Fecha">${fechaSinMs}</td>
-                `;
+        <td data-label="ID Ficha">${ficha.Id_Ficha}</td>
+        <td data-label="Número">${ficha.Numero.toString().padStart(6, '0')}</td>
+        <td data-label="Nombre del Usuario">${ficha.Nombre} ${ficha.Apellido_Paterno} ${ficha.Apellido_Materno}</td>
+        <td data-label="Fecha">${fechaSinMs}</td>
+    `;
 
                 tbody.appendChild(fila);
             });

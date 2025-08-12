@@ -11,21 +11,20 @@ require_once '../../bd/conexion.php';
 try {
     // Obtener datos del usuario logueado
     $stmt = $conexion->prepare("
-        SELECT 
-            Id_Usuarios, 
-            Dni, 
-            Nombre, 
-            Apellido_Paterno, 
-            Apellido_Materno, 
-            Id_Areas, 
-            Id_Roles, 
-            Activo, 
-            CONVERT(DATE, Fecha_Creacion) AS Fecha_Creacion, 
-            Usuario, 
-            Clave
-        FROM tb_Usuarios 
-        WHERE Id_Usuarios = :id
-    ");
+    SELECT 
+        Id_Usuarios, 
+        Dni, 
+        Nombre, 
+        Apellido_Paterno, 
+        Apellido_Materno,
+        Id_Roles, 
+        Activo, 
+        DATE(Fecha_Creacion) AS Fecha_Creacion, 
+        Usuario, 
+        Clave
+    FROM tb_Usuarios 
+    WHERE Id_Usuarios = :id
+");
     $stmt->bindParam(':id', $_SESSION['hd_id'], PDO::PARAM_INT);
     $stmt->execute();
     $usuario = $stmt->fetch(PDO::FETCH_ASSOC);

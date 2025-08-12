@@ -1,67 +1,158 @@
+/* Estilo General */
 body {
-    font-family: Arial, sans-serif;
-    background: #f4f4f4;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #f5f7fa;
     margin: 0;
-    padding: 20px;
-}
-
-h1 {
+    padding: 30px;
     color: #333;
 }
 
+/* Título */
+h1 {
+    color: #2c3e50;
+    font-size: 28px;
+    margin-bottom: 20px;
+    font-weight: 600;
+}
+
+/* Contenedor principal */
+.container {
+    max-width: 1000px;
+    margin: auto;
+}
+
+/* Header con botón */
+.header-flex {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+    flex-wrap: wrap;
+}
+
+/* Botón regresar */
+.btn-regresar {
+    background-color: #4CAF50;
+    color: white;
+    padding: 8px 16px;
+    text-decoration: none;
+    border-radius: 6px;
+    font-size: 14px;
+    white-space: nowrap;
+    transition: background-color 0.3s ease;
+}
+
+.btn-regresar:hover {
+    background-color: #45a049;
+}
+
+/* Tabla */
 table {
     width: 100%;
     border-collapse: collapse;
     background: white;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
 }
 
 th,
 td {
-    padding: 12px;
-    border-bottom: 1px solid #ccc;
+    padding: 14px 16px;
+    border-bottom: 1px solid #e0e0e0;
     text-align: left;
+    font-size: 14px;
 }
 
 th {
-    background: #4CAF50;
+    background-color: #4CAF50;
     color: white;
+    font-weight: 600;
+    text-align: left;
 }
 
+tr:hover {
+    background-color: #f1f5f9;
+}
+
+/* Links dentro de la tabla */
 a {
     color: #2196F3;
     text-decoration: none;
+    transition: text-decoration 0.3s ease;
 }
 
 a:hover {
     text-decoration: underline;
 }
 
-.container {
-    max-width: 900px;
-    margin: auto;
+.dataTables_wrapper .dataTables_paginate {
+    display: flex !important;
+    justify-content: flex-end;
+    gap: 8px;
+    flex-wrap: nowrap;
+    margin-top: -28px !important;
+    /* Evita que se vayan a la siguiente línea */
 }
 
-.header-flex {
-    display: flex;
-    justify-content: space-between;
+.dataTables_wrapper .paginate_button {
+    display: inline-flex !important;
     align-items: center;
-    margin-bottom: 15px;
-    flex-wrap: wrap;
-    /* Para que en móviles se adapten bien */
-}
-
-.btn-regresar {
-    background-color: #4CAF50;
-    color: white;
-    padding: 8px 16px;
-    text-decoration: none;
-    border-radius: 4px;
-    font-size: 14px;
+    justify-content: center;
+    padding: 6px 14px !important;
+    color: white !important;
+    border-radius: 6px !important;
+    cursor: pointer !important;
     white-space: nowrap;
-    transition: background-color 0.3s;
+    font-size: 14px !important;
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-.btn-regresar:hover {
-    background-color: #45a049;
+.dataTables_wrapper .paginate_button:hover {
+    background-color: #1d4ed8 !important;
+    border-color: #1d4ed8 !important;
+}
+
+.dataTables_wrapper .paginate_button.current {
+    background-color: #1e40af !important;
+    border-color: #1e40af !important;
+    color: white !important;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    body {
+        padding: 20px;
+    }
+
+    .header-flex {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    table {
+        font-size: 13px;
+    }
+
+    th,
+    td {
+        padding: 10px;
+    }
+
+    .dataTables_wrapper .dataTables_footer {
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .dataTables_wrapper .dataTables_info,
+    .dataTables_wrapper .dataTables_paginate {
+        width: 100%;
+        text-align: center;
+    }
+
+    .dataTables_wrapper .dataTables_paginate {
+        justify-content: center;
+    }
 }

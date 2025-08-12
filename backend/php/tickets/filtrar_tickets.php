@@ -22,14 +22,14 @@ try {
         SELECT 
             t.Codigo_Ticket,
             COALESCE(
-                ue.Nombre + ' ' + ue.Apellido_Paterno + ' ' + ISNULL(ue.Apellido_Materno, ''), 
-                u.Nombre + ' ' + u.Apellido_Paterno + ' ' + ISNULL(u.Apellido_Materno, ''), 
+                CONCAT(ue.Nombre, ' ', ue.Apellido_Paterno, ' ', IFNULL(ue.Apellido_Materno, '')),
+                CONCAT(u.Nombre, ' ', u.Apellido_Paterno, ' ', IFNULL(u.Apellido_Materno, '')),
                 'Usuario no encontrado'
-            ) as NombreCompleto,
-            a.Nombre as AreaNombre,
+            ) AS NombreCompleto,
+            a.Nombre AS AreaNombre,
             i.Descripcion,
-            ei.Nombre as EstadoNombre,
-            ei.Id_Estados_Incidente as EstadoId,
+            ei.Nombre AS EstadoNombre,
+            ei.Id_Estados_Incidente AS EstadoId,
             i.Fecha_Creacion,
             i.Id_Incidentes
         FROM tb_Incidentes i
@@ -37,7 +37,7 @@ try {
         LEFT JOIN tb_UsuariosExternos ue ON i.Id_UsuariosExternos = ue.Id_UsuariosExternos
         LEFT JOIN tb_Usuarios u ON i.Id_Usuarios = u.Id_Usuarios
         INNER JOIN tb_Areas a ON i.Id_Areas = a.Id_Areas
-        INNER JOIN tb_Estados_Incidente ei ON i.Id_Estados_Incidente = ei.Id_Estados_Incidente
+        INNER JOIN tb_Estados_Incidente ei ON i.Id_Estados_Incidente = ei.Id_Estados_Incidente;
     ";
 
     // Agregar filtro si se especifica estado

@@ -23,9 +23,24 @@
 }
 
 /* Fila especial: Área y Descripción */
-.form-row.area-descripcion .form-group:first-child,
+.form-row.area-descripcion .form-group:first-child {
+    flex: 0 0 355px;
+    /* ancho fijo para el select */
+    max-width: 355px;
+}
+
 .form-row.area-descripcion .form-group:last-child {
-    flex: 1;
+    flex: 1 1 auto;
+    /* textarea ocupa resto */
+}
+
+#area {
+    max-width: 355px;
+    width: 100% !important;
+}
+
+.select2-container {
+    max-width: 355px !important;
 }
 
 /* Botón alineado a la derecha */
@@ -185,6 +200,12 @@
     left: 12px;
     top: 50%;
     transform: translateY(-50%);
+}
+
+.select2-selection__rendered {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .select2-container .select2-selection--single .select2-selection__rendered {

@@ -9,8 +9,8 @@ try {
         a.Nombre AS Area,
         i.Descripcion,
         e.Nombre AS Estado,
-        FORMAT(i.Fecha_Creacion, 'dd/MM/yyyy HH:mm') AS Fecha_Creacion,
-        FORMAT(i.Fecha_Resuelto, 'dd/MM/yyyy HH:mm') AS Fecha_Resuelto
+        DATE_FORMAT(i.Fecha_Creacion, '%d/%m/%Y %H:%i') AS Fecha_Creacion,
+        DATE_FORMAT(i.Fecha_Resuelto, '%d/%m/%Y %H:%i') AS Fecha_Resuelto
     FROM tb_incidentes i
     INNER JOIN tb_tickets t ON i.Id_Tickets = t.Id_Tickets
     INNER JOIN tb_areas a ON i.Id_Areas = a.Id_Areas

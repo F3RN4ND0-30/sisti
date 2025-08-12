@@ -70,9 +70,8 @@ $ubicaciones = [
 ];
 
 // Obtener nuevo número de ficha
-$stmt = $conexion->query("SELECT MAX(Numero) AS ultimo FROM ficha_control");
-$ultimoNumero = $stmt->fetchColumn();
-$nuevoNumero = $ultimoNumero ? $ultimoNumero + 1 : 1;
+$stmt = $conexion->query("SELECT COALESCE(MAX(Numero), 0) + 1 AS nuevo_num FROM tb_ficha_control");
+$nuevoNumero = (int)$stmt->fetchColumn();
 $numeroFormateado = str_pad($nuevoNumero, 6, '0', STR_PAD_LEFT); // Ej: 000001
 
 // Ruta a la plantilla
@@ -147,13 +146,20 @@ $writer->save($filePath);
 // Guardar ruta en la base de datos (solo la ruta relativa)
 $rutaRelativa = "/sisti/archivos/fichas/" . $filename;
 
-$sqlInsert = "INSERT INTO ficha_control (Numero, Id_Usuarios, ArchivoExcel)
-              VALUES (:numero, :id_usuario, :rutaArchivo)";
+$fechaActual = date('Y-m-d H:i:s');
+
+$sqlInsert = "INSERT INTO tb_ficha_control (Numero, Id_Usuarios, ArchivoExcel, Fecha)
+              VALUES (:numero, :id_usuario, :rutaArchivo, :fecha)";
 $stmt = $conexion->prepare($sqlInsert);
 $stmt->bindParam(':numero', $nuevoNumero, PDO::PARAM_INT);
 $stmt->bindParam(':id_usuario', $idUsuario, PDO::PARAM_INT);
 $stmt->bindParam(':rutaArchivo', $rutaRelativa, PDO::PARAM_STR);
-$stmt->execute();
+$stmt->bindParam(':fecha', $fechaActual, PDO::PARAM_STR);
+
+if (!$stmt->execute()) {
+    $errorInfo = $stmt->errorInfo();
+    die("Error en inserción: " . $errorInfo[2]);
+}
 
 // Descargar el archivo directamente al navegador
 header("Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");

@@ -12,7 +12,7 @@ $fechaHoy = date('d-m-Y');
 require_once $_SERVER['DOCUMENT_ROOT'] . '/sisti/backend/bd/conexion.php';
 
 // Obtener el siguiente número de ficha
-$stmtNum = $conexion->query("SELECT ISNULL(MAX(Numero), 0) + 1 AS nuevo_num FROM ficha_control");
+$stmtNum = $conexion->query("SELECT COALESCE(MAX(Numero), 0) + 1 AS nuevo_num FROM tb_ficha_control");
 $numeroNuevo = (int)$stmtNum->fetchColumn();
 $numeroFormateado = str_pad($numeroNuevo, 6, '0', STR_PAD_LEFT);
 ?>
@@ -80,7 +80,7 @@ $numeroFormateado = str_pad($numeroNuevo, 6, '0', STR_PAD_LEFT);
                 </tr>
                 <tr>
                     <td>Doc. Requerimiento</td>
-                    <td><input type="number" name="doc_requerimiento" min="0" step="1"></td>
+                    <td><input type="text" name="doc_requerimiento"></td>
                 </tr>
                 <tr>
                     <td>Nombre del Técnico</td>

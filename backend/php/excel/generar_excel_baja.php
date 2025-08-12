@@ -69,8 +69,8 @@ $ubicaciones = [
 ];
 
 // Obtener nuevo número para ficha_control
-$stmtNum = $conexion->query("SELECT ISNULL(MAX(Numero),0) + 1 AS nuevo_num FROM ficha_control");
-$numeroNuevo = (int)$stmtNum->fetchColumn();
+$stmt = $conexion->query("SELECT COALESCE(MAX(Numero), 0) + 1 AS nuevo_num FROM tb_ficha_control");
+$numeroNuevo = (int)$stmt->fetchColumn();
 $numeroFormateado = str_pad($numeroNuevo, 6, '0', STR_PAD_LEFT);
 
 // Ruta a la plantilla
@@ -141,11 +141,15 @@ $writer = new Xlsx($spreadsheet);
 $writer->save($rutaCompleta);
 
 // Guardar registro en BD
-$sqlInsert = "INSERT INTO ficha_control (Numero, Id_Usuarios, ArchivoExcel) VALUES (:numero, :id_usuario, :archivo)";
+$fechaActual = date('Y-m-d H:i:s');
+
+$sqlInsert = "INSERT INTO tb_ficha_control (Numero, Id_Usuarios, ArchivoExcel, Fecha)
+              VALUES (:numero, :id_usuario, :rutaArchivo, :fecha)";
 $stmt = $conexion->prepare($sqlInsert);
 $stmt->bindParam(':numero', $numeroNuevo, PDO::PARAM_INT);
 $stmt->bindParam(':id_usuario', $idUsuario, PDO::PARAM_INT);
-$stmt->bindParam(':archivo', $rutaRelativa, PDO::PARAM_STR);
+$stmt->bindParam(':rutaArchivo', $rutaRelativa, PDO::PARAM_STR);
+$stmt->bindParam(':fecha', $fechaActual, PDO::PARAM_STR);
 $stmt->execute();
 
 // Descargar archivo

@@ -186,7 +186,7 @@ function aplicarFiltroEstado(estadoId) {
   showLoading();
 
   $.ajax({
-    url: "/sisti/backend/php/tickets/filtrar_tickets.php",
+    url: "/sisti/backend/ajax/estadisticas_generales.php",
     method: "POST",
     data: { estado_id: estadoId },
     dataType: "json",

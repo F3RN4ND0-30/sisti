@@ -22,6 +22,11 @@ usort($archivos, function ($a, $b) use ($directorio) {
     <meta charset="UTF-8">
     <title>Fichas Generadas</title>
     <link rel="stylesheet" href="../../backend/css/archivos/index_archivos.css">
+    <!-- DataTables -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
 </head>
 
 <body>
@@ -30,7 +35,7 @@ usort($archivos, function ($a, $b) use ($directorio) {
             <h1>Fichas Generadas</h1>
             <a href="/sisti/frontend/reportes/lista_fichas/listado_fichas.php" class="btn-regresar">Regresar</a>
         </div>
-        <table>
+        <table class="table">
             <thead>
                 <tr>
                     <th>Nombre del Archivo</th>
@@ -49,6 +54,21 @@ usort($archivos, function ($a, $b) use ($directorio) {
             </tbody>
         </table>
     </div>
+
+    <script>
+        $(document).ready(function() {
+            $('.table').DataTable({
+                language: {
+                    url: '//cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json'
+                },
+                responsive: true,
+                order: [
+                    [1, 'desc']
+                ],
+                pagingType: "simple_numbers", // solo anterior y siguiente
+            });
+        });
+    </script>
 </body>
 
 </html>

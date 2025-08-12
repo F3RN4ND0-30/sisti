@@ -53,7 +53,7 @@ try {
                 INNER JOIN tb_UsuariosExternos u ON i.Id_UsuariosExternos = u.Id_UsuariosExternos
                 INNER JOIN tb_Areas a ON i.Id_Areas = a.Id_Areas
                 INNER JOIN tb_Estados_Incidente ei ON i.Id_Estados_Incidente = ei.Id_Estados_Incidente
-                WHERE CONVERT(date, i.Fecha_Creacion) = :fecha
+                WHERE DATE(i.Fecha_Creacion) = :fecha
             ";
             $params = [':fecha' => $fecha];
             break;
@@ -79,7 +79,7 @@ try {
                 INNER JOIN tb_UsuariosExternos u ON i.Id_UsuariosExternos = u.Id_UsuariosExternos
                 INNER JOIN tb_Areas a ON i.Id_Areas = a.Id_Areas
                 INNER JOIN tb_Estados_Incidente ei ON i.Id_Estados_Incidente = ei.Id_Estados_Incidente
-                WHERE FORMAT(i.Fecha_Creacion, 'yyyy-MM') = :mes
+                WHERE DATE_FORMAT(i.Fecha_Creacion, '%Y-%m') = :mes
             ";
             $params = [':mes' => $fecha];
             break;
@@ -120,7 +120,7 @@ try {
                 INNER JOIN tb_UsuariosExternos u ON i.Id_UsuariosExternos = u.Id_UsuariosExternos
                 INNER JOIN tb_Areas a ON i.Id_Areas = a.Id_Areas
                 INNER JOIN tb_Estados_Incidente ei ON i.Id_Estados_Incidente = ei.Id_Estados_Incidente
-                WHERE CONVERT(date, i.Fecha_Creacion) BETWEEN :inicio AND :fin
+                WHERE DATE(i.Fecha_Creacion) BETWEEN :inicio AND :fin
             ";
             $params = [
                 ':inicio' => $fechaInicio,

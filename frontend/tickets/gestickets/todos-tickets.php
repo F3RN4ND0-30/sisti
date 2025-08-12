@@ -250,8 +250,8 @@ require_once '../../../backend/bd/conexion.php';
                                 SELECT 
                                     t.Codigo_Ticket,
                                     COALESCE(
-                                        ue.Nombre + ' ' + ue.Apellido_Paterno + ' ' + ISNULL(ue.Apellido_Materno, ''), 
-                                        u.Nombre + ' ' + u.Apellido_Paterno + ' ' + ISNULL(u.Apellido_Materno, ''), 
+                                        CONCAT_WS(' ', ue.Nombre, ue.Apellido_Paterno, IFNULL(ue.Apellido_Materno, '')), 
+                                        CONCAT_WS(' ', u.Nombre, u.Apellido_Paterno, IFNULL(u.Apellido_Materno, '')), 
                                         'Usuario no encontrado'
                                     ) as NombreCompleto,
                                     a.Nombre as AreaNombre,

@@ -22,7 +22,7 @@ $estadoMap = [
 
 $nuevo_estado_nombre = $estadoMap[$nuevo_estado_nombre] ?? null;
 
-if (!$id_incidente || !$nuevo_estado_nombre || !$id_usuario_actual) {
+if (!isset($id_incidente) || $id_incidente === '' || !$nuevo_estado_nombre || !$id_usuario_actual) {
     echo json_encode([
         'exito' => false,
         'mensaje' => 'Datos incompletos o sesión no válida.'
@@ -52,7 +52,7 @@ try {
     $id_usuario_asignado = $incidente['Id_Usuarios'];
     $fecha_resuelto = $incidente['Fecha_Resuelto'];
 
-    // 👈 NUEVO: No permitir cambiar si ya está resuelto
+    // No permitir cambiar si ya está resuelto
     $stmtEstadoActual = $conexion->prepare("
         SELECT LOWER(Nombre) as Nombre FROM tb_estados_incidente WHERE Id_Estados_Incidente = :id
     ");
@@ -86,19 +86,19 @@ try {
 
     $id_estado = $estado['Id_Estados_Incidente'];
 
-    // 👈 NUEVO: Preparar campos para actualización
+    // Preparar campos para actualización
     $campos_update = "Id_Estados_Incidente = :estado";
     $params_update = [
         ':estado' => $id_estado,
         ':id' => $id_incidente
     ];
 
-    // 👈 NUEVO: Si el nuevo estado es "resuelto", registrar la fecha/hora actual
+    // Si el nuevo estado es "resuelto", registrar la fecha/hora actual usando NOW()
     if ($nuevo_estado_nombre === 'resuelto') {
-    $campos_update .= ", Fecha_Resuelto = GETDATE()"; // ✅ CORREGIDO PARA SQL Server
-}
+        $campos_update .= ", Fecha_Resuelto = NOW()"; // Cambiado GETDATE() por NOW()
+    }
 
-    // 👈 Si no tiene usuario asignado, asignar
+    // Si no tiene usuario asignado, asignar el actual
     if ($id_usuario_asignado === null) {
         $campos_update .= ", Id_Usuarios = :usuario";
         $params_update[':usuario'] = $id_usuario_actual;

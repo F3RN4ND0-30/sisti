@@ -20,7 +20,7 @@ try {
             u.Apellido_Paterno,
             u.Apellido_Materno,
             f.Fecha
-            FROM ficha_control f
+            FROM tb_ficha_control f
             JOIN tb_Usuarios u ON f.Id_Usuarios = u.Id_Usuarios
             ORDER BY f.Id_Ficha DESC;";
     $stmt = $conexion->prepare($sql);

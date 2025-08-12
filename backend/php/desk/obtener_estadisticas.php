@@ -5,7 +5,7 @@ header('Content-Type: application/json');
 
 try {
     // Total incidentes HOY
-    $stmtHoy = $conexion->prepare("SELECT COUNT(*) AS total FROM tb_incidentes WHERE CAST(fecha_creacion AS DATE) = CAST(GETDATE() AS DATE)");
+    $stmtHoy = $conexion->prepare("SELECT COUNT(*) AS total FROM tb_incidentes WHERE DATE(fecha_creacion) = CURDATE()");
     $stmtHoy->execute();
     $totalHoy = $stmtHoy->fetch(PDO::FETCH_ASSOC)['total'] ?? 0;
 
