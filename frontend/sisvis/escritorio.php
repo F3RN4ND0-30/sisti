@@ -124,6 +124,11 @@ require_once '../../backend/bd/conexion.php';
                 ]
             });
         });
+
+        // Recarga automática cada 5 segundos (5000 ms)
+        setTimeout(function() {
+            location.reload();
+        }, 10000);
     </script>
 
 </body>
