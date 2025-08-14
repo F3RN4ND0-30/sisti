@@ -99,6 +99,14 @@ function inicializarTabla() {
     initComplete: function () {
       console.log("📊 DataTable inicializada correctamente");
       setTimeout(inicializarBadges, 400);
+
+      // 🔥 QUITAR SOLO LA FLECHITA DEL SELECT DEL DROPDOWN
+      $(".dataTables_length select").css({
+        appearance: "none",
+        "-webkit-appearance": "none",
+        "-moz-appearance": "none",
+        "background-image": "none",
+      });
     },
   });
 }
@@ -680,5 +688,20 @@ window.debugFiltros = function () {
   };
 };
 
+function toggleDesc(element) {
+  const textoCompleto = element.getAttribute("data-full");
+  const textoCorto = element.getAttribute("data-short");
+  const textoActual = element.textContent;
+
+  if (textoActual === textoCorto) {
+    // Mostrar completo
+    element.textContent = textoCompleto;
+    element.style.color = "#007bff";
+  } else {
+    // Mostrar corto
+    element.textContent = textoCorto;
+    element.style.color = "#333";
+  }
+}
 // ================== INICIALIZACIÓN GLOBAL ==================
 console.log("📋 Módulo todos-tickets.js cargado correctamente");

@@ -182,7 +182,7 @@ function obtenerPrimerNombre($nombre_completo)
                     <!-- Usuario info y dropdown (siempre visible en desktop) -->
                     <div class="navbar-nav ms-auto d-none d-lg-flex">
                         <div class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle user-dropdown" href="#" role="button"
+                            <a class="nav-link user-dropdown" href="#" role="button"
                                 data-bs-toggle="dropdown" aria-expanded="false">
                                 <i class="material-icons user-icon">person</i>
                                 <span class="user-info">
