@@ -85,6 +85,12 @@ select:focus {
     outline: none;
 }
 
+.selectize-control.single .selectize-input {
+    border-radius: 8px;
+    height: 43px;
+    background: white !important;
+}
+
 input[type="number"],
 textarea,
 select {

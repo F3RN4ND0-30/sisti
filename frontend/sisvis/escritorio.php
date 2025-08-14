@@ -21,10 +21,10 @@ require_once '../../backend/bd/conexion.php';
     <link rel="stylesheet" href="../../backend/css/vistas/escritorio.css">
     <link rel="icon" type="image/png" href="../../backend/img/logoPisco.png" />
 
-    <!-- jQuery -->
+    <!-- jQuery debe ir primero -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-    <!-- DataTables -->
+    <!-- DataTables después de jQuery -->
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
@@ -113,22 +113,30 @@ require_once '../../backend/bd/conexion.php';
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            $('.table').DataTable({
+        $(document).ready(function() {
+            console.log("Inicializando DataTable...");
+
+            $('#tabla-incidente').DataTable({
                 language: {
                     url: '//cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json'
                 },
                 responsive: true,
                 order: [
                     [0, 'desc']
-                ]
+                ],
+                pagingType: "simple_numbers",
+                pageLength: 5, // Mostrar 5 por defecto
+                lengthMenu: [
+                    [5, 10, 25, 50, -1],
+                    [5, 10, 25, 50, "Todos"]
+                ] // Opciones
             });
         });
 
-        // Recarga automática cada 5 segundos (5000 ms)
+        //Recarga automática cada 20 segundos(20000 ms) 
         setTimeout(function() {
             location.reload();
-        }, 10000);
+        }, 20000);
     </script>
 
 </body>

@@ -74,6 +74,21 @@ if (!isset($_SESSION['hd_activo']) || $_SESSION['hd_activo'] !== true) {
             </div>
         </div>
     </div>
+
+    <script>
+        $(document).ready(function() {
+            $('.table').DataTable({
+                language: {
+                    url: '//cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json'
+                },
+                responsive: true,
+                order: [
+                    [1, 'desc']
+                ],
+                pagingType: "simple_numbers", // solo anterior y siguiente
+            });
+        });
+    </script>
 </body>
 
 </html>

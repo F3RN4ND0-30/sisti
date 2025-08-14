@@ -15,6 +15,9 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/sisti/backend/bd/conexion.php';
 $stmtNum = $conexion->query("SELECT COALESCE(MAX(Numero), 0) + 1 AS nuevo_num FROM tb_ficha_control");
 $numeroNuevo = (int)$stmtNum->fetchColumn();
 $numeroFormateado = str_pad($numeroNuevo, 6, '0', STR_PAD_LEFT);
+// Obtener las áreas desde la BD
+$stmtAreas = $conexion->query("SELECT Id_Areas, Nombre, Encargado, DNI, Cargo FROM tb_areas ORDER BY Nombre ASC");
+$areas = $stmtAreas->fetchAll(PDO::FETCH_ASSOC);
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -29,6 +32,15 @@ $numeroFormateado = str_pad($numeroNuevo, 6, '0', STR_PAD_LEFT);
 
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="icon" type="image/png" href="../../backend/img/logoPisco.png" />
+
+    <!-- Selectize CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/selectize@0.12.6/dist/css/selectize.default.css">
+
+    <!-- jQuery (ya lo debes tener) -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- Selectize JS -->
+    <script src="https://cdn.jsdelivr.net/npm/selectize@0.12.6/dist/js/standalone/selectize.min.js"></script>
 </head>
 
 <body>
@@ -55,7 +67,16 @@ $numeroFormateado = str_pad($numeroNuevo, 6, '0', STR_PAD_LEFT);
                 </tr>
                 <tr>
                     <td>Unidad Orgánica</td>
-                    <td><input type="text" name="unidad_organica" required></td>
+                    <td>
+                        <select id="unidad_organica" name="unidad_organica" required>
+                            <option value="">-- Selecciona un área --</option>
+                            <?php foreach ($areas as $area): ?>
+                                <option value="<?= htmlspecialchars($area['Nombre']) ?>">
+                                    <?= strtoupper(htmlspecialchars($area['Nombre'])) ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                    </td>
                 </tr>
                 <tr>
                     <td>Fecha</td>
@@ -195,6 +216,56 @@ $numeroFormateado = str_pad($numeroNuevo, 6, '0', STR_PAD_LEFT);
         }
     </script>
 
+    <script>
+        $(document).ready(function() {
+            const $selectUnidad = $('#unidad_organica').selectize({
+                create: false,
+                sortField: 'text',
+                maxOptions: 100,
+                placeholder: 'Escribe para buscar...',
+                onChange: function(value) {
+                    const data = datosPorUnidad[value];
+
+                    if (data) {
+                        $('input[name="trabajador_municipal"]').val(data.encargado?.toUpperCase() || '');
+                        $('input[name="dni_trabajador"]').val(data.dni || '');
+                        $('input[name="cargo"]').val(data.cargo?.toUpperCase() || '');
+                    } else {
+                        // Limpiar si no hay datos
+                        $('input[name="trabajador_municipal"]').val('');
+                        $('input[name="dni_trabajador"]').val('');
+                        $('input[name="cargo"]').val('');
+                    }
+                }
+            });
+        });
+    </script>
+
+    <script>
+        const datosPorUnidad = <?php
+                                $map = [];
+                                foreach ($areas as $area) {
+                                    $map[$area['Nombre']] = [
+                                        'encargado' => $area['Encargado'],
+                                        'dni' => $area['DNI'],
+                                        'cargo' => $area['Cargo']
+                                    ];
+                                }
+                                echo json_encode($map);
+                                ?>;
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const campos = document.querySelectorAll('input[type="text"], textarea');
+
+            campos.forEach(function(campo) {
+                campo.addEventListener('input', function() {
+                    this.value = this.value.toUpperCase();
+                });
+            });
+        });
+    </script>
 </body>
 
 </html>

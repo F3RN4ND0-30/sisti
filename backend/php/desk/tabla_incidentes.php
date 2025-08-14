@@ -26,10 +26,10 @@ try {
 ?>
 
 <!-- Tabla de Incidentes -->
-<div class="activity-card" id="tabla-incidentes">
+<div class="activity-card">
     <h4><i class="material-icons">list</i> Lista de Incidentes</h4>
     <div style="overflow-x:auto;">
-        <table class="table">
+        <table id="tabla-incidente" class="table">
             <thead>
                 <tr>
                     <th>ID</th>
