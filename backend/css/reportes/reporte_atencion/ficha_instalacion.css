@@ -39,7 +39,22 @@ form {
 /* Tabla de formulario */
 table {
     width: 100%;
+    max-width: 700px;
+    /* ancho máximo para pantallas grandes */
+    min-width: 400px;
+    /* ancho mínimo para que no se achique demasiado */
     border-collapse: collapse;
+    margin: 0 auto;
+    /* para centrar */
+}
+
+table td:first-child {
+    min-width: 150px;
+    /* o el ancho que prefieras */
+    width: 150px;
+    white-space: nowrap;
+    /* que el texto no se rompa en varias líneas */
+    padding-right: 15px;
 }
 
 /* Celdas */
@@ -75,9 +90,34 @@ textarea {
     min-height: 80px;
 }
 
-/* Botón enviar */
+.botones-container {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 30px;
+    flex-wrap: wrap;
+    /* Para que no se rompa en pantallas pequeñas */
+}
+
+.btn-volver {
+    background-color: #bbb;
+    color: #222;
+    padding: 12px 25px;
+    border-radius: 10px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.btn-volver:hover {
+    background-color: #999;
+    color: white;
+    transform: translateY(-2px);
+}
+
 button[type="submit"] {
-    background: linear-gradient(135deg, #2563eb, #1d4ed8);
+    background: linear-gradient(135deg, #e53935, #c62828);
     color: white;
     padding: 12px 25px;
     font-size: 16px;
@@ -85,18 +125,14 @@ button[type="submit"] {
     border: none;
     border-radius: 10px;
     cursor: pointer;
-    box-shadow: 0 5px 15px rgba(37, 99, 235, 0.3);
+    box-shadow: 0 5px 15px rgba(229, 57, 53, 0.3);
     transition: background 0.3s ease, transform 0.2s ease;
-    margin-top: 20px;
-    display: block;
-    width: 100%;
     max-width: 300px;
-    margin-left: auto;
-    margin-right: auto;
+    width: 100%;
 }
 
 button[type="submit"]:hover {
-    background: #1e40af;
+    background: #b71c1c;
     transform: translateY(-2px);
 }
 
@@ -163,7 +199,7 @@ button[type="submit"]:active {
 
 @media (max-width: 600px) {
     table {
-        display: block;
+        min-width: unset;
         width: 100%;
     }
 

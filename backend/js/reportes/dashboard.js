@@ -23,8 +23,8 @@ async function cargarDashboard() {
     },
   });
 
-  // Gráfico por semana (nuevo)
-  renderGraficoPorSemana(data);
+  // Gráfico por técnico
+  renderGraficoPorUsuario(data.usuarios);
 
   // Gráfico por mes
   new Chart(document.getElementById("graficoPorMes"), {
@@ -47,41 +47,57 @@ async function cargarDashboard() {
   renderGraficoPorArea(data.areas);
 }
 
-// Nueva función para gráfico de semanas
-function renderGraficoPorSemana(data) {
-  const ctx = document.getElementById("graficoPorSemana").getContext("2d");
+// Nuevo: Gráfico de tickets por técnico (usuarios con rol 'técnico')
+function renderGraficoPorUsuario(usuarios) {
+  const ctx = document.getElementById("graficoPorUsuario").getContext("2d");
 
   new Chart(ctx, {
     type: "bar",
     data: {
-      labels: data.semanas, // ej: ['Semana 1', 'Semana 2', ...]
+      labels: usuarios.map((u) => u.nombre_completo),
       datasets: [
         {
-          label: "Tickets por semana",
-          data: data.totales,
+          label: "Tickets por técnico",
+          data: usuarios.map((u) => u.cantidad),
           backgroundColor: "#3b82f6",
         },
       ],
     },
     options: {
       responsive: true,
+      plugins: {
+        tooltip: {
+          callbacks: {
+            label: function (context) {
+              const user = usuarios[context.dataIndex];
+              return `${user.nombre_completo}: ${user.cantidad} tickets`;
+            },
+          },
+        },
+      },
       scales: {
         y: {
           beginAtZero: true,
+        },
+        x: {
+          ticks: {
+            autoSkip: false,
+            maxRotation: 45,
+            minRotation: 0,
+          },
         },
       },
     },
   });
 }
 
-// Nueva función para gráfico de área
 function renderGraficoPorArea(areas) {
   const ctx = document.getElementById("graficoPorArea").getContext("2d");
 
   new Chart(ctx, {
-    type: "pie", // Cambio a pie para no repetir barras
+    type: "pie",
     data: {
-      labels: areas.map((a) => a.abreviatura), // etiquetas cortas
+      labels: areas.map((a) => a.abreviatura),
       datasets: [
         {
           label: "Tickets por área",

@@ -6,6 +6,8 @@ if (!isset($_SESSION['hd_activo']) || $_SESSION['hd_activo'] !== true) {
     header('location: ../login.php');
     exit();
 }
+$nombreTecnico = $_SESSION['hd_ficha'] ?? '';
+$fechaHoy = date('d-m-Y');
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -40,7 +42,7 @@ if (!isset($_SESSION['hd_activo']) || $_SESSION['hd_activo'] !== true) {
                 </tr>
                 <tr>
                     <td>Fecha</td>
-                    <td><input type="text" name="fecha" required></td>
+                    <td><input type="text" name="fecha" required readonly value="<?php echo $fechaHoy; ?>"></td>
                 </tr>
                 <tr>
                     <td>Encargado o responsable</td>
@@ -60,7 +62,7 @@ if (!isset($_SESSION['hd_activo']) || $_SESSION['hd_activo'] !== true) {
                 </tr>
                 <tr>
                     <td>Nombre del Técnico</td>
-                    <td><input type="text" name="nombre_tecnico" required></td>
+                    <td><input type="text" name="nombre_tecnico" required readonly value="<?php echo htmlspecialchars($nombreTecnico); ?>"></td>
                 </tr>
                 <tr>
                     <td>Tipo</td>
@@ -92,44 +94,47 @@ if (!isset($_SESSION['hd_activo']) || $_SESSION['hd_activo'] !== true) {
                 </tr>
             </table>
 
-            <button type="submit">Generar Ficha Excel</button>
+            <div class="botones-container">
+                <a href="/sisti/frontend/reportes/reporte_atencion/fichas.php" class="btn-volver">Volver</a>
+                <button type="submit">Generar Ficha</button>
+            </div>
         </form>
     </div>
 
-        <script>
-            const subtiposPorTipo = {
-                hardware: [
-                    "CPU", "Monitor", "Teclado", "Mouse", "Estabilizador", "Impresora", "Supresor de Pico", "Otros"
-                ],
-                sistemas: [
-                    "SIAF", "SIGA", "Sistema Registro Civil", "RUBEM", "RUB PVL 20", "SISPLA", "Sistema Vía Web", "Otros"
-                ],
-                software: [
-                    "Sistema Operativo", "Word", "Excel", "Power Point", "Internet", "Antivirus", "Otros"
-                ],
-                redes: [
-                    "Internet", "Modem", "Router", "Switch", "Cableado", "Otros"
-                ]
-            };
+    <script>
+        const subtiposPorTipo = {
+            hardware: [
+                "CPU", "Monitor", "Teclado", "Mouse", "Estabilizador", "Impresora", "Supresor de Pico", "Otros"
+            ],
+            sistemas: [
+                "SIAF", "SIGA", "Sistema Registro Civil", "RUBEM", "RUB PVL 20", "SISPLA", "Sistema Vía Web", "Otros"
+            ],
+            software: [
+                "Sistema Operativo", "Word", "Excel", "Power Point", "Internet", "Antivirus", "Otros"
+            ],
+            redes: [
+                "Internet", "Modem", "Router", "Switch", "Cableado", "Otros"
+            ]
+        };
 
-            document.getElementById('tipo').addEventListener('change', function() {
-                const subtipoSelect = document.getElementById('subtipo');
-                const tipo = this.value;
+        document.getElementById('tipo').addEventListener('change', function() {
+            const subtipoSelect = document.getElementById('subtipo');
+            const tipo = this.value;
 
-                subtipoSelect.innerHTML = '<option value="">-- Selecciona subtipo --</option>';
-                subtipoSelect.disabled = true;
+            subtipoSelect.innerHTML = '<option value="">-- Selecciona subtipo --</option>';
+            subtipoSelect.disabled = true;
 
-                if (subtiposPorTipo[tipo]) {
-                    subtiposPorTipo[tipo].forEach(function(sub) {
-                        const opt = document.createElement('option');
-                        opt.value = sub;
-                        opt.text = sub;
-                        subtipoSelect.appendChild(opt);
-                    });
-                    subtipoSelect.disabled = false;
-                }
-            });
-        </script>
+            if (subtiposPorTipo[tipo]) {
+                subtiposPorTipo[tipo].forEach(function(sub) {
+                    const opt = document.createElement('option');
+                    opt.value = sub;
+                    opt.text = sub;
+                    subtipoSelect.appendChild(opt);
+                });
+                subtipoSelect.disabled = false;
+            }
+        });
+    </script>
 
 </body>
 
