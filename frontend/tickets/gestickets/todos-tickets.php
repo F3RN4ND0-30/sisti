@@ -309,14 +309,14 @@ require_once '../../../backend/bd/conexion.php';
                                         <span class='user-area'>" . htmlspecialchars($ticket['AreaNombre']) . "</span>
                                       </td>";
 
-                                // Descripción
-                                $descripcionCompleta = htmlspecialchars($ticket['Descripcion']);
-                                $descripcionCorta = htmlspecialchars(substr($ticket['Descripcion'], 0, 50));
+                                $descripcion = htmlspecialchars($ticket['Descripcion']);
+                                $descripcionCorta = strlen($descripcion) > 50 ? substr($descripcion, 0, 50) . '...' : $descripcion;
+
                                 echo "<td class='description-cell'>
-                                        <span class='description-text' title='$descripcionCompleta'>
-                                            $descripcionCorta" . (strlen($ticket['Descripcion']) > 50 ? '...' : '') . "
-                                        </span>
-                                      </td>";
+        <span class='desc-text' onclick='toggleDesc(this)' 
+              data-full='$descripcion' 
+              data-short='$descripcionCorta'>$descripcionCorta</span>
+      </td>";
 
                                 // Estado con select
                                 echo "<td>

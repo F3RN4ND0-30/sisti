@@ -982,3 +982,15 @@ input.form-control:focus {
     font-size: 2rem;
   }
 }
+
+.desc-text {
+  cursor: pointer;
+  color: #333;
+  line-height: 1.4;
+  word-wrap: break-word;
+  transition: color 0.2s;
+}
+
+.desc-text:hover {
+  color: #007bff;
+}

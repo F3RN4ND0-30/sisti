@@ -15,12 +15,14 @@ require_once '../../../backend/bd/conexion.php';
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Crear Ticket | HelpDesk MPP</title>
+    <title>Crear Ticket | HelpDesk </title>
 
     <!-- CSS -->
     <link rel="stylesheet" href="../../../backend/css/vistas/escritorio.css">
     <link rel="stylesheet" href="../../../backend/css/tickets/modal-ticket.css">
     <link rel="stylesheet" href="../../../backend/css/tickets/crear-ticket.css">
+
+    <link rel="icon" type="image/png" href="../../../backend/img/logoPisco.png" />
 
     <!-- jQuery y Select2 -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
