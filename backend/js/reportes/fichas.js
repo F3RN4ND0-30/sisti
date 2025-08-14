@@ -2,39 +2,38 @@ document.addEventListener('DOMContentLoaded', () => {
     fetch('/sisti/backend/php/reportes/listar_fichas.php')
         .then(response => response.json())
         .then(data => {
-            const tbody = document.querySelector('#tabla-fichas tbody');
-            if (!tbody) {
-                console.error('No se encontró el tbody de la tabla');
-                return;
-            }
+            const tabla = $('#tabla-fichas');
+            const tbody = tabla.find('tbody');
 
             if (data.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="4">No hay fichas registradas.</td></tr>';
+                tbody.html('<tr><td colspan="4">No hay fichas registradas.</td></tr>');
                 return;
             }
 
             data.forEach(ficha => {
-                let fechaSinMs = ficha.Fecha ? ficha.Fecha.split('.')[0] : 'Sin fecha';
-
-                const fila = document.createElement('tr');
-
-                fila.innerHTML = `
-        <td data-label="ID Ficha">${ficha.Id_Ficha}</td>
-        <td data-label="Número">${ficha.Numero.toString().padStart(6, '0')}</td>
-        <td data-label="Nombre del Usuario">${ficha.Nombre} ${ficha.Apellido_Paterno} ${ficha.Apellido_Materno}</td>
-        <td data-label="Fecha">${fechaSinMs}</td>
-    `;
-
-                tbody.appendChild(fila);
+                const fechaSinMs = ficha.Fecha ? ficha.Fecha.split('.')[0] : 'Sin fecha';
+                const fila = `
+                    <tr>
+                        <td data-label="ID Ficha">${ficha.Id_Ficha}</td>
+                        <td data-label="Número">${ficha.Numero.toString().padStart(6, '0')}</td>
+                        <td data-label="Nombre del Usuario">${ficha.Nombre} ${ficha.Apellido_Paterno} ${ficha.Apellido_Materno}</td>
+                        <td data-label="Fecha">${fechaSinMs}</td>
+                    </tr>
+                `;
+                tbody.append(fila);
             });
 
-            $('#tabla-fichas').DataTable({
-                language: {
-                    url: '//cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json'
-                },
-                responsive: true,
-                order: [[0, 'desc']]
-            });
+            // Solo inicializa DataTable si aún no lo está
+            if (!$.fn.DataTable.isDataTable('#tabla-fichas')) {
+                tabla.DataTable({
+                    language: {
+                        url: '//cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json'
+                    },
+                    responsive: true,
+                    order: [[0, 'desc']],
+                    pagingType: "simple_numbers"
+                });
+            }
         })
         .catch(error => {
             console.error('Error al cargar las fichas:', error);

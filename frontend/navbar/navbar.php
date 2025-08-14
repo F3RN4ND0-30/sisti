@@ -48,7 +48,7 @@ function obtenerPrimerNombre($nombre_completo)
         <div class="sidebar-header">
             <h3>
                 <img src="/sisti/backend/img/logoPisco.png" class="img-fluid" alt="Logo Pisco" />
-                <span class="sidebar-text">HELPDESK</span>
+                <span class="sidebar-text">SISTI</span>
             </h3>
         </div>
 
@@ -174,12 +174,12 @@ function obtenerPrimerNombre($nombre_completo)
                     </button>
 
                     <!-- BRAND RESPONSIVO -->
-                    <a class="navbar-brand" href="/frontend/sisvis/escritorio.php">
+                    <a class="navbar-brand" href="/sisti/frontend/sisvis/escritorio.php">
                         <i class="material-icons brand-icon">support_agent</i>
                         <!-- Texto completo para desktop -->
-                        <span class="brand-text-full d-none d-lg-inline">HelpDesk - Panel Principal</span>
+                        <span class="brand-text-full d-none d-lg-inline">SISTI - Panel Principal</span>
                         <!-- Texto medio para tablet -->
-                        <span class="brand-text-medium d-none d-md-inline d-lg-none">HelpDesk</span>
+                        <span class="brand-text-medium d-none d-md-inline d-lg-none">SISTI</span>
                         <!-- Texto corto para móvil -->
                         <span class="brand-text-short d-inline d-md-none">HD</span>
                     </a>

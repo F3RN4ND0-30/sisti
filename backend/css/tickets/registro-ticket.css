@@ -12,13 +12,16 @@ body {
     height: 100%;
     font-family: 'Inter', sans-serif;
     background: #f3f4f6;
-    overflow: hidden;
+    overflow-y: auto;
 }
 
 .contenedor-login {
     display: flex;
-    height: 100vh;
+    min-height: 100vh;
+    /* En vez de height */
     width: 100vw;
+    overflow: hidden;
+    /* Evita scroll del contenedor general */
 }
 
 .columna-formulario {
@@ -28,10 +31,15 @@ body {
     align-items: center;
     justify-content: center;
     padding: 40px;
+    overflow-y: auto;
+    /* Scroll solo en formulario si se necesita */
+    max-height: 100vh;
 }
 
 .columna-imagen {
     flex: 1;
+    min-height: 100vh;
+    /* Para que siempre llegue hasta abajo */
     background: linear-gradient(135deg, #2563eb, #1d4ed8);
     color: white;
     display: flex;
@@ -224,6 +232,52 @@ textarea.control-formulario {
 .boton-enviar:hover::before {
     left: 100%;
 }
+
+.boton-enviar:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+    color: #666;
+}
+
+.enlace-volver {
+    font-size: 17px;
+    font-weight: 600;
+    display: inline-block;
+    padding: 10px 20px;
+    color: white;
+    background: linear-gradient(135deg, #63666d, #2c2d31);
+    border: none;
+    border-radius: 12px;
+    text-decoration: none;
+    box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    text-align: center;
+    font-family: 'Inter', sans-serif;
+}
+
+.enlace-volver:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(37, 99, 235, 0.4);
+    text-decoration: none;
+}
+
+.enlace-volver::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s;
+}
+
+.enlace-volver:hover::before {
+    left: 100%;
+}
+
 
 .informacion-acceso {
     margin-top: 30px;

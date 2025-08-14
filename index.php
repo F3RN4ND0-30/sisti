@@ -37,7 +37,7 @@
                     <img src="backend/img/logoPisco.png" alt="Escudo de Pisco">
                 </div>
 
-                <h1 class="main-title">HelpDesk</h1>
+                <h1 class="main-title">SISTI</h1>
                 <p class="main-description">
                     Sistema de tickets para reportar problemas técnicos. Rápido, fácil y con seguimiento en tiempo real.
                 </p>

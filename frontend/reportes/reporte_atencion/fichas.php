@@ -33,8 +33,8 @@ if (!isset($_SESSION['hd_activo']) || $_SESSION['hd_activo'] !== true) {
     <div class="row">
       <div class="col-lg-12">
         <div class="activity-card">
-          <h4><i class="material-icons">support_agent</i> Sistema de reportes del HelpDesk</h4>
-          <p>El Sistema de reportes del HelpDesk de la Municipalidad Provincial de Pisco permite la optimización en la creación de las fichas de reporte. Proporciona un formulario donde se rellenan los datos de manera eficiente y organizada.</p>
+          <h4><i class="material-icons">support_agent</i> Sistema de reportes del SISTI</h4>
+          <p>El Sistema de reportes del SISTI de la Municipalidad Provincial de Pisco permite la optimización en la creación de las fichas de reporte. Proporciona un formulario donde se rellenan los datos de manera eficiente y organizada.</p>
         </div>
       </div>
     </div>

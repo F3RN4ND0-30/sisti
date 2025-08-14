@@ -15,7 +15,7 @@ require_once '../../backend/bd/conexion.php';
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>HelpDesk | MPP</title>
+    <title>SISTI | MPP</title>
 
     <!-- CSS Básico -->
     <link rel="stylesheet" href="../../backend/css/vistas/escritorio.css">
@@ -43,7 +43,7 @@ require_once '../../backend/bd/conexion.php';
             <div class="row">
                 <div class="col-md-8">
                     <h2>¡Bienvenido, <?php echo $_SESSION['hd_nombre']; ?>!</h2>
-                    <p class="mb-0">Sistema de HelpDesk - Gestión de Incidencias y Soporte Técnico</p>
+                    <p class="mb-0">Sistema de SISTI - Gestión de Incidencias y Soporte Técnico</p>
                     <?php
                     date_default_timezone_set('America/Lima');
                     ?>
@@ -62,8 +62,8 @@ require_once '../../backend/bd/conexion.php';
         <div class="row">
             <div class="col-lg-12">
                 <div class="activity-card">
-                    <h4><i class="material-icons">support_agent</i> Sistema de HelpDesk</h4>
-                    <p>El Sistema de HelpDesk de la Municipalidad Provincial de Pisco permite la gestión integral de incidencias y soporte técnico para optimizar la atención ciudadana y mejorar los servicios municipales. Proporciona herramientas para el registro, seguimiento y resolución de tickets de soporte de manera eficiente y organizada.</p>
+                    <h4><i class="material-icons">support_agent</i> Sistema de SISTI</h4>
+                    <p>El Sistema de SISTI de la Municipalidad Provincial de Pisco permite la gestión integral de incidencias y soporte técnico para optimizar la atención ciudadana y mejorar los servicios municipales. Proporciona herramientas para el registro, seguimiento y resolución de tickets de soporte de manera eficiente y organizada.</p>
                 </div>
             </div>
         </div>

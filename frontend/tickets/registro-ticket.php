@@ -89,7 +89,13 @@ require_once '../../backend/bd/conexion.php';
                         </div>
 
                         <div class="acciones">
-                            <button type="submit" class="boton boton-enviar">Enviar Ticket</button>
+                            <div id="mensaje-bloqueo" style="display:none; color: red; margin-bottom: 8px; font-weight: 600; text-align: center;">
+                                Bloqueado hasta horario laboral
+                            </div>
+                            <button type="submit" class="boton boton-enviar" id="btn-registrar">Enviar Ticket</button>
+                            <div style="margin-top: 10px; text-align: center;">
+                                <a href="/sisti/index.php" class="boton boton-enviar enlace-volver">Volver al inicio</a>
+                            </div>
                         </div>
                     </form>
                 </div>
@@ -140,6 +146,41 @@ require_once '../../backend/bd/conexion.php';
                 templateResult: customTemplate
             });
         });
+    </script>
+    
+    <script>
+        function controlarHorarioBoton() {
+            const boton = document.getElementById('btn-registrar');
+            const mensaje = document.getElementById('mensaje-bloqueo');
+            const ahora = new Date();
+
+            const horaActual = ahora.getHours();
+            const minutosActual = ahora.getMinutes();
+
+            const minutosDesdeMedianoche = horaActual * 60 + minutosActual;
+
+            const inicio = 8 * 60; // 480 (08:00)
+            const fin = 15 * 60 + 30; // 930 (15:30)
+
+            console.log(`Hora actual: ${horaActual}:${minutosActual}`);
+            console.log(`Minutos desde medianoche: ${minutosDesdeMedianoche}`);
+            console.log(`Inicio: ${inicio}, Fin: ${fin}`);
+
+            if (minutosDesdeMedianoche >= inicio && minutosDesdeMedianoche <= fin) {
+                boton.disabled = false;
+                boton.title = '';
+                mensaje.style.display = 'none';
+                console.log('Botón habilitado');
+            } else {
+                boton.disabled = true;
+                boton.title = 'El registro solo está disponible de 08:00 a 15:30';
+                mensaje.style.display = 'block';
+                console.log('Botón deshabilitado');
+            }
+        }
+
+        controlarHorarioBoton();
+        setInterval(controlarHorarioBoton, 60 * 1000);
     </script>
 </body>
 

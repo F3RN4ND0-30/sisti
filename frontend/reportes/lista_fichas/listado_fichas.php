@@ -15,26 +15,26 @@ if (!isset($_SESSION['hd_activo']) || $_SESSION['hd_activo'] !== true) {
     <title>Listado de Fichas | HelpDesk</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <!-- Estilos base -->
+    <!-- Estilos -->
     <link rel="stylesheet" href="../../../backend/css/vistas/escritorio.css">
     <link rel="stylesheet" href="../../../backend/css/reportes/lista_fichas/listado_fichas.css">
-    <link rel="icon" type="image/png" href="../../backend/img/logoPisco.png" />
+    <link rel="icon" type="image/png" href="../../../backend/img/logoPisco.png" />
 
-    <!-- jQuery y DataTables -->
+    <!-- jQuery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- DataTables -->
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
 
-    <!-- Responsive extension CSS -->
+    <!-- DataTables Responsive -->
     <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.5.0/css/responsive.bootstrap5.min.css">
-
-    <!-- Responsive extension JS -->
     <script src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
     <script src="https://cdn.datatables.net/responsive/2.5.0/js/responsive.bootstrap5.min.js"></script>
 
-    <!-- Script JS -->
-    <script src="../../../backend/js/reportes/fichas.js" defer></script>
+    <!-- Tu script personalizado -->
+    <script src="../../../backend/js/reportes/fichas.js"></script>
 </head>
 
 <body>
@@ -68,27 +68,12 @@ if (!isset($_SESSION['hd_activo']) || $_SESSION['hd_activo'] !== true) {
                         </tr>
                     </thead>
                     <tbody>
-                        <!-- Se carga por JS -->
+                        <!-- Cargado dinámicamente por JS -->
                     </tbody>
                 </table>
             </div>
         </div>
     </div>
-
-    <script>
-        $(document).ready(function() {
-            $('.table').DataTable({
-                language: {
-                    url: '//cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json'
-                },
-                responsive: true,
-                order: [
-                    [1, 'desc']
-                ],
-                pagingType: "simple_numbers", // solo anterior y siguiente
-            });
-        });
-    </script>
 </body>
 
 </html>
