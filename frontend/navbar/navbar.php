@@ -283,13 +283,11 @@ function obtenerPrimerNombre($nombre_completo)
                     barraLateral.classList.toggle('active');
                     contenido.classList.toggle('active');
 
-                    // Activar overlay solo en móvil
                     if (window.innerWidth <= 768) {
                         superposicionCuerpo.classList.toggle('active');
                         document.body.style.overflow = barraLateral.classList.contains('active') ? 'hidden' : 'auto';
                     }
 
-                    // Cerrar dropdowns cuando se colapsa en desktop
                     if (barraLateral.classList.contains('active') && window.innerWidth > 768) {
                         const desplegablesAbiertos = document.querySelectorAll('#sidebar .collapse.show');
                         desplegablesAbiertos.forEach(desplegable => {
@@ -300,7 +298,28 @@ function obtenerPrimerNombre($nombre_completo)
                             alternador.setAttribute('aria-expanded', 'false');
                         });
                     }
+
+                    if ($.fn.dataTable.isDataTable('#tabla-incidente')) {
+                        const tabla = $('#tabla-incidente').DataTable();
+                        if (tabla && tabla.columns && tabla.columns.adjust && tabla.responsive && tabla.responsive.recalc) {
+                            setTimeout(() => {
+                                tabla.columns.adjust().responsive.recalc();
+                            }, 300);
+                        }
+                    }
                 });
+
+                function manejarEstadosActivos() {
+                    const rutaActual = window.location.pathname;
+                    const enlacesNavegacion = document.querySelectorAll('#sidebar .components a');
+
+                    enlacesNavegacion.forEach(enlace => {
+                        const href = enlace.getAttribute('href');
+                        if (href && rutaActual === href) { // igualdad estricta
+                            enlace.parentElement.classList.add('active');
+                        }
+                    });
+                }
 
                 // Cerrar barra lateral al hacer clic en overlay (móvil)
                 superposicionCuerpo.addEventListener('click', function() {

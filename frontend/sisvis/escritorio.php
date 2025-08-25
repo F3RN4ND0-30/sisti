@@ -24,11 +24,22 @@ require_once '../../backend/bd/conexion.php';
     <!-- jQuery debe ir primero -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-    <!-- DataTables después de jQuery -->
+    <!-- DataTables CSS -->
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
+
+    <!-- DataTables Responsive CSS -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.5.0/css/responsive.bootstrap5.min.css">
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- DataTables JS -->
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
 
+    <!-- DataTables Responsive JS -->
+    <script src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
+    <script src="https://cdn.datatables.net/responsive/2.5.0/js/responsive.bootstrap5.min.js"></script>
     <script src="../../backend/js/desk/actualizarEstado.js" defer></script>
 </head>
 
@@ -106,17 +117,75 @@ require_once '../../backend/bd/conexion.php';
                 </div>
             </div>
         </div>
-
-        <!-- Módulos del Sistema -->
-        <?php include '../../backend/php/desk/tabla_incidentes.php'; ?>
+        <div class="incidentes">
+            <!-- Módulos del Sistema -->
+            <?php include '../../backend/php/desk/tabla_incidentes.php'; ?>
+        </div>
 
     </div>
+    <script>
+        // Reajusta la tabla cuando se redimensiona el contenedor
+        $(window).on('resize', function() {
+            if ($.fn.dataTable.isDataTable('#tabla-incidente')) {
+                const tabla = $('#tabla-incidente').DataTable();
+                tabla.columns.adjust();
+                if (tabla.responsive && typeof tabla.responsive.recalc === 'function') {
+                    tabla.responsive.recalc();
+                }
+            }
+        });
+
+        $('#toggle-menu, .sidebar-toggle').on('click', function() {
+            setTimeout(() => {
+                if ($.fn.dataTable.isDataTable('#tabla-incidente')) {
+                    const tabla = $('#tabla-incidente').DataTable();
+                    tabla.columns.adjust();
+                    if (tabla.responsive && typeof tabla.responsive.recalc === 'function') {
+                        tabla.responsive.recalc();
+                    }
+                }
+            }, 300);
+        });
+    </script>
 
     <script>
         $(document).ready(function() {
-            console.log("Inicializando DataTable...");
-
-            $('#tabla-incidente').DataTable({
+            const tabla = $('#tabla-incidente').DataTable({
+                ajax: {
+                    url: '../../backend/php/desk/listar_incidentes.php',
+                    dataSrc: ''
+                },
+                columns: [{
+                        data: 'Id_Incidentes'
+                    },
+                    {
+                        data: 'Ticket'
+                    },
+                    {
+                        data: 'Area'
+                    },
+                    {
+                        data: 'Descripcion'
+                    },
+                    {
+                        data: 'Estado',
+                        render: function(data, type, row) {
+                            const estado = data.toLowerCase().trim();
+                            return `
+                        <select class="estado-select ${estado}" onchange="actualizarEstado(this, ${row.Id_Incidentes})">
+                            <option value="pendiente" ${estado === 'pendiente' ? 'selected' : ''}>Pendiente</option>
+                            <option value="proceso" ${estado === 'en proceso' ? 'selected' : ''}>En Proceso</option>
+                            <option value="resuelto" ${estado === 'resuelto' ? 'selected' : ''}>Resuelto</option>
+                        </select>`;
+                        }
+                    },
+                    {
+                        data: 'Fecha_Creacion'
+                    },
+                    {
+                        data: 'Fecha_Resuelto'
+                    }
+                ],
                 language: {
                     url: '//cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json'
                 },
@@ -125,19 +194,70 @@ require_once '../../backend/bd/conexion.php';
                     [0, 'desc']
                 ],
                 pagingType: "simple_numbers",
-                pageLength: 5, // Mostrar 5 por defecto
+                pageLength: 5,
                 lengthMenu: [
                     [5, 10, 25, 50, -1],
                     [5, 10, 25, 50, "Todos"]
-                ] // Opciones
+                ]
             });
-        });
 
-        //Recarga automática cada 20 segundos(20000 ms) 
-        setTimeout(function() {
-            location.reload();
-        }, 20000);
+            // Auto recargar cada 10 segundos sin perder la página actual
+            setInterval(() => {
+                tabla.ajax.reload(null, false);
+            }, 10000);
+        });
     </script>
+    <script>
+        $(document).ready(function() {
+            const sonido = new Audio('../../backend/sounds/Beep-alert.mp3');
+            let prevStats = {
+                total_hoy: 0,
+                pendientes: 0,
+                proceso: 0,
+                resueltos: 0
+            };
+
+            function actualizarEstadisticas() {
+                $.ajax({
+                    url: '../../backend/php/desk/obtener_estadisticas.php',
+                    method: 'GET',
+                    dataType: 'json',
+                    success: function(data) {
+                        if (data.error) {
+                            console.error("Error:", data.error);
+                            return;
+                        }
+
+                        // Comparar con los valores anteriores
+                        if (prevStats.total_hoy !== data.total_hoy ||
+                            prevStats.pendientes !== data.pendientes ||
+                            prevStats.proceso !== data.proceso ||
+                            prevStats.resueltos !== data.resueltos) {
+
+                            sonido.play(); // Reproducir sonido solo si hay cambios
+                        }
+
+                        // Actualizar valores en el DOM
+                        $('#total-hoy').text(data.total_hoy);
+                        $('#pendientes').text(data.pendientes);
+                        $('#proceso').text(data.proceso);
+                        $('#resueltos').text(data.resueltos);
+
+                        // Guardar los nuevos valores
+                        prevStats = data;
+                    },
+                    error: function(xhr, status, error) {
+                        console.error("AJAX Error:", error);
+                    }
+                });
+            }
+
+            // Llamar inmediatamente y luego cada 10 segundos
+            actualizarEstadisticas();
+            setInterval(actualizarEstadisticas, 10000); // 10000 ms = 10 segundos
+        });
+    </script>
+
 
 </body>
 

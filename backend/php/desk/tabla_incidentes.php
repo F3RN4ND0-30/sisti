@@ -29,7 +29,7 @@ try {
 <div class="activity-card">
     <h4><i class="material-icons">list</i> Lista de Incidentes</h4>
     <div style="overflow-x:auto;">
-        <table id="tabla-incidente" class="table">
+        <table id="tabla-incidente" class="table table-striped table-bordered dt-responsive nowrap" style="width:100%">
             <thead>
                 <tr>
                     <th>ID</th>
@@ -41,27 +41,6 @@ try {
                     <th>Fecha de Resolución</th>
                 </tr>
             </thead>
-            <tbody>
-                <?php foreach ($incidentes as $row): ?>
-                    <?php $estado = strtolower(trim($row['Estado'])); ?>
-                    <tr>
-                        <td><?= $row['Id_Incidentes'] ?></td>
-                        <td><?= $row['Ticket'] ?></td>
-                        <td><?= $row['Area'] ?></td>
-                        <td><?= $row['Descripcion'] ?></td>
-                        <td style="text-align: center;">
-                            <select class="estado-select <?= $estado ?>" onchange="actualizarEstado(this, <?= $row['Id_Incidentes'] ?>)">
-                                <option value="pendiente" <?= $estado === 'pendiente' ? 'selected' : '' ?>>Pendiente</option>
-                                <option value="proceso" <?= $estado === 'en proceso' ? 'selected' : '' ?>>En Proceso</option>
-                                <option value="resuelto" <?= $estado === 'resuelto' ? 'selected' : '' ?>>Resuelto</option>
-
-                            </select>
-                        </td>
-                        <td><?= $row['Fecha_Creacion'] ?></td>
-                        <td><?= $row['Fecha_Resuelto'] ?></td>
-                    </tr>
-                <?php endforeach; ?>
-            </tbody>
         </table>
     </div>
 </div>

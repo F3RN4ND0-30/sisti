@@ -15,7 +15,7 @@ body {
 .main-content {
     padding: 30px;
     max-width: 100%;
-    overflow-x: hidden;
+    overflow-x: auto;
 }
 
 /* Bootstrap Grid System */
@@ -201,6 +201,8 @@ body {
 
 /* Activity card */
 .activity-card {
+    overflow-x: auto;
+    width: 100%;
     background: white;
     border-radius: 15px;
     padding: 25px;
@@ -338,6 +340,11 @@ body {
     margin-top: 20px;
 }
 
+.table-container {
+    overflow-x: auto;
+    min-width: 100%;
+}
+
 .table thead {
     background-color: #2563eb;
     color: white;
@@ -424,6 +431,10 @@ body {
 
 .estado-select.changed {
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+}
+
+#incidentes {
+    overflow-x: auto;
 }
 
 
