@@ -72,9 +72,11 @@ function obtenerPrimerNombre($nombre_completo)
                     <span>Gestión de Tickets</span>
                 </a>
                 <ul class="collapse list-unstyled menu <?php echo $tickets_abierto ? 'show' : ''; ?>" id="ticketsSubmenu">
-                    <li <?php echo esPaginaActiva('/tickets/gestickets/crear-ticket.php') ? 'class="active"' : ''; ?>>
-                        <a href="/sisti/frontend/tickets/gestickets/crear-ticket.php">Crear Ticket</a>
-                    </li>
+                    <?php if ($rol === 'administrador'): ?>
+                        <li <?php echo esPaginaActiva('/tickets/gestickets/crear-ticket.php') ? 'class="active"' : ''; ?>>
+                            <a href="/sisti/frontend/tickets/gestickets/crear-ticket.php">Crear Ticket</a>
+                        </li>
+                    <?php endif; ?>
                     <li <?php echo esPaginaActiva('/tickets/gestickets/mis-tickets.php') ? 'class="active"' : ''; ?>>
                         <a href="/sisti/frontend/tickets/gestickets/mis-tickets.php">Mis Tickets</a>
                     </li>
