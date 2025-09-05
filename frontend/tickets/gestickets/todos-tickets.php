@@ -331,10 +331,12 @@ require_once '../../../backend/bd/conexion.php';
                                       </td>";
 
                                 // Fecha
+                                $fechaISO = date('Y-m-d H:i:s', strtotime($ticket['Fecha_Creacion']));
                                 $fechaFormateada = date('d/m/Y H:i', strtotime($ticket['Fecha_Creacion']));
                                 echo "<td>
-                                        <span class='date-cell'>" . $fechaFormateada . "</span>
-                                      </td>";
+        <span class='date-cell' data-order='" . $fechaISO . "'>" . $fechaFormateada . "</span>
+      </td>";
+
 
                                 echo "</tr>";
                                 $rowIndex++;
