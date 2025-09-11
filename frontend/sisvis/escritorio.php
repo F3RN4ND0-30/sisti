@@ -152,6 +152,10 @@ require_once '../../backend/bd/conexion.php';
     </div>
 
     <script>
+        const usuarioRol = "<?php echo strtolower($_SESSION['hd_rol']); ?>";
+    </script>
+
+    <script>
         function abrirModalAsignarTecnico(idIncidente) {
             $('#idIncidenteAsignar').val(idIncidente);
             $('#modalAsignarTecnico').modal('show');
@@ -277,10 +281,14 @@ require_once '../../backend/bd/conexion.php';
                         orderable: false,
                         searchable: false,
                         render: function(data, type, row) {
-                            return `
-                    <button class="btn btn-sm btn-primary" onclick="abrirModalAsignarTecnico(${row.Id_Incidentes})">
-                        Asignar Técnico
-                    </button>`;
+                            if (usuarioRol === 'administrador') {
+                                return `
+                        <button class="btn btn-sm btn-primary" onclick="abrirModalAsignarTecnico(${row.Id_Incidentes})">
+                            Asignar Técnico
+                        </button>`;
+                            } else {
+                                return ''; // No mostrar nada para otros roles
+                            }
                         }
                     }
                 ],
@@ -350,9 +358,9 @@ require_once '../../backend/bd/conexion.php';
                 });
             }
 
-            // Llamar inmediatamente y luego cada 10 segundos
+            // Llamar inmediatamente y luego cada 20 segundos
             actualizarEstadisticas();
-            setInterval(actualizarEstadisticas, 15000); // 15000 ms = 15 segundos
+            setInterval(actualizarEstadisticas, 20000); // 20000 ms = 20 segundos
         });
     </script>
 
