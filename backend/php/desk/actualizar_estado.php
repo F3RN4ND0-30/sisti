@@ -31,9 +31,9 @@ if (!isset($id_incidente) || $id_incidente === '' || !$nuevo_estado_nombre || !$
 }
 
 try {
-    // Obtener estado y usuario actual del incidente
+    // Obtener estado actual del incidente
     $stmt = $conexion->prepare("
-        SELECT Id_Usuarios, Id_Estados_Incidente, Fecha_Resuelto 
+        SELECT Id_Estados_Incidente, Fecha_Resuelto 
         FROM tb_incidentes 
         WHERE Id_Incidentes = :id
     ");
@@ -49,10 +49,8 @@ try {
     }
 
     $id_estado_actual = $incidente['Id_Estados_Incidente'];
-    $id_usuario_asignado = $incidente['Id_Usuarios'];
-    $fecha_resuelto = $incidente['Fecha_Resuelto'];
 
-    // No permitir cambiar si ya está resuelto
+    // Obtener el nombre del estado actual
     $stmtEstadoActual = $conexion->prepare("
         SELECT LOWER(Nombre) as Nombre FROM tb_estados_incidente WHERE Id_Estados_Incidente = :id
     ");
@@ -93,15 +91,9 @@ try {
         ':id' => $id_incidente
     ];
 
-    // Si el nuevo estado es "resuelto", registrar la fecha/hora actual usando NOW()
+    // Si el nuevo estado es "resuelto", registrar la fecha/hora actual
     if ($nuevo_estado_nombre === 'resuelto') {
-        $campos_update .= ", Fecha_Resuelto = NOW()"; // Cambiado GETDATE() por NOW()
-    }
-
-    // Si no tiene usuario asignado, asignar el actual
-    if ($id_usuario_asignado === null) {
-        $campos_update .= ", Id_Usuarios = :usuario";
-        $params_update[':usuario'] = $id_usuario_actual;
+        $campos_update .= ", Fecha_Resuelto = NOW()";
     }
 
     // Ejecutar actualización

@@ -35,10 +35,12 @@ try {
                     <th>ID</th>
                     <th>Ticket</th>
                     <th>Área</th>
+                    <th>Técnico</th>
                     <th>Descripción</th>
                     <th>Estado</th>
                     <th>Fecha de Creación</th>
                     <th>Fecha de Resolución</th>
+                    <th>Acciones</th>
                 </tr>
             </thead>
         </table>
