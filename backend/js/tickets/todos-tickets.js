@@ -87,7 +87,7 @@ function inicializarTabla() {
       {
         targets: [5],
         className: "date-column",
-        type: "date-eu", 
+        type: "date-eu",
       },
     ],
 
@@ -199,7 +199,7 @@ function aplicarFiltroEstado(estadoId) {
   showLoading();
 
   $.ajax({
-    url: "/sisti/backend/php/tickets/filtrar_tickets.php", // ✅ ESTE ES EL FILTRO
+    url: "/sisti/backend/php/tickets/filtrar_tickets.php",
     method: "POST",
     data: { estado_id: estadoId },
     dataType: "json",
@@ -373,11 +373,9 @@ function filtrarPorFechas(desde, hasta) {
 
     const filtro = (settings, data, idx) => {
       try {
-        const fechaTexto = data[5]; // columna fecha
-        const [fechaParte] = fechaTexto.split(" ");
-        const [dia, mes, anio] = fechaParte.split("/");
-        const fechaFila = new Date(anio, mes - 1, dia);
-
+        const cell = $(table.row(idx).node()).find(".date-cell");
+        const rawDate = cell.attr("data-order"); // formato Y-m-d H:i:s
+        const fechaFila = rawDate ? new Date(rawDate) : null;
         return (
           (!fechaDesde || fechaFila >= fechaDesde) &&
           (!fechaHasta || fechaFila <= fechaHasta)

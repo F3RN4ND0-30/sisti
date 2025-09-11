@@ -5,7 +5,7 @@ session_start();
 if (!isset($_SESSION['hd_activo']) || $_SESSION['hd_activo'] !== true) {
     header('location: ../../../login.php');
     exit();
-}
+} 
 
 require_once '../../../backend/bd/conexion.php';
 ?>
