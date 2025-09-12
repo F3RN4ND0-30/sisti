@@ -9,6 +9,7 @@ try {
             i.Id_Incidentes,
             t.Codigo_Ticket AS Ticket,
             a.Nombre AS Area,
+            u.Nombre AS Tecnico,
             i.Descripcion,
             e.Nombre AS Estado,
             DATE_FORMAT(i.Fecha_Creacion, '%d/%m/%Y %H:%i') AS Fecha_Creacion,
@@ -16,6 +17,7 @@ try {
         FROM tb_incidentes i
         INNER JOIN tb_tickets t ON i.Id_Tickets = t.Id_Tickets
         INNER JOIN tb_areas a ON i.Id_Areas = a.Id_Areas
+        LEFT JOIN tb_usuarios u ON i.Id_Usuarios = u.Id_Usuarios
         INNER JOIN tb_estados_incidente e ON i.Id_Estados_Incidente = e.Id_Estados_Incidente
         ORDER BY i.Id_Incidentes DESC
     ");

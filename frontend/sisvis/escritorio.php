@@ -123,6 +123,94 @@ require_once '../../backend/bd/conexion.php';
         </div>
 
     </div>
+
+    <!-- Modal Asignar Técnico -->
+    <div class="modal fade" id="modalAsignarTecnico" tabindex="-1" aria-labelledby="tituloModalTecnico" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="tituloModalTecnico">Asignar Técnico</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="formAsignarTecnico">
+                        <input type="hidden" id="idIncidenteAsignar" name="id_incidente">
+                        <div class="mb-3">
+                            <label for="tecnicoSelect" class="form-label">Seleccione un técnico:</label>
+                            <select class="form-select" id="tecnicoSelect" name="id_tecnico" required>
+                                <option value="">Cargando técnicos...</option>
+                            </select>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary">Asignar</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const usuarioRol = "<?php echo strtolower($_SESSION['hd_rol']); ?>";
+    </script>
+
+    <script>
+        function abrirModalAsignarTecnico(idIncidente) {
+            $('#idIncidenteAsignar').val(idIncidente);
+            $('#modalAsignarTecnico').modal('show');
+
+            // Cargar técnicos
+            $.getJSON('../../backend/php/desk/listar_tecnicos.php', function(data) {
+                const select = $('#tecnicoSelect');
+                select.empty();
+
+                if (data.length === 0) {
+                    select.append('<option value="">No hay técnicos disponibles</option>');
+                } else {
+                    select.append('<option value="">Seleccione un técnico</option>');
+                    data.forEach(function(tecnico) {
+                        select.append(`<option value="${tecnico.id}">${tecnico.nombre}</option>`);
+                    });
+                }
+            });
+        }
+
+        $('#formAsignarTecnico').on('submit', function(e) {
+            e.preventDefault();
+            const id_incidente = $('#idIncidenteAsignar').val();
+            const id_tecnico = $('#tecnicoSelect').val();
+
+            if (!id_tecnico) {
+                alert('Seleccione un técnico válido.');
+                return;
+            }
+
+            $.ajax({
+                url: '../../backend/php/desk/asignar_tecnico.php',
+                method: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    id_incidente,
+                    id_tecnico
+                }),
+                success: function(response) {
+                    if (response.exito) {
+                        $('#modalAsignarTecnico').modal('hide');
+                        alert('Técnico asignado correctamente.');
+                        $('#tabla-incidente').DataTable().ajax.reload(null, false);
+                    } else {
+                        alert('Error: ' + response.mensaje);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    alert('Error en la solicitud: ' + error);
+                }
+            });
+        });
+    </script>
+
+
     <script>
         // Reajusta la tabla cuando se redimensiona el contenedor
         $(window).on('resize', function() {
@@ -165,6 +253,9 @@ require_once '../../backend/bd/conexion.php';
                         data: 'Area'
                     },
                     {
+                        data: 'Tecnico'
+                    },
+                    {
                         data: 'Descripcion'
                     },
                     {
@@ -184,6 +275,21 @@ require_once '../../backend/bd/conexion.php';
                     },
                     {
                         data: 'Fecha_Resuelto'
+                    },
+                    {
+                        data: null,
+                        orderable: false,
+                        searchable: false,
+                        render: function(data, type, row) {
+                            if (usuarioRol === 'administrador') {
+                                return `
+                        <button class="btn btn-sm btn-primary" onclick="abrirModalAsignarTecnico(${row.Id_Incidentes})">
+                            Asignar Técnico
+                        </button>`;
+                            } else {
+                                return ''; // No mostrar nada para otros roles
+                            }
+                        }
                     }
                 ],
                 language: {
@@ -252,9 +358,9 @@ require_once '../../backend/bd/conexion.php';
                 });
             }
 
-            // Llamar inmediatamente y luego cada 10 segundos
+            // Llamar inmediatamente y luego cada 20 segundos
             actualizarEstadisticas();
-            setInterval(actualizarEstadisticas, 10000); // 10000 ms = 10 segundos
+            setInterval(actualizarEstadisticas, 20000); // 20000 ms = 20 segundos
         });
     </script>
 
