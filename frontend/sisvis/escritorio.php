@@ -19,6 +19,7 @@ require_once '../../backend/bd/conexion.php';
 
     <!-- CSS Básico -->
     <link rel="stylesheet" href="../../backend/css/vistas/escritorio.css">
+    
     <link rel="icon" type="image/png" href="../../backend/img/logoPisco.png" />
 
     <!-- jQuery debe ir primero -->
@@ -295,7 +296,7 @@ require_once '../../backend/bd/conexion.php';
                 language: {
                     url: '//cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json'
                 },
-                responsive: true,
+                responsive: false,
                 order: [
                     [0, 'desc']
                 ],
@@ -358,9 +359,9 @@ require_once '../../backend/bd/conexion.php';
                 });
             }
 
-            // Llamar inmediatamente y luego cada 20 segundos
+            // Llamar inmediatamente y luego cada 15 segundos
             actualizarEstadisticas();
-            setInterval(actualizarEstadisticas, 20000); // 20000 ms = 20 segundos
+            setInterval(actualizarEstadisticas, 15000); // 15000 ms = 15 segundos
         });
     </script>
 

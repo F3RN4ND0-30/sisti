@@ -84,8 +84,13 @@ function inicializarTabla() {
       { targets: [3], width: "200px", className: "description-column" },
       { targets: [4], orderable: false, className: "estado-column" },
       { targets: [0], className: "ticket-column" },
-      { targets: [5], className: "date-column" },
+      {
+        targets: [5],
+        className: "date-column",
+        type: "date-eu",
+      },
     ],
+
     drawCallback: function () {
       setTimeout(inicializarBadges, 200);
       $(this.api().table().node())
@@ -194,7 +199,7 @@ function aplicarFiltroEstado(estadoId) {
   showLoading();
 
   $.ajax({
-    url: "/sisti/backend/ajax/estadisticas_generales.php",
+    url: "/sisti/backend/php/tickets/filtrar_tickets.php",
     method: "POST",
     data: { estado_id: estadoId },
     dataType: "json",
@@ -224,12 +229,15 @@ function aplicarFiltroEstado(estadoId) {
                       data-id='${ticket.Id_Incidentes}' 
                       onchange='cambiarEstadoDirecto(this)'
                       data-original='${ticket.EstadoNombre}'>
-                 <option value='Pendiente'${ticket.EstadoNombre === "Pendiente" ? " selected" : ""
-              }>Pendiente</option>
-                 <option value='En proceso'${ticket.EstadoNombre === "En proceso" ? " selected" : ""
-              }>En proceso</option>
-                 <option value='Resuelto'${ticket.EstadoNombre === "Resuelto" ? " selected" : ""
-              }>Resuelto</option>
+                 <option value='Pendiente'${
+                   ticket.EstadoNombre === "Pendiente" ? " selected" : ""
+                 }>Pendiente</option>
+                 <option value='En proceso'${
+                   ticket.EstadoNombre === "En proceso" ? " selected" : ""
+                 }>En proceso</option>
+                 <option value='Resuelto'${
+                   ticket.EstadoNombre === "Resuelto" ? " selected" : ""
+                 }>Resuelto</option>
                </select>`,
               `<span class='date-cell'>${fechaFormateada}</span>`,
             ];
@@ -256,7 +264,7 @@ function aplicarFiltroEstado(estadoId) {
       } else {
         mostrarNotificacion(
           "Error al aplicar filtro: " +
-          (response.message || "Error desconocido"),
+            (response.message || "Error desconocido"),
           "error"
         );
       }
@@ -353,25 +361,25 @@ function aplicarFiltroFechaRapida(tipo) {
 }
 
 function filtrarPorFechas(desde, hasta) {
+  // Quitar filtros anteriores
   $.fn.dataTable.ext.search = $.fn.dataTable.ext.search.filter(
     (fn) => fn.nombre !== "fecha"
   );
 
   if (desde || hasta) {
+    // Si hay rango definido, aplicar el filtro
     const fechaDesde = desde ? new Date(desde) : null;
     const fechaHasta = hasta ? new Date(hasta + "T23:59:59") : null;
 
     const filtro = (settings, data, idx) => {
       try {
-        const fechaTexto = data[5];
-        const [fechaParte] = fechaTexto.split(" ");
-        const [dia, mes, anio] = fechaParte.split("/");
-        const fechaFila = new Date(anio, mes - 1, dia);
-
-        const dentroDelRango =
+        const cell = $(table.row(idx).node()).find(".date-cell");
+        const rawDate = cell.attr("data-order"); // formato Y-m-d H:i:s
+        const fechaFila = rawDate ? new Date(rawDate) : null;
+        return (
           (!fechaDesde || fechaFila >= fechaDesde) &&
-          (!fechaHasta || fechaFila <= fechaHasta);
-        return dentroDelRango;
+          (!fechaHasta || fechaFila <= fechaHasta)
+        );
       } catch (error) {
         console.warn("Error al procesar fecha:", error);
         return true;
@@ -381,9 +389,13 @@ function filtrarPorFechas(desde, hasta) {
     filtro.nombre = "fecha";
     $.fn.dataTable.ext.search.push(filtro);
     console.log("📅 Filtro de fecha aplicado:", { desde, hasta });
+  } else {
+    // 👇 Caso TODOS: sin rango, mostrar todo pero ORDENAR por fecha DESC
+    console.log("📅 Filtro TODOS activo, mostrando todas las fechas");
   }
 
-  table.draw();
+  // 👇 Aquí está el truco: siempre que se redibuje, forzar orden DESC en la columna fecha
+  table.order([5, "desc"]).draw();
 }
 
 // ================== UTILIDADES ==================
@@ -450,6 +462,7 @@ function obtenerIdEstado(estado) {
   return mapeoEstados[estado] || "1";
 }
 
+// ================== CAMBIO DE ESTADO ==================
 function cambiarEstadoDirecto(select) {
   const id = select.dataset.id;
   const nuevoEstado = select.value.trim();
@@ -475,18 +488,17 @@ function cambiarEstadoDirecto(select) {
 
   // Actualización AJAX
   $.ajax({
-    url: "/sisti/backend/ajax/estadisticas_generales.php", // Cambia esta ruta a tu endpoint real
+    url: "/sisti/backend/ajax/estadisticas_generales.php", // ✅ ESTE ES EL CAMBIO DE ESTADO
     method: "POST",
     data: {
       id: id,
-      estado: nuevoEstado
+      estado: nuevoEstado,
     },
     dataType: "json",
     success: function (response) {
       hideLoading();
 
       if (response.success) {
-        // Actualizar visualmente solo si el servidor confirma el cambio
         const nuevaClase = getBadgeClass(nuevoEstado);
         select.className = "estado-select " + nuevaClase;
 
@@ -503,17 +515,23 @@ function cambiarEstadoDirecto(select) {
         mostrarNotificacion(`Estado cambiado a: ${nuevoEstado}`, "success");
 
         console.log("✅ Estado actualizado exitosamente");
-        location.reload();
       } else {
-        // Revertir el cambio si hubo error en el backend
-        revertirCambio(select, estadoOriginal, response.message || "Error al actualizar estado en BD");
+        revertirCambio(
+          select,
+          estadoOriginal,
+          response.message || "Error al actualizar estado en BD"
+        );
       }
     },
     error: function (xhr, status, error) {
       hideLoading();
-      revertirCambio(select, estadoOriginal, "Error de conexión al actualizar estado");
+      revertirCambio(
+        select,
+        estadoOriginal,
+        "Error de conexión al actualizar estado"
+      );
       console.error("Error AJAX:", error);
-    }
+    },
   });
 }
 
@@ -532,7 +550,11 @@ function revertirCambio(select, estadoOriginal, mensaje) {
 // ================== ESTADÍSTICAS ==================
 function actualizarEstadisticasGenerales() {
   const xhr = new XMLHttpRequest();
-  xhr.open("POST", "/sisti/frontend/tickets/gestickets/todos-tickets.php", true); // <- Ruta directa al PHP
+  xhr.open(
+    "POST",
+    "/sisti/frontend/tickets/gestickets/todos-tickets.php",
+    true
+  ); // <- Ruta directa al PHP
   xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 
   xhr.onreadystatechange = function () {

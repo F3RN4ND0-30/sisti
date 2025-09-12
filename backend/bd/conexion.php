@@ -1,10 +1,9 @@
 <?php
 // Configuración
-$host = 'localhost'; // o IP del servidor MariaDB
-$puerto = '3306'; // Puerto por defecto de MySQL/MariaDB
-$basedatos = 'sisti';
-$usuario_sql = 'root'; // <- Cambia esto
-$password_sql = ''; // <- Cambia esto
+$servidor   = 'localhost';     // o 127.0.0.1
+$basedatos  = 'sisti';         // el nombre de tu BD en phpMyAdmin
+$usuario_sql = 'root';         // por defecto en XAMPP/WAMP
+$password_sql = '';            // vacío si no has puesto contraseña
 $logFile  = __DIR__ . '/log_conexion.txt';
 
 // Log
@@ -14,18 +13,18 @@ function log_conexion($msg)
     file_put_contents($logFile, "[" . date("Y-m-d H:i:s") . "] $msg\n", FILE_APPEND);
 }
 
-// Conexion
+// Conexión
 try {
-    log_conexion("Intentando conexión con MariaDB/MySQL (Usuario: $usuario_sql)...");
+    log_conexion("Intentando conexión con MySQL (usuario: $usuario_sql)...");
 
-    // DSN para MariaDB
-    $dsn = "mysql:host=$host;port=$puerto;dbname=$basedatos;charset=utf8mb4";
-
+    $dsn = "mysql:host=$servidor;dbname=$basedatos;charset=utf8mb4";
     $conexion = new PDO($dsn, $usuario_sql, $password_sql, [
-        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
+        PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
+        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+        PDO::ATTR_EMULATE_PREPARES   => false,
     ]);
 
-    log_conexion("✅ Conectado correctamente a $basedatos con usuario $usuario_sql");
+    log_conexion("✅ Conectado correctamente a $basedatos en $servidor");
 } catch (PDOException $e) {
     log_conexion("❌ Error de conexión: " . $e->getMessage());
     die("Error de conexión: " . $e->getMessage());

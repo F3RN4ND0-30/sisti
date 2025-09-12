@@ -17,7 +17,7 @@ require_once '../../bd/conexion.php';
 try {
     $estadoId = isset($_POST['estado_id']) ? trim($_POST['estado_id']) : '';
 
-    // Construir consulta base
+    // Construir consulta base SIN punto y coma
     $sql = "
         SELECT 
             t.Codigo_Ticket,
@@ -37,7 +37,7 @@ try {
         LEFT JOIN tb_UsuariosExternos ue ON i.Id_UsuariosExternos = ue.Id_UsuariosExternos
         LEFT JOIN tb_Usuarios u ON i.Id_Usuarios = u.Id_Usuarios
         INNER JOIN tb_Areas a ON i.Id_Areas = a.Id_Areas
-        INNER JOIN tb_Estados_Incidente ei ON i.Id_Estados_Incidente = ei.Id_Estados_Incidente;
+        INNER JOIN tb_Estados_Incidente ei ON i.Id_Estados_Incidente = ei.Id_Estados_Incidente
     ";
 
     // Agregar filtro si se especifica estado
@@ -45,6 +45,7 @@ try {
         $sql .= " WHERE ei.Id_Estados_Incidente = :estado_id";
     }
 
+    // Agregar ordenamiento
     $sql .= " ORDER BY i.Fecha_Creacion DESC";
 
     $stmt = $conexion->prepare($sql);
