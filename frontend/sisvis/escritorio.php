@@ -19,6 +19,7 @@ require_once '../../backend/bd/conexion.php';
 
     <!-- CSS Básico -->
     <link rel="stylesheet" href="../../backend/css/vistas/escritorio.css">
+    
     <link rel="icon" type="image/png" href="../../backend/img/logoPisco.png" />
 
     <!-- jQuery debe ir primero -->
@@ -295,7 +296,7 @@ require_once '../../backend/bd/conexion.php';
                 language: {
                     url: '//cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json'
                 },
-                responsive: true,
+                responsive: false,
                 order: [
                     [0, 'desc']
                 ],
