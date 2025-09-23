@@ -147,16 +147,16 @@ $areas = $stmtAreas->fetchAll(PDO::FETCH_ASSOC);
     <script>
         const subtiposPorTipo = {
             hardware: [
-                "CPU", "Monitor", "Teclado", "Mouse", "Estabilizador", "Impresora", "Supresor de Pico", "Otros"
+                "CPU", "MONITOR", "TECLADO", "MOUSE", "ESTABILIZADOR", "IMPRESORA", "SUPRESOR DE PICO", "OTROS"
             ],
             sistemas: [
-                "SIAF", "SIGA", "Sistema Registro Civil", "RUBEM", "RUB PVL 20", "SISPLA", "Sistema Vía Web", "Otros"
+                "SIAF", "SIGA", "SISTEMA REGISTRO CIVIL", "RUBEM", "RUB PVL 20", "SISPLA", "SISTEMA VÍA WEB", "OTROS"
             ],
             software: [
-                "Sistema Operativo", "Word", "Excel", "Power Point", "Internet", "Antivirus", "Otros"
+                "SISTEMA OPERATIVO", "WORD", "EXCEL", "POWER POINT", "INTERNET", "ANTIVIRUS", "OTROS"
             ],
             redes: [
-                "Internet", "Modem", "Router", "Switch", "Cableado", "Otros"
+                "INTERNET", "MODEM", "ROUTER", "SWITCH", "CABLEADO", "OTROS"
             ]
         };
 
