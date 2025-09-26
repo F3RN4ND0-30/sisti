@@ -19,7 +19,7 @@ require_once '../../backend/bd/conexion.php';
 
     <!-- CSS Básico -->
     <link rel="stylesheet" href="../../backend/css/vistas/escritorio.css">
-    
+
     <link rel="icon" type="image/png" href="../../backend/img/logoPisco.png" />
 
     <!-- jQuery debe ir primero -->
@@ -122,7 +122,6 @@ require_once '../../backend/bd/conexion.php';
             <!-- Módulos del Sistema -->
             <?php include '../../backend/php/desk/tabla_incidentes.php'; ?>
         </div>
-
     </div>
 
     <!-- Modal Asignar Técnico -->
@@ -236,63 +235,72 @@ require_once '../../backend/bd/conexion.php';
             }, 300);
         });
     </script>
-
     <script>
-        $(document).ready(function() {
-            const tabla = $('#tabla-incidente').DataTable({
-                ajax: {
-                    url: '../../backend/php/desk/listar_incidentes.php',
-                    dataSrc: ''
+        document.addEventListener("DOMContentLoaded", function() {
+            const usuarioRol = "<?php echo strtolower($_SESSION['hd_rol']); ?>";
+
+            // 👇 Aquí definimos las columnas base (sin acciones)
+            const columnas = [{
+                    data: 'Id_Incidentes'
                 },
-                columns: [{
-                        data: 'Id_Incidentes'
-                    },
-                    {
-                        data: 'Ticket'
-                    },
-                    {
-                        data: 'Area'
-                    },
-                    {
-                        data: 'Tecnico'
-                    },
-                    {
-                        data: 'Descripcion'
-                    },
-                    {
-                        data: 'Estado',
-                        render: function(data, type, row) {
-                            const estado = data.toLowerCase().trim();
-                            return `
+                {
+                    data: 'Ticket'
+                },
+                {
+                    data: 'Area'
+                },
+                {
+                    data: 'Tecnico'
+                },
+                {
+                    data: 'Descripcion'
+                },
+                {
+                    data: 'Estado',
+                    render: function(data, type, row) {
+                        const estado = data.toLowerCase().trim();
+                        return `
                         <select class="estado-select ${estado}" onchange="actualizarEstado(this, ${row.Id_Incidentes})">
                             <option value="pendiente" ${estado === 'pendiente' ? 'selected' : ''}>Pendiente</option>
                             <option value="proceso" ${estado === 'en proceso' ? 'selected' : ''}>En Proceso</option>
                             <option value="resuelto" ${estado === 'resuelto' ? 'selected' : ''}>Resuelto</option>
-                        </select>`;
-                        }
-                    },
-                    {
-                        data: 'Fecha_Creacion'
-                    },
-                    {
-                        data: 'Fecha_Resuelto'
-                    },
-                    {
-                        data: null,
-                        orderable: false,
-                        searchable: false,
-                        render: function(data, type, row) {
-                            if (usuarioRol === 'administrador') {
-                                return `
+                        </select>
+                    `;
+                    }
+                },
+                {
+                    data: 'Ultima_Modificacion'
+                },
+                {
+                    data: 'Fecha_Creacion'
+                },
+                {
+                    data: 'Fecha_Resuelto'
+                }
+            ];
+
+            // 👇 Solo agregamos la columna de acciones si es administrador
+            if (usuarioRol === 'administrador') {
+                columnas.push({
+                    data: null,
+                    orderable: false,
+                    searchable: false,
+                    render: function(data, type, row) {
+                        return `
                         <button class="btn btn-sm btn-primary" onclick="abrirModalAsignarTecnico(${row.Id_Incidentes})">
                             Asignar Técnico
-                        </button>`;
-                            } else {
-                                return ''; // No mostrar nada para otros roles
-                            }
-                        }
+                        </button>
+                    `;
                     }
-                ],
+                });
+            }
+
+            $('#tabla-incidente').DataTable({
+                ajax: {
+                    url: '../../backend/php/desk/listar_incidentes.php',
+                    dataSrc: ''
+                },
+                columns: columnas,
                 language: {
                     url: '//cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json'
                 },
@@ -308,12 +316,13 @@ require_once '../../backend/bd/conexion.php';
                 ]
             });
 
-            // Auto recargar cada 10 segundos sin perder la página actual
+            // Recarga automática
             setInterval(() => {
-                tabla.ajax.reload(null, false);
+                $('#tabla-incidente').DataTable().ajax.reload(null, false);
             }, 10000);
         });
     </script>
+
     <script>
         $(document).ready(function() {
             const sonido = new Audio('../../backend/sounds/Beep-alert.mp3');

@@ -4,7 +4,9 @@ session_start();
 
 require_once $_SERVER['DOCUMENT_ROOT'] . '/sisti/backend/bd/conexion.php';
 
+// ✅ Capturamos el ID y el usuario (solo el nombre de usuario)
 $id_usuario_actual = $_SESSION['hd_id'] ?? null;
+$usuario_actual = $_SESSION['hd_usuario'] ?? null; // 👈 ESTA es la variable que usaremos
 
 $data = json_decode(file_get_contents('php://input'), true);
 $id_incidente = $data['id_incidente'] ?? null;
@@ -22,7 +24,7 @@ $estadoMap = [
 
 $nuevo_estado_nombre = $estadoMap[$nuevo_estado_nombre] ?? null;
 
-if (!isset($id_incidente) || $id_incidente === '' || !$nuevo_estado_nombre || !$id_usuario_actual) {
+if (!$id_incidente || !$nuevo_estado_nombre || !$id_usuario_actual || !$usuario_actual) {
     echo json_encode([
         'exito' => false,
         'mensaje' => 'Datos incompletos o sesión no válida.'
@@ -31,9 +33,9 @@ if (!isset($id_incidente) || $id_incidente === '' || !$nuevo_estado_nombre || !$
 }
 
 try {
-    // Obtener estado actual del incidente
+    // 1️⃣ Verificar si el incidente existe
     $stmt = $conexion->prepare("
-        SELECT Id_Estados_Incidente, Fecha_Resuelto 
+        SELECT Id_Estados_Incidente 
         FROM tb_incidentes 
         WHERE Id_Incidentes = :id
     ");
@@ -48,24 +50,7 @@ try {
         exit;
     }
 
-    $id_estado_actual = $incidente['Id_Estados_Incidente'];
-
-    // Obtener el nombre del estado actual
-    $stmtEstadoActual = $conexion->prepare("
-        SELECT LOWER(Nombre) as Nombre FROM tb_estados_incidente WHERE Id_Estados_Incidente = :id
-    ");
-    $stmtEstadoActual->execute([':id' => $id_estado_actual]);
-    $estado_actual = $stmtEstadoActual->fetch(PDO::FETCH_ASSOC)['Nombre'] ?? '';
-
-    if ($estado_actual === 'resuelto') {
-        echo json_encode([
-            'exito' => false,
-            'mensaje' => 'El incidente ya está resuelto y no se puede modificar.'
-        ]);
-        exit;
-    }
-
-    // Obtener ID del nuevo estado
+    // 2️⃣ Obtener ID del nuevo estado
     $stmt = $conexion->prepare("
         SELECT Id_Estados_Incidente 
         FROM tb_estados_incidente 
@@ -84,19 +69,19 @@ try {
 
     $id_estado = $estado['Id_Estados_Incidente'];
 
-    // Preparar campos para actualización
-    $campos_update = "Id_Estados_Incidente = :estado";
+    // 3️⃣ Preparar actualización con el usuario que hizo el cambio
+    $campos_update = "Id_Estados_Incidente = :estado, Ultima_Modificacion = :usuario";
     $params_update = [
         ':estado' => $id_estado,
+        ':usuario' => $usuario_actual, // ✅ Guardamos el usuario (no nombre)
         ':id' => $id_incidente
     ];
 
-    // Si el nuevo estado es "resuelto", registrar la fecha/hora actual
+    // 4️⃣ Si el estado es "resuelto", guardamos la fecha
     if ($nuevo_estado_nombre === 'resuelto') {
         $campos_update .= ", Fecha_Resuelto = NOW()";
     }
 
-    // Ejecutar actualización
     $updateStmt = $conexion->prepare("
         UPDATE tb_incidentes 
         SET $campos_update 
@@ -106,7 +91,7 @@ try {
 
     echo json_encode([
         'exito' => true,
-        'mensaje' => 'Estado actualizado correctamente.'
+        'mensaje' => 'Estado actualizado y usuario registrado correctamente.'
     ]);
 } catch (PDOException $e) {
     error_log("Error SQL: " . $e->getMessage());

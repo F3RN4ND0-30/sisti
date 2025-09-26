@@ -12,6 +12,7 @@ try {
             u.Nombre AS Tecnico,
             i.Descripcion,
             e.Nombre AS Estado,
+            i.Ultima_Modificacion, 
             DATE_FORMAT(i.Fecha_Creacion, '%d/%m/%Y %H:%i') AS Fecha_Creacion,
             DATE_FORMAT(i.Fecha_Resuelto, '%d/%m/%Y %H:%i') AS Fecha_Resuelto
         FROM tb_incidentes i
