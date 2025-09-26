@@ -4,14 +4,16 @@ session_start();
 
 require_once $_SERVER['DOCUMENT_ROOT'] . '/sisti/backend/bd/conexion.php';
 
-// ✅ Capturamos el ID y el usuario (solo el nombre de usuario)
+// ✅ Capturamos el ID del usuario y su nombre completo con apellido principal
 $id_usuario_actual = $_SESSION['hd_id'] ?? null;
-$usuario_actual = $_SESSION['hd_usuario'] ?? null; // 👈 ESTA es la variable que usaremos
+$nombre_usuario = $_SESSION['hd_nombre'] ?? null; 
 
+// 📦 Datos recibidos desde el frontend
 $data = json_decode(file_get_contents('php://input'), true);
 $id_incidente = $data['id_incidente'] ?? null;
 $nuevo_estado_raw = $data['nuevo_estado'] ?? '';
 
+// ✨ Normalizamos el estado
 $nuevo_estado_nombre = strtolower(trim(preg_replace('/\s+/', ' ', $nuevo_estado_raw)));
 
 $estadoMap = [
@@ -21,10 +23,10 @@ $estadoMap = [
     'proceso'     => 'en proceso',
     'resuelto'    => 'resuelto'
 ];
-
 $nuevo_estado_nombre = $estadoMap[$nuevo_estado_nombre] ?? null;
 
-if (!$id_incidente || !$nuevo_estado_nombre || !$id_usuario_actual || !$usuario_actual) {
+// 🚨 Validación de datos
+if (!$id_incidente || !$nuevo_estado_nombre || !$id_usuario_actual || !$nombre_usuario) {
     echo json_encode([
         'exito' => false,
         'mensaje' => 'Datos incompletos o sesión no válida.'
@@ -69,11 +71,11 @@ try {
 
     $id_estado = $estado['Id_Estados_Incidente'];
 
-    // 3️⃣ Preparar actualización con el usuario que hizo el cambio
+    // 3️⃣ Preparar actualización con el nombre completo del usuario
     $campos_update = "Id_Estados_Incidente = :estado, Ultima_Modificacion = :usuario";
     $params_update = [
         ':estado' => $id_estado,
-        ':usuario' => $usuario_actual, // ✅ Guardamos el usuario (no nombre)
+        ':usuario' => $nombre_usuario, // ✅ Guardamos nombre + apellido
         ':id' => $id_incidente
     ];
 
@@ -82,6 +84,7 @@ try {
         $campos_update .= ", Fecha_Resuelto = NOW()";
     }
 
+    // 5️⃣ Ejecutar actualización
     $updateStmt = $conexion->prepare("
         UPDATE tb_incidentes 
         SET $campos_update 
@@ -91,7 +94,7 @@ try {
 
     echo json_encode([
         'exito' => true,
-        'mensaje' => 'Estado actualizado y usuario registrado correctamente.'
+        'mensaje' => 'Estado actualizado y última modificación registrada correctamente.'
     ]);
 } catch (PDOException $e) {
     error_log("Error SQL: " . $e->getMessage());
