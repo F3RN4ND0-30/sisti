@@ -137,6 +137,69 @@ body {
     font-size: 16px;
 }
 
+/* Checkbox personalizado */
+.checkbox-extranjero {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+    font-size: 15px;
+    font-weight: 500;
+    color: #374151;
+    /* texto gris oscuro */
+    position: relative;
+    padding-left: 35px;
+    cursor: pointer;
+    user-select: none;
+    animation: slideInUp 0.5s ease-out;
+}
+
+.checkbox-extranjero input[type="checkbox"] {
+    opacity: 0;
+    position: absolute;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+}
+
+/* Estilo visual del checkbox */
+.checkbox-extranjero .custom-checkbox {
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 20px;
+    width: 20px;
+    background-color: #f9fafb;
+    border: 2px solid #e5e7eb;
+    border-radius: 6px;
+    transition: all 0.3s;
+}
+
+/* Check visible cuando está marcado */
+.checkbox-extranjero input:checked+.custom-checkbox {
+    background: linear-gradient(135deg, #2563eb, #1d4ed8);
+    border-color: #1d4ed8;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
+}
+
+/* Icono check */
+.checkbox-extranjero .custom-checkbox::after {
+    content: '';
+    position: absolute;
+    display: none;
+    left: 6px;
+    top: 2px;
+    width: 6px;
+    height: 10px;
+    border: solid white;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+}
+
+/* Mostrar icono cuando está marcado */
+.checkbox-extranjero input:checked+.custom-checkbox::after {
+    display: block;
+}
+
 .grupo-formulario {
     position: relative;
     margin-bottom: 25px;

@@ -10,9 +10,48 @@ document.addEventListener('DOMContentLoaded', function () {
     const irInicio = document.getElementById('irInicio');
     const aceptar = document.getElementById('aceptar');
     const copiarTicket = document.getElementById('copiarTicket');
+    const checkExtranjero = document.getElementById('checkExtranjero');
+
+    async function buscarCedulaExtranjero(cedula) {
+        if (!cedula || cedula.length < 5) return;
+
+        if (loader) loader.style.display = 'flex';
+
+        try {
+            const response = await fetch('/sisti/backend/php/api/buscar-cedula-extranjero.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: new URLSearchParams({ cedula })
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                nombreInput.value = data.nombre;
+                apPaternoInput.value = data.apPaterno;
+                apMaternoInput.value = data.apMaterno;
+            } else {
+                alert('❌ Cédula no registrada. Por favor acérquese a la oficina de sistemas.');
+                nombreInput.value = '';
+                apPaternoInput.value = '';
+                apMaternoInput.value = '';
+            }
+        } catch (error) {
+            console.error('Error al consultar la cédula:', error);
+            alert('❌ Error al consultar la cédula. Intente nuevamente.');
+        } finally {
+            if (loader) loader.style.display = 'none';
+        }
+    }
 
     async function buscarDNI(dni) {
-        if (dni.length !== 8) return;
+        // Salir si está marcado como extranjero
+        if (checkExtranjero.checked) return;
+
+        if (dni.length !== 8) {
+            alert('El DNI debe tener 8 dígitos.');
+            return;
+        }
 
         if (loader) loader.style.display = 'flex';
 
@@ -45,20 +84,74 @@ document.addEventListener('DOMContentLoaded', function () {
 
     if (dniInput) {
         dniInput.addEventListener('input', function () {
-            const dni = dniInput.value.trim();
-            if (dni.length === 8) {
-                buscarDNI(dni);
+            let valor = dniInput.value.trim();
+
+            // Limpiar campos al editar
+            nombreInput.value = '';
+            apPaternoInput.value = '';
+            apMaternoInput.value = '';
+
+            if (checkExtranjero.checked) {
+                // Extranjero: permitir hasta 15 caracteres alfanuméricos
+                dniInput.maxLength = 15;
+                dniInput.value = valor.replace(/[^a-zA-Z0-9]/g, '');
+
+                valor = dniInput.value;
+                if (valor.length >= 10) {
+                    buscarCedulaExtranjero(valor);
+                }
             } else {
-                nombreInput.value = '';
-                apPaternoInput.value = '';
-                apMaternoInput.value = '';
+                // Nacional: permitir solo 8 dígitos
+                dniInput.maxLength = 8;
+                dniInput.value = valor.replace(/\D/g, '');
+
+                valor = dniInput.value;
+                if (valor.length === 8) {
+                    buscarDNI(valor);
+                }
             }
         });
     }
 
+    if (checkExtranjero) {
+        checkExtranjero.addEventListener('change', function () {
+            dniInput.value = '';
+            nombreInput.value = '';
+            apPaternoInput.value = '';
+            apMaternoInput.value = '';
+            dniInput.dispatchEvent(new Event('input'));
+        });
+    }
+
+    let ultimaSolicitud = 0;
+
     if (form) {
         form.addEventListener('submit', async function (e) {
             e.preventDefault();
+
+            const ahora = Date.now();
+            const tiempoTranscurrido = ahora - ultimaSolicitud;
+
+            if (tiempoTranscurrido < 5000) {
+                alert('⚠️ Por favor espera unos segundos antes de enviar nuevamente.');
+                return;
+            }
+
+            const dniValor = dniInput.value.trim();
+
+            // Validación adicional solo si NO es extranjero
+            if (!checkExtranjero.checked && dniValor.length !== 8) {
+                alert('El DNI debe tener exactamente 8 dígitos.');
+                return;
+            }
+
+            // Validación adicional si ES extranjero
+            if (checkExtranjero.checked && dniValor.length < 10) {
+                alert('La cédula del extranjero debe tener al menos 10 caracteres.');
+                return;
+            }
+
+            ultimaSolicitud = ahora;
 
             const formData = new FormData(form);
 
@@ -91,7 +184,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 return;
             }
 
-            // Extraer solo el código del ticket (asumiendo que el mensaje es "Código: XYZ123")
             const ticket = texto.replace(/^Código:\s*/, '');
 
             navigator.clipboard.writeText(ticket).then(() => {

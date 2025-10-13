@@ -132,6 +132,9 @@ function obtenerPrimerNombre($nombre_completo)
                         <li <?php echo esPaginaActiva('/admin/usuarios.php') ? 'class="active"' : ''; ?>>
                             <a href="/sisti/frontend/admin/usuarios.php">Gestión de Usuarios</a>
                         </li>
+                        <li <?php echo esPaginaActiva('/admin/extranjeros.php') ? 'class="active"' : ''; ?>>
+                            <a href="/sisti/frontend/admin/extranjeros.php">Agregar Extranjeros</a>
+                        </li>
                     </ul>
                 </li>
             <?php endif; ?>

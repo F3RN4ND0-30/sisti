@@ -20,6 +20,8 @@ require_once '../../backend/bd/conexion.php';
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    
+    <link rel="icon" type="image/png" href="../../backend/img/logoPisco.png" />
 </head>
 
 <body>
@@ -39,12 +41,20 @@ require_once '../../backend/bd/conexion.php';
 
                     <form id="formTicket">
                         <div class="grupo-formulario tiene-retroalimentacion">
+                            <div class="checkbox-extranjero">
+                                <label>
+                                    <input type="checkbox" id="checkExtranjero">
+                                    <span class="custom-checkbox"></span>
+                                    Soy extranjero
+                                </label>
+                            </div>
+
                             <input type="text" id="dni" name="dni" class="control-formulario"
-                                placeholder="DNI" maxlength="8" required autocomplete="off"
-                                pattern="\d{8}" title="El DNI debe contener exactamente 8 números"
+                                placeholder="DNI" required autocomplete="off"
+                                title="El DNI debe contener exactamente 8 números"
                                 oninput="this.value = this.value.replace(/\D/g, '')">
-                            <span class="material-icons icono-control-formulario">badge</span>
-                            <div id="dni-loader" style="display: none; position: absolute; right: 15px; top: 50%; transform: translateY(-50%);">
+                            <span class="material-icons icono-control-formulario" style="margin-top: 18px;">badge</span>
+                            <div id="dni-loader" style="display: none; position: absolute; right: 15px; top: 50%; transform: translateY(-50%); margin-top: 18px;">
                                 <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCA0MDAgNDAwIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxjaXJjbGUgY3g9IjIwMCIgY3k9IjIwMCIgcj0iMTgwIiBzdHJva2U9IiMyNTYzZWIiIHN0cm9rZS13aWR0aD0iNDAiIGZpbGw9Im5vbmUiIHN0cm9rZS1kYXNoYXJyYXk9IjMwMCw1MDAiPjxhbmltYXRlVHJhbnNmb3JtIGF0dHJpYnV0ZU5hbWU9InRyYW5zZm9ybSIgZHVyPSIxcyIgcmVwZWF0Q291bnQ9ImluZGVmaW5pdGUiIHR5cGU9InJvdGF0ZSIgZnJvbT0iMCAyMDAgMjAwIiB0bz0iMzYwIDIwMCAyMDAiLz48L2NpcmNsZT48L3N2Zz4=" alt="Cargando" width="22">
                             </div>
                         </div>
@@ -147,7 +157,7 @@ require_once '../../backend/bd/conexion.php';
             });
         });
     </script>
-    
+
     <script>
         function controlarHorarioBoton() {
             const boton = document.getElementById('btn-registrar');
@@ -160,7 +170,7 @@ require_once '../../backend/bd/conexion.php';
             const minutosDesdeMedianoche = horaActual * 60 + minutosActual;
 
             const inicio = 8 * 60; // 480 (08:00)
-            const fin = 15 * 60 + 30; // 930 (15:30)
+            const fin = 17 * 60; // 1020 (5:00)
 
             console.log(`Hora actual: ${horaActual}:${minutosActual}`);
             console.log(`Minutos desde medianoche: ${minutosDesdeMedianoche}`);
