@@ -36,14 +36,14 @@ try {
                 <tr>
                     <th>ID</th>
                     <th>Ticket</th>
-                    <th>Área</th>
+                    <th>Estado</th>
                     <th>Técnico</th>
                     <th>Descripción</th>
-                    <th>Estado</th>
+                    <th>Área</th>
                     <th>Última Modificación</th>
                     <th>Fecha de Creación</th>
                     <th>Fecha de Resolución</th>
-                    <?php if (strtolower($_SESSION['hd_rol']) === 'administrador'): ?>
+                    <?php if (strtolower($_SESSION['hd_rol']) === 'administrador' || strtolower($_SESSION['hd_rol']) === 'secretaria'): ?>
                         <th>Acciones</th>
                     <?php endif; ?>
                 </tr>

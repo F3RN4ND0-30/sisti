@@ -72,7 +72,7 @@ function obtenerPrimerNombre($nombre_completo)
                     <span>Gestión de Tickets</span>
                 </a>
                 <ul class="collapse list-unstyled menu <?php echo $tickets_abierto ? 'show' : ''; ?>" id="ticketsSubmenu">
-                    <?php if ($rol === 'administrador'): ?>
+                    <?php if ($rol === 'administrador' || $rol == 'secretaria'): ?>
                         <li <?php echo esPaginaActiva('/tickets/gestickets/crear-ticket.php') ? 'class="active"' : ''; ?>>
                             <a href="/sisti/frontend/tickets/gestickets/crear-ticket.php">Crear Ticket</a>
                         </li>
@@ -89,33 +89,35 @@ function obtenerPrimerNombre($nombre_completo)
                 </ul>
             </li>
 
-            <!-- Reportes -->
-            <?php
-            $rutas_reportes = ['/reportes/'];
-            $reportes_abierto = debeDropdownEstarAbierto($rutas_reportes);
-            ?>
-            <li class="dropdown <?php echo esPaginaActiva('/reportes/') ? 'active' : ''; ?>">
-                <a href="#reportesSubmenu" class="dropdown-toggle" aria-expanded="<?php echo $reportes_abierto ? 'true' : 'false'; ?>">
-                    <i class="material-icons">assessment</i>
-                    <span>Reportes</span>
-                </a>
-                <ul class="collapse list-unstyled menu <?php echo $reportes_abierto ? 'show' : ''; ?>" id="reportesSubmenu">
-                    <li <?php echo esPaginaActiva('/reportes/general.php') ? 'class="active"' : ''; ?>>
-                        <a href="/sisti/frontend/reportes/reporte_dias/reporte_ticket.php">Reporte General</a>
-                    </li>
-                    <li <?php echo esPaginaActiva('/reportes/atencion.php') ? 'class="active"' : ''; ?>>
-                        <a href="/sisti/frontend/reportes/reporte_atencion/fichas.php">Reporte de Atención</a>
-                    </li>
-                    <li <?php echo esPaginaActiva('/reportes/estadisticas.php') ? 'class="active"' : ''; ?>>
-                        <a href="/sisti/frontend/reportes/estadisticas/estadisticas.php">Estadísticas</a>
-                    </li>
-                    <?php if ($rol === 'administrador'): ?>
-                        <li <?php echo esPaginaActiva('/reportes/fichas.php') ? 'class="active"' : ''; ?>>
-                            <a href="/sisti/frontend/reportes/lista_fichas/listado_fichas.php">Lista de Fichas</a>
+            <?php if ($rol === 'administrador'): ?>
+                <!-- Reportes -->
+                <?php
+                $rutas_reportes = ['/reportes/'];
+                $reportes_abierto = debeDropdownEstarAbierto($rutas_reportes);
+                ?>
+                <li class="dropdown <?php echo esPaginaActiva('/reportes/') ? 'active' : ''; ?>">
+                    <a href="#reportesSubmenu" class="dropdown-toggle" aria-expanded="<?php echo $reportes_abierto ? 'true' : 'false'; ?>">
+                        <i class="material-icons">assessment</i>
+                        <span>Reportes</span>
+                    </a>
+                    <ul class="collapse list-unstyled menu <?php echo $reportes_abierto ? 'show' : ''; ?>" id="reportesSubmenu">
+                        <li <?php echo esPaginaActiva('/reportes/general.php') ? 'class="active"' : ''; ?>>
+                            <a href="/sisti/frontend/reportes/reporte_dias/reporte_ticket.php">Reporte General</a>
                         </li>
-                    <?php endif; ?>
-                </ul>
-            </li>
+                        <li <?php echo esPaginaActiva('/reportes/atencion.php') ? 'class="active"' : ''; ?>>
+                            <a href="/sisti/frontend/reportes/reporte_atencion/fichas.php">Reporte de Atención</a>
+                        </li>
+                        <li <?php echo esPaginaActiva('/reportes/estadisticas.php') ? 'class="active"' : ''; ?>>
+                            <a href="/sisti/frontend/reportes/estadisticas/estadisticas.php">Estadísticas</a>
+                        </li>
+                        <?php if ($rol === 'administrador'): ?>
+                            <li <?php echo esPaginaActiva('/reportes/fichas.php') ? 'class="active"' : ''; ?>>
+                                <a href="/sisti/frontend/reportes/lista_fichas/listado_fichas.php">Lista de Fichas</a>
+                            </li>
+                        <?php endif; ?>
+                    </ul>
+                </li>
+            <?php endif; ?>
 
             <?php if ($rol === 'administrador'): ?>
                 <!-- Administración (solo administradores) -->
