@@ -109,7 +109,8 @@ $startRow = 55;
 $columnStart = 'C';
 $columnEnd = 'L';
 
-$lines = str_split($observacion, $maxCharsPerRow);
+$lines = explode("\n", wordwrap($observacion, $maxCharsPerRow, "\n", false));
+
 foreach ($lines as $i => $linea) {
   $fila = $startRow + $i;
   $celdaInicio = $columnStart . $fila;

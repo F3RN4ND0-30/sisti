@@ -6,7 +6,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/sisti/backend/bd/conexion.php';
 
 // ✅ Capturamos el ID del usuario y su nombre completo con apellido principal
 $id_usuario_actual = $_SESSION['hd_id'] ?? null;
-$nombre_usuario = $_SESSION['hd_nombre'] ?? null; 
+$nombre_usuario = $_SESSION['hd_nombre'] ?? null;
 
 // 📦 Datos recibidos desde el frontend
 $data = json_decode(file_get_contents('php://input'), true);
@@ -35,12 +35,13 @@ if (!$id_incidente || !$nuevo_estado_nombre || !$id_usuario_actual || !$nombre_u
 }
 
 try {
-    // 1️⃣ Verificar si el incidente existe
+    // 1️⃣ Verificar si el incidente existe y obtener su estado actual
     $stmt = $conexion->prepare("
-        SELECT Id_Estados_Incidente 
-        FROM tb_incidentes 
-        WHERE Id_Incidentes = :id
-    ");
+    SELECT ei.Nombre AS estado_actual 
+    FROM tb_incidentes i
+    INNER JOIN tb_estados_incidente ei ON i.Id_Estados_Incidente = ei.Id_Estados_Incidente
+    WHERE i.Id_Incidentes = :id
+");
     $stmt->execute([':id' => $id_incidente]);
     $incidente = $stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -51,6 +52,17 @@ try {
         ]);
         exit;
     }
+
+    // ❌ Si ya está resuelto, no permitir cambio a otro estado
+    $estado_actual = strtolower(trim($incidente['estado_actual']));
+    if ($estado_actual === 'resuelto' && $nuevo_estado_nombre !== 'resuelto') {
+        echo json_encode([
+            'exito' => false,
+            'mensaje' => 'No se puede cambiar el estado. El incidente ya fue marcado como resuelto.'
+        ]);
+        exit;
+    }
+
 
     // 2️⃣ Obtener ID del nuevo estado
     $stmt = $conexion->prepare("

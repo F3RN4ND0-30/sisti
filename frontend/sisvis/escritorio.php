@@ -247,15 +247,6 @@ require_once '../../backend/bd/conexion.php';
                     data: 'Ticket'
                 },
                 {
-                    data: 'Area'
-                },
-                {
-                    data: 'Tecnico'
-                },
-                {
-                    data: 'Descripcion'
-                },
-                {
                     data: 'Estado',
                     render: function(data, type, row) {
                         const estado = data.toLowerCase().trim();
@@ -269,6 +260,15 @@ require_once '../../backend/bd/conexion.php';
                     }
                 },
                 {
+                    data: 'Tecnico'
+                },
+                {
+                    data: 'Descripcion'
+                },
+                {
+                    data: 'Area'
+                },
+                {
                     data: 'Ultima_Modificacion'
                 },
                 {
@@ -280,7 +280,7 @@ require_once '../../backend/bd/conexion.php';
             ];
 
             // 👇 Solo agregamos la columna de acciones si es administrador
-            if (usuarioRol === 'administrador') {
+            if (usuarioRol === 'administrador' || usuarioRol === 'secretaria') {
                 columnas.push({
                     data: null,
                     orderable: false,
