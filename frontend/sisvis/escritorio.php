@@ -75,7 +75,10 @@ require_once '../../backend/bd/conexion.php';
             <div class="col-lg-12">
                 <div class="activity-card">
                     <h4><i class="material-icons">support_agent</i> Sistema de SISTI</h4>
-                    <p>El Sistema de SISTI de la Municipalidad Provincial de Pisco permite la gestión integral de incidencias y soporte técnico para optimizar la atención ciudadana y mejorar los servicios municipales. Proporciona herramientas para el registro, seguimiento y resolución de tickets de soporte de manera eficiente y organizada.</p>
+                    <p>El Sistema de SISTI de la Municipalidad Provincial de Pisco permite la gestión integral de
+                        incidencias y soporte técnico para optimizar la atención ciudadana y mejorar los servicios
+                        municipales. Proporciona herramientas para el registro, seguimiento y resolución de tickets de
+                        soporte de manera eficiente y organizada.</p>
                 </div>
             </div>
         </div>
@@ -125,7 +128,8 @@ require_once '../../backend/bd/conexion.php';
     </div>
 
     <!-- Modal Asignar Técnico -->
-    <div class="modal fade" id="modalAsignarTecnico" tabindex="-1" aria-labelledby="tituloModalTecnico" aria-hidden="true">
+    <div class="modal fade" id="modalAsignarTecnico" tabindex="-1" aria-labelledby="tituloModalTecnico"
+        aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
@@ -244,9 +248,6 @@ require_once '../../backend/bd/conexion.php';
                     data: 'Id_Incidentes'
                 },
                 {
-                    data: 'Ticket'
-                },
-                {
                     data: 'Estado',
                     render: function(data, type, row) {
                         const estado = data.toLowerCase().trim();
@@ -260,13 +261,16 @@ require_once '../../backend/bd/conexion.php';
                     }
                 },
                 {
-                    data: 'Tecnico'
+                    data: 'Area'
+                },
+                {
+                    data: 'Ticket'
                 },
                 {
                     data: 'Descripcion'
                 },
                 {
-                    data: 'Area'
+                    data: 'Tecnico'
                 },
                 {
                     data: 'Ultima_Modificacion'
