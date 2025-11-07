@@ -89,7 +89,7 @@ function obtenerPrimerNombre($nombre_completo)
                 </ul>
             </li>
 
-            <?php if ($rol === 'administrador'): ?>
+            <?php if ($rol === 'administrador' || $rol === 'tecnico'): ?>
                 <!-- Reportes -->
                 <?php
                 $rutas_reportes = ['/reportes/'];
@@ -101,16 +101,18 @@ function obtenerPrimerNombre($nombre_completo)
                         <span>Reportes</span>
                     </a>
                     <ul class="collapse list-unstyled menu <?php echo $reportes_abierto ? 'show' : ''; ?>" id="reportesSubmenu">
+                        <?php if ($rol === 'administrador'): ?>
                         <li <?php echo esPaginaActiva('/reportes/general.php') ? 'class="active"' : ''; ?>>
                             <a href="/sisti/frontend/reportes/reporte_dias/reporte_ticket.php">Reporte General</a>
                         </li>
+                        <?php endif; ?>
                         <li <?php echo esPaginaActiva('/reportes/atencion.php') ? 'class="active"' : ''; ?>>
                             <a href="/sisti/frontend/reportes/reporte_atencion/fichas.php">Reporte de Atención</a>
                         </li>
-                        <li <?php echo esPaginaActiva('/reportes/estadisticas.php') ? 'class="active"' : ''; ?>>
-                            <a href="/sisti/frontend/reportes/estadisticas/estadisticas.php">Estadísticas</a>
-                        </li>
                         <?php if ($rol === 'administrador'): ?>
+                            <li <?php echo esPaginaActiva('/reportes/estadisticas.php') ? 'class="active"' : ''; ?>>
+                                <a href="/sisti/frontend/reportes/estadisticas/estadisticas.php">Estadísticas</a>
+                            </li>
                             <li <?php echo esPaginaActiva('/reportes/fichas.php') ? 'class="active"' : ''; ?>>
                                 <a href="/sisti/frontend/reportes/lista_fichas/listado_fichas.php">Lista de Fichas</a>
                             </li>
