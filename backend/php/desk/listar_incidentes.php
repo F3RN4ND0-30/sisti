@@ -20,6 +20,7 @@ try {
         INNER JOIN tb_areas a ON i.Id_Areas = a.Id_Areas
         LEFT JOIN tb_usuarios u ON i.Id_Usuarios = u.Id_Usuarios
         INNER JOIN tb_estados_incidente e ON i.Id_Estados_Incidente = e.Id_Estados_Incidente
+        WHERE i.EstadoIncidente = 1
         ORDER BY i.Id_Incidentes DESC
     ");
 

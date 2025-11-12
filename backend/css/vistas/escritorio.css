@@ -422,7 +422,7 @@ body {
   background: linear-gradient(135deg, var(--primary), var(--primary-dark));
   color: #fff;
   padding: 16px 12px;
-  text-align: left;
+  text-align: center;
   font-weight: 800;
   font-size: 12px;
   text-transform: uppercase;
@@ -468,6 +468,10 @@ body {
 }
 
 /* ÁREA (col 3) → 2 líneas, corte limpio */
+#tabla-incidente th:nth-child(3){
+  text-align: center !important;
+}
+
 #tabla-incidente th:nth-child(3),
 #tabla-incidente td:nth-child(3) {
   min-width: 280px;
@@ -493,6 +497,10 @@ body {
 }
 
 /* DESCRIPCIÓN (col 5) → 3 líneas en desktop */
+#tabla-incidente th:nth-child(5){
+  text-align: center !important;
+}
+
 #tabla-incidente th:nth-child(5),
 #tabla-incidente td:nth-child(5) {
   min-width: 420px;

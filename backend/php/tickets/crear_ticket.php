@@ -65,20 +65,23 @@ try {
 
     // Insertar en tb_Incidentes con fecha de creación desde PHP (hora Lima)
     $stmtIncidente = $conexion->prepare("
-        INSERT INTO tb_Incidentes (
-            Id_Tickets, Id_Usuarios, Id_UsuariosExternos, Id_Areas, Descripcion, Id_Estados_Incidente, Fecha_Creacion, Ip_PC
-        ) VALUES (
-            :idTicket, NULL, :idUsuarioExterno, :idArea, :descripcion, :estado, :fechaCreacion, :ip_pc
-        )
-    ");
+    INSERT INTO tb_Incidentes (
+        Id_Tickets, Id_Usuarios, Id_UsuariosExternos, Id_Areas, Descripcion, 
+        Id_Estados_Incidente, Fecha_Creacion, Ip_PC, EstadoIncidente
+    ) VALUES (
+        :idTicket, NULL, :idUsuarioExterno, :idArea, :descripcion, 
+        :estado, :fechaCreacion, :ip_pc, :estadoIncidente
+    )
+");
     $stmtIncidente->execute([
         ':idTicket' => $ticketId,
         ':idUsuarioExterno' => $usuarioId,
         ':idArea' => $area,
         ':descripcion' => $descripcion,
-        ':estado' => 1,
+        ':estado' => 1, // tu columna Id_Estados_Incidente
         ':fechaCreacion' => $fechaCreacion,
-        ':ip_pc' => $ip_pc
+        ':ip_pc' => $ip_pc,
+        ':estadoIncidente' => 1 // nueva columna EstadoIncidente
     ]);
 
     $conexion->commit();
