@@ -18,7 +18,7 @@ try {
     $stmtProc->execute();
     $proceso = $stmtProc->fetch(PDO::FETCH_ASSOC)['total'] ?? 0;
 
-    $stmtRes = $conexion->prepare("SELECT COUNT(*) AS total FROM tb_incidentes WHERE Id_Estados_Incidente = 3");
+    $stmtRes = $conexion->prepare("SELECT COUNT(*) AS total FROM tb_incidentes WHERE Id_Estados_Incidente = 3 AND YEAR(fecha_creacion) = YEAR(CURDATE())");
     $stmtRes->execute();
     $resueltos = $stmtRes->fetch(PDO::FETCH_ASSOC)['total'] ?? 0;
 
