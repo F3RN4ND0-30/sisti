@@ -13,7 +13,7 @@ try {
             u.Nombre AS nombre
         FROM tb_usuarios u
         INNER JOIN tb_roles r ON u.Id_Roles = r.Id_Roles
-        WHERE u.Id_Roles = 2
+        WHERE u.Id_Roles = 2 AND u.Activo = 1
     ");
     $stmt->execute();
 
